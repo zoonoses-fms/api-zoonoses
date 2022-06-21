@@ -3,6 +3,7 @@
 namespace App\Models\Location\The;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Http\Request;
 use App\Models\MetaPhone;
 
 class TheNeighborhood extends MetaPhone
@@ -17,6 +18,11 @@ class TheNeighborhood extends MetaPhone
     public function blocks()
     {
         return $this->hasMany(TheBlock::class);
+    }
+
+    public function subLocations()
+    {
+        return $this->hasMany(TheSubLocation::class);
     }
 
     public function geography()
@@ -50,5 +56,23 @@ class TheNeighborhood extends MetaPhone
         } catch (\Throwable $th) {
             return null;
         }
+    }
+
+    public static function getGeoJSON(Request $request)
+    {
+        return TheNeighborhood::select(
+            'the_neighborhoods.id',
+            'the_neighborhoods.name',
+            'the_neighborhoods.gid'
+        )
+        ->selectRaw(
+            'ST_AsGeoJSON(the_neighborhood_geographies.area) AS geojson'
+        )
+        ->join('the_neighborhood_geographies', 'the_neighborhood_geographies.the_neighborhood_id', '=', 'the_neighborhoods.id')
+        ->when($request->has('id'), function ($query) use ($request) {
+            $id = $request->get('id');
+            $query->where('the_neighborhoods.id', $id);
+        })
+        ->get();
     }
 }

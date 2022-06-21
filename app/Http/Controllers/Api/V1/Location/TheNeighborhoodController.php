@@ -3,8 +3,12 @@
 namespace App\Http\Controllers\Api\V1\Location;
 
 use App\Http\Controllers\Controller;
+use App\Models\Location\The\TheBlock;
 use Illuminate\Http\Request;
 use App\Models\Location\The\TheNeighborhood;
+use App\Models\Location\The\TheNeighborhoodGeography;
+use App\Models\Location\The\TheSaad;
+use Illuminate\Support\Facades\DB;
 
 class TheNeighborhoodController extends Controller
 {
@@ -16,30 +20,16 @@ class TheNeighborhoodController extends Controller
     public function index(Request $request)
     {
         if ($request->has('keyword')) {
-            $keyword = $request->get('keyword');
 
-            $theNeighborhoods = TheNeighborhood::whereRaw(
-                "unaccent(name) ilike unaccent('%{$keyword}%')"
-            )->limit(30)->get();
+            $keyword = $request->get('keyword');
+            $theNeighborhoods = TheNeighborhood::searchByName($keyword);
         } elseif ($request->has('type')) {
+
             $type = $request->get('type');
             if ($type == 'list') {
-                $theNeighborhoods = TheNeighborhood::orderBy('the_neighborhoods.name')->get();
+                $theNeighborhoods = TheSaad::orderBy('the_saads.name')->with('neighborhoods')->get();
             } elseif ($type == 'geojson') {
-                $theNeighborhoods = TheNeighborhood::select(
-                    'the_neighborhoods.id',
-                    'the_neighborhoods.name',
-                    'the_neighborhoods.gid'
-                )
-                ->selectRaw(
-                    'ST_AsGeoJSON(the_neighborhood_geographies.area) AS geojson'
-                )
-                ->join('the_neighborhood_geographies', 'the_neighborhood_geographies.the_neighborhood_id', '=', 'the_neighborhoods.id')
-                ->when($request->has('id'), function ($query) use ($request) {
-                    $id = $request->get('id');
-                    $query->where('the_neighborhoods.id', $id);
-                })
-                ->get();
+                $theNeighborhoods = TheNeighborhood::getGeoJSON($request);
             }
         } else {
             if ($request->has('per_page')) {
@@ -63,7 +53,31 @@ class TheNeighborhoodController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+
+            $feature = $request->all();
+
+            $lastNeighborhood  = TheNeighborhood::orderBy('gid', 'desc')->first();
+
+            $neighborhood = new TheNeighborhood();
+            $name = trim($feature['properties']['name']);
+            $neighborhood->name = $name;
+            $neighborhood->standardized = $neighborhood->nameCase($name);
+            $neighborhood->metaphone = $neighborhood->getPhraseMetaphone($name);
+            $neighborhood->soundex = soundex($name);
+            $neighborhood->gid = $lastNeighborhood != null ? $lastNeighborhood->gid + 1 : 1;
+            $neighborhood->the_saad_id = $feature['properties']['region_id'];
+            $neighborhoodGeography = new TheNeighborhoodGeography();
+            $geometry = json_encode($feature['geometry']);
+            $neighborhoodGeography->area = DB::raw("ST_SetSRID(ST_GeomFromGeoJSON('{$geometry}'), 3857)");
+            $neighborhood->save();
+            $neighborhood->geography()->save($neighborhoodGeography);
+
+            return $this->success('created', 201);
+        } catch (\Throwable $th) {
+            //throw $th;
+            return $this->error('internal error', 503, $th);
+        }
     }
 
     /**
@@ -86,7 +100,29 @@ class TheNeighborhoodController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        try {
+
+            $feature = $request->all();
+
+            $neighborhood = TheNeighborhood::find($id);
+            $name = trim($feature['properties']['name']);
+            $neighborhood->name = $name;
+            $neighborhood->standardized = $neighborhood->nameCase($name);
+            $neighborhood->metaphone = $neighborhood->getPhraseMetaphone($name);
+            $neighborhood->soundex = soundex($name);
+            $neighborhood->the_saad_id = $feature['properties']['region_id'];
+            $neighborhoodGeography = $neighborhood->geography;
+            $geometry = json_encode($feature['geometry']);
+            $neighborhoodGeography->area = DB::raw("ST_SetSRID(ST_GeomFromGeoJSON('{$geometry}'), 3857)");
+            $neighborhood->save();
+            $neighborhood->geography()->save($neighborhoodGeography);
+
+            return $this->success('created', 201);
+        } catch (\Throwable $th) {
+            //throw $th;
+            return $this->error('internal error', 503, $th);
+        }
+        
     }
 
     /**
@@ -97,6 +133,20 @@ class TheNeighborhoodController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $neighborhood = TheNeighborhood::find($id);
+        $blocks = $neighborhood->blocks;
+        $subLocations = $neighborhood->subLocations;
+
+        foreach ($blocks as $block) {
+            $block->delete();
+        }
+
+        foreach ($subLocations as $subLocation) {
+            $subLocation->delete();
+        }
+
+        $neighborhood->geography->delete();
+
+        $neighborhood->delete();
     }
 }

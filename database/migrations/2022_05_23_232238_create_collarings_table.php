@@ -20,7 +20,7 @@ return new class extends Migration
             $table->unsignedBigInteger('the_saad_id');
             $table->unsignedBigInteger('the_neighborhood_id');
             $table->unsignedBigInteger('the_block_id')->nullable();
-            $table->unsignedBigInteger('the_location_id')->nullable();
+            $table->unsignedBigInteger('the_sub_location_id')->nullable();
             $table->integer('address_number')->nullable();
             $table->string('landmark')->nullable();
             $table->string('owner_name');
@@ -30,7 +30,7 @@ return new class extends Migration
             $table->foreign('the_saad_id')->references('id')->on('the_saads');
             $table->foreign('the_neighborhood_id')->references('id')->on('the_neighborhoods');
             $table->foreign('the_block_id')->references('id')->on('the_blocks');
-            $table->foreign('the_location_id')->references('id')->on('the_locations');
+            $table->foreign('the_sub_location_id')->references('id')->on('the_sub_locations');
         });
     }
 

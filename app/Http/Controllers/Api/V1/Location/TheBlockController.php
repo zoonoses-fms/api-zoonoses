@@ -5,7 +5,10 @@ namespace App\Http\Controllers\Api\V1\Location;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Location\The\TheBlock;
+use App\Models\Location\The\TheBlockGeography;
 use App\Models\Location\The\TheNeighborhood;
+use App\Models\Location\The\TheSaad;
+use Illuminate\Support\Facades\DB;
 
 class TheBlockController extends Controller
 {
@@ -19,27 +22,9 @@ class TheBlockController extends Controller
         if ($request->has('type')) {
             $type = $request->get('type');
             if ($type == 'list') {
-                $theBlocks = TheNeighborhood::orderBy('the_neighborhoods.name')->get();
+                $theBlocks = TheSaad::orderBy('the_saads.name')->with('neighborhoods')->get();
             } elseif ($type == 'geojson') {
-                $theBlocks = TheBlock::select(
-                    'the_blocks.id',
-                    'the_blocks.gid as name',
-                    'the_blocks.gid'
-                )
-                ->selectRaw(
-                    'ST_AsGeoJSON(the_block_geographies.area) AS geojson'
-                )
-                ->join(
-                    'the_block_geographies',
-                    'the_block_geographies.the_block_id',
-                    '=',
-                    'the_blocks.id'
-                )
-                ->when($request->has('id'), function ($query) use ($request) {
-                    $id = $request->get('id');
-                    $query->where('the_blocks.the_neighborhood_id', $id);
-                })
-                ->get();
+                $theBlocks = TheBlock::getGeoJSON($request);
             }
         } else {
             if ($request->has('per_page')) {
@@ -62,7 +47,25 @@ class TheBlockController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
+        try {
+            $feature = $request->all();
+
+            $block = new TheBlock();
+            $block->gid = trim($feature['properties']['name']);
+            $block->description = trim($feature['properties']['description']);
+            $block->the_neighborhood_id = $feature['properties']['feature_id'];
+            $blockGeography = new TheBlockGeography();
+            $geometry = json_encode($feature['geometry']);
+            $blockGeography->area = DB::raw("ST_SetSRID(ST_GeomFromGeoJSON('{$geometry}'), 3857)");
+            $block->save();
+            $block->geography()->save($blockGeography);
+
+            return $this->success('created', 201);
+        } catch (\Throwable $th) {
+            //throw $th;
+            return $this->error('internal error', 503, $th);
+        }
     }
 
     /**
@@ -85,7 +88,24 @@ class TheBlockController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        try {
+            $feature = $request->all();
+
+            $block = TheBlock::find($id);
+            $block->gid = trim($feature['properties']['name']);
+            $block->description = trim($feature['properties']['description']);
+            $block->the_neighborhood_id = $feature['properties']['feature_id'];
+            $blockGeography = $block->geography;
+            $geometry = json_encode($feature['geometry']);
+            $blockGeography->area = DB::raw("ST_SetSRID(ST_GeomFromGeoJSON('{$geometry}'), 3857)");
+            $block->save();
+            $blockGeography->save();
+
+            return $this->success('created', 201);
+        } catch (\Throwable $th) {
+            //throw $th;
+            return $this->error('internal error', 503, $th);
+        }
     }
 
     /**
@@ -96,6 +116,9 @@ class TheBlockController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $block = TheBlock::find($id);
+        $block->geography->delete();
+
+        $block->delete();
     }
 }

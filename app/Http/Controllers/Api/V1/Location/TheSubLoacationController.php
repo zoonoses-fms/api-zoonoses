@@ -4,11 +4,12 @@ namespace App\Http\Controllers\Api\V1\Location;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Location\The\TheSubLocation;
+use App\Models\Location\The\TheSubLocationGeography;
 use App\Models\Location\The\TheSaad;
-use App\Models\Location\The\TheSaadGeography;
 use Illuminate\Support\Facades\DB;
 
-class TheSaadController extends Controller
+class TheSubLoacationController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -20,13 +21,14 @@ class TheSaadController extends Controller
         if ($request->has('keyword')) {
 
             $keyword = $request->get('keyword');
-            $theSaads = TheSaad::searchByName($keyword);
+            $theSublocations = TheSubLocation::searchByName($keyword);
         } elseif ($request->has('type')) {
+
             $type = $request->get('type');
             if ($type == 'list') {
-                $theSaads = TheSaad::orderBy('the_saads.name')->get();
+                $theSublocations = TheSaad::orderBy('the_saads.name')->with('neighborhoods')->get();
             } elseif ($type == 'geojson') {
-                $theSaads = TheSaad::getGeoJSON($request);
+                $theSublocations = TheSubLocation::getGeoJSON($request);
             }
         } else {
             if ($request->has('per_page')) {
@@ -35,11 +37,10 @@ class TheSaadController extends Controller
                 $perPage = 10;
             }
 
-            $theSaads = TheSaad::paginate($perPage);
+            $theSublocations = TheSubLocation::paginate($perPage);
         }
 
-
-        return $theSaads;
+        return $theSublocations;
     }
 
     /**
@@ -54,20 +55,21 @@ class TheSaadController extends Controller
 
             $feature = $request->all();
 
-            $lastSaad = TheSaad::orderBy('gid', 'desc')->first();
+            $lastSubLocation  = TheSubLocation::orderBy('gid', 'desc')->first();
 
-            $saad = new TheSaad();
-            $name = trim(str_replace('SAAD ', '', $feature['properties']['name']));
-            $saad->name = $name;
-            $saad->standardized = $saad->nameCase($name);
-            $saad->metaphone = $saad->getPhraseMetaphone($name);
-            $saad->soundex = soundex($name);
-            $saad->gid = $lastSaad != null ? $lastSaad->gid + 1 : 1;
-            $saadGeography = new TheSaadGeography();
+            $subLocation = new TheSubLocation();
+            $name = trim($feature['properties']['name']);
+            $subLocation->name = $name;
+            $subLocation->standardized = $subLocation->nameCase($name);
+            $subLocation->metaphone = $subLocation->getPhraseMetaphone($name);
+            $subLocation->soundex = soundex($name);
+            $subLocation->gid = $lastSubLocation != null ? $lastSubLocation->gid + 1 : 1;
+            $subLocation->the_neighborhood_id = $feature['properties']['feature_id'];
+            $subLocationGeography = new TheSubLocationGeography();
             $geometry = json_encode($feature['geometry']);
-            $saadGeography->area = DB::raw("ST_SetSRID(ST_GeomFromGeoJSON('{$geometry}'), 3857)");
-            $saad->save();
-            $saad->geography()->save($saadGeography);
+            $subLocationGeography->area = DB::raw("ST_SetSRID(ST_GeomFromGeoJSON('{$geometry}'), 3857)");
+            $subLocation->save();
+            $subLocation->geography()->save($subLocationGeography);
 
             return $this->success('created', 201);
         } catch (\Throwable $th) {
@@ -96,23 +98,22 @@ class TheSaadController extends Controller
      */
     public function update(Request $request, $id)
     {
-
         try {
+
             $feature = $request->all();
 
-            $lastSaad = TheSaad::orderBy('gid', 'desc')->first();
-
-            $saad = TheSaad::find($id);
-            $name = trim(str_replace('SAAD ', '', $feature['properties']['name']));
-            $saad->name = $name;
-            $saad->standardized = $saad->nameCase($name);
-            $saad->metaphone = $saad->getPhraseMetaphone($name);
-            $saad->soundex = soundex($name);
-            $saadGeography = $saad->geography;
+            $subLocation = TheSubLocation::find($id);
+            $name = trim($feature['properties']['name']);
+            $subLocation->name = $name;
+            $subLocation->standardized = $subLocation->nameCase($name);
+            $subLocation->metaphone = $subLocation->getPhraseMetaphone($name);
+            $subLocation->soundex = soundex($name);
+            $subLocation->the_neighborhood_id = $feature['properties']['feature_id'];
+            $subLocationGeography = $subLocation->geography;
             $geometry = json_encode($feature['geometry']);
-            $saadGeography->area = DB::raw("ST_SetSRID(ST_GeomFromGeoJSON('{$geometry}'), 3857)");
-            $saad->save();
-            $saadGeography->save();
+            $subLocationGeography->area = DB::raw("ST_SetSRID(ST_GeomFromGeoJSON('{$geometry}'), 3857)");
+            $subLocation->save();
+            $subLocationGeography->save();
 
             return $this->success('created', 201);
         } catch (\Throwable $th) {
@@ -129,9 +130,8 @@ class TheSaadController extends Controller
      */
     public function destroy($id)
     {
-        $saad = TheSaad::find($id);
-        $saadGeography = $saad->geography;
-        $saadGeography->delete();
-        $saad->delete();
+        $subLocation = TheSubLocation::find($id);
+        $subLocation->geography->delete();
+        $subLocation->delete();
     }
 }

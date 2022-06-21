@@ -20,7 +20,9 @@ return new class extends Migration {
         $this->createBlockGeographies();
         $this->createNeighborhoodSpellingVariations();
         $this->createNeighborhoodPopulations();
-        $this->createLocations();
+        $this->createSubLocations();
+        $this->createSubLocationGeographies();
+        $this->createSubLocationSpellingVariations();
     }
 
     /**
@@ -30,7 +32,9 @@ return new class extends Migration {
      */
     public function down()
     {
-        $this->dropLocations();
+        $this->dropSubLocationSpellingVariations();
+        $this->dropSubLocationGeographies();
+        $this->dropSubLocations();
         $this->dropNeighborhoodPopulations();
         $this->dropNeighborhoodSpellingVariations();
         $this->dropBlockGeographies();
@@ -83,6 +87,7 @@ return new class extends Migration {
             $table->string('metaphone');
             $table->string('soundex');
             $table->integer('gid');
+            $table->integer('sinan_code')->nullable();
             $table->unsignedBigInteger('the_saad_id')->nullable();
             $table->timestamps();
             $table->foreign('the_saad_id')->references('id')->on('the_saads');
@@ -132,9 +137,9 @@ return new class extends Migration {
      *
      * @return void
      */
-    public function createLocations()
+    public function createSubLocations()
     {
-        Schema::create('the_locations', function (Blueprint $table) {
+        Schema::create('the_sub_locations', function (Blueprint $table) {
             $table->id();
             $table->integer('gid')->nullable();
             $table->string('name');
@@ -152,9 +157,9 @@ return new class extends Migration {
      *
      * @return void
      */
-    public function dropLocations()
+    public function dropSubLocations()
     {
-        Schema::dropIfExists('the_locations');
+        Schema::dropIfExists('the_sub_locations');
     }
 
     /**
@@ -240,14 +245,14 @@ return new class extends Migration {
      *
      * @return void
      */
-    public function createLocationGeographies()
+    public function createSubLocationGeographies()
     {
-        Schema::create('the_location_geographies', function (Blueprint $table) {
+        Schema::create('the_sub_location_geographies', function (Blueprint $table) {
             $table->id();
             $table->geometry('area', 'GEOMETRY', '3857');
-            $table->unsignedBigInteger('the_location_id');
+            $table->unsignedBigInteger('the_sub_location_id');
             $table->timestamps();
-            $table->foreign('the_location_id')->references('id')->on('the_locations');
+            $table->foreign('the_sub_location_id')->references('id')->on('the_sub_locations');
         });
     }
 
@@ -256,9 +261,9 @@ return new class extends Migration {
      *
      * @return void
      */
-    public function dropLocationGeographies()
+    public function dropSubLocationGeographies()
     {
-        Schema::dropIfExists('the_location_geographies');
+        Schema::dropIfExists('the_sub_location_geographies');
     }
 
     /**
@@ -315,5 +320,34 @@ return new class extends Migration {
     public function dropNeighborhoodPopulations()
     {
         Schema::dropIfExists('the_neighborhood_populations');
+    }
+
+    /**
+     * Run the create the_neighborhood_spelling_variations.
+     *
+     * @return void
+     */
+    public function createSubLocationSpellingVariations()
+    {
+        Schema::create('the_sub_location_spelling_variations', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('standardized');
+            $table->string('metaphone');
+            $table->string('soundex');
+            $table->unsignedInteger('the_sub_location_id')->nullable();
+            $table->timestamps();
+            $table->foreign('the_sub_location_id')->references('id')->on('the_sub_locations');
+        });
+    }
+
+    /**
+     * Reverse the the_neighborhood_spelling_variations.
+     *
+     * @return void
+     */
+    public function dropSubLocationSpellingVariations()
+    {
+        Schema::dropIfExists('the_sub_location_spelling_variations');
     }
 };

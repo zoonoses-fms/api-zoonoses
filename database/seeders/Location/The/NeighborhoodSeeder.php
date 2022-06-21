@@ -64,6 +64,7 @@ class NeighborhoodSeeder extends Seeder
                 $neighborhood->soundex = soundex($feature['properties']['nome']);
 
                 $neighborhood->gid = $feature['properties']['codigo'];
+                $neighborhood->sinan_code = $feature['properties']['sinan_codigo'];
                 $neighborhood->the_saad_id = $zone->id;
 
                 $neighborhoodGeography = new TheNeighborhoodGeography();
