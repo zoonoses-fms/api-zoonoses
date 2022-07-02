@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api\V1\Ncrlo;
 
+use App\Http\Controllers\Controller;
 use App\Models\Collaring;
 use Illuminate\Http\Request;
 

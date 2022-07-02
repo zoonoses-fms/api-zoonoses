@@ -596,4 +596,26 @@ class MetaPhone extends Model
     
     }
 
+    public static function getByName($name)
+    {
+        $meta = new MetaPhone();
+
+        $standardized = $meta->nameCase($name);
+        $metaphone = $meta->getPhraseMetaphone($name);
+        $soundex = soundex($name);
+
+        return self::where(function ($query) use ($name, $standardized, $metaphone, $soundex) {
+            $query->orWhereRaw(
+                "unaccent(name) ilike unaccent('%{$name}%')"
+            )->orWhereRaw(
+                "unaccent(standardized) ilike unaccent('%{$standardized}%')"
+            )->orWhereRaw(
+                "unaccent(metaphone) ilike unaccent('%{$metaphone}%')"
+            )->orWhereRaw(
+                "unaccent(soundex) ilike unaccent('%{$soundex}%')"
+            );
+        })->first();
+    
+    }
+
 }

@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api\V1\Ncrlo;
 
-use App\Models\CollaringDog;
+use App\Http\Controllers\Controller;
+use App\Models\VaccinationPoint;
 use Illuminate\Http\Request;
 
-class CollaringDogController extends Controller
+class VaccinationPointController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -31,10 +32,10 @@ class CollaringDogController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\CollaringDog  $collaringDog
+     * @param  \App\Models\VaccinationPoint  $vaccinationPoint
      * @return \Illuminate\Http\Response
      */
-    public function show(CollaringDog $collaringDog)
+    public function show(VaccinationPoint $vaccinationPoint)
     {
         //
     }
@@ -43,10 +44,10 @@ class CollaringDogController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\CollaringDog  $collaringDog
+     * @param  \App\Models\VaccinationPoint  $vaccinationPoint
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, CollaringDog $collaringDog)
+    public function update(Request $request, VaccinationPoint $vaccinationPoint)
     {
         //
     }
@@ -54,10 +55,10 @@ class CollaringDogController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\CollaringDog  $collaringDog
+     * @param  \App\Models\VaccinationPoint  $vaccinationPoint
      * @return \Illuminate\Http\Response
      */
-    public function destroy(CollaringDog $collaringDog)
+    public function destroy(VaccinationPoint $vaccinationPoint)
     {
         //
     }

@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api\V1\Ncrlo;
 
-use App\Models\CollaringDogImage;
+use App\Http\Controllers\Controller;
+use App\Models\VaccinationSupportSupervisor;
 use Illuminate\Http\Request;
 
-class CollaringDogImageController extends Controller
+class VaccinationSupportSupervisorController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -31,10 +32,10 @@ class CollaringDogImageController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\CollaringDogImage  $collaringDogImage
+     * @param  \App\Models\VaccinationSupportSupervisor  $vaccinationSupportSupervisor
      * @return \Illuminate\Http\Response
      */
-    public function show(CollaringDogImage $collaringDogImage)
+    public function show(VaccinationSupportSupervisor $vaccinationSupportSupervisor)
     {
         //
     }
@@ -43,10 +44,10 @@ class CollaringDogImageController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\CollaringDogImage  $collaringDogImage
+     * @param  \App\Models\VaccinationSupportSupervisor  $vaccinationSupportSupervisor
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, CollaringDogImage $collaringDogImage)
+    public function update(Request $request, VaccinationSupportSupervisor $vaccinationSupportSupervisor)
     {
         //
     }
@@ -54,10 +55,10 @@ class CollaringDogImageController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\CollaringDogImage  $collaringDogImage
+     * @param  \App\Models\VaccinationSupportSupervisor  $vaccinationSupportSupervisor
      * @return \Illuminate\Http\Response
      */
-    public function destroy(CollaringDogImage $collaringDogImage)
+    public function destroy(VaccinationSupportSupervisor $vaccinationSupportSupervisor)
     {
         //
     }

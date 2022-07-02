@@ -22,9 +22,16 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::prefix('v1')->group(
     function () {
         require __DIR__ . '/auth.php';
+
         Route::prefix('map')->group(
             function () {
                 require __DIR__ . '/location.php';
+            }
+        );
+
+        Route::prefix('ncrlo')->group(
+            function () {
+                require __DIR__ . '/ncrlo.php';
             }
         );
     }
