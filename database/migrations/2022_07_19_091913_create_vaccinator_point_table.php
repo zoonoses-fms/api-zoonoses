@@ -13,12 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('vaccination_campaigns', function (Blueprint $table) {
+        Schema::create('vaccinator_point', function (Blueprint $table) {
             $table->id();
-            $table->integer('year');
-            $table->date('start');
-            $table->date('end')->nullable();
-            $table->integer('goal')->nullable();
+            $table->unsignedBigInteger('vaccinator_id');
+            $table->unsignedBigInteger('campaing_point_id');
+            $table->foreign('vaccinator_id')->references('id')->on('vaccination_workers');
+            $table->foreign('campaing_point_id')->references('id')->on('campaing_points');
             $table->timestamps();
         });
     }
@@ -30,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('vaccination_campaigns');
+        Schema::dropIfExists('vaccinator_point');
     }
 };

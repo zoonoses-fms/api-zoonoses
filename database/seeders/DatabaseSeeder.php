@@ -68,5 +68,11 @@ class DatabaseSeeder extends Seeder
         $neighborhoodSeeder->run();
         $neighborhoodPopulationSeeder->run();
         $blockSeeder->run();
+
+
+        //Load ponit vaccination NCRLO
+
+        //$vaccinationSupportSeeder = new VaccinationSupportSeeder();
+        //$vaccinationSupportSeeder->run();
     }
 }

@@ -13,11 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('vaccination_supervisors', function (Blueprint $table) {
+        Schema::create('driver_support', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('phone');
-            $table->softDeletes();
+            $table->unsignedBigInteger('driver_id');
+            $table->unsignedBigInteger('campaing_support_id');
+            $table->foreign('driver_id')->references('id')->on('vaccination_workers');
+            $table->foreign('campaing_support_id')->references('id')->on('campaing_supports');
             $table->timestamps();
         });
     }
@@ -29,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('vaccination_supervisors');
+        Schema::dropIfExists('driver_support');
     }
 };

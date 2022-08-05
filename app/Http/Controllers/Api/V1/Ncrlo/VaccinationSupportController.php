@@ -3,9 +3,12 @@
 namespace App\Http\Controllers\Api\V1\Ncrlo;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 use App\Models\VaccinationPoint;
 use App\Models\VaccinationSupport;
+use App\Models\CampaignCycle;
 use Illuminate\Http\Request;
+use App\Models\Location\The\TheNeighborhoodAlias;
 
 class VaccinationSupportController extends Controller
 {
@@ -14,9 +17,59 @@ class VaccinationSupportController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $vaccinationSupports = VaccinationSupport::get();
+        if ($request->has('campaign_cycle_id')) {
+            $cycle = CampaignCycle::with('supports.support')
+                ->findOrFail($request->get('campaign_cycle_id'));
+            $listSupport = [];
+
+            foreach ($cycle->supports as $supportPoint) {
+                $listSupport[] = $supportPoint->support->id;
+            }
+
+            $vaccinationSupports = VaccinationSupport::whereNotIn('id', $listSupport)->get();
+
+            foreach ($vaccinationSupports as $vaccinationSupport) {
+                $vaccinationSupport->neighborhood = $vaccinationSupport->getNeighborhood();
+            }
+
+            return $vaccinationSupports;
+        }
+
+        if ($request->has('per_page')) {
+            $perPage = $request->per_page;
+        } else {
+            $perPage = 5;
+        }
+
+        $vaccinationSupports = VaccinationSupport::select(
+            'id',
+            'name',
+            'address',
+            'number',
+            'address_complement',
+            'the_neighborhood_alias_id'
+        )
+        ->selectRaw(
+            'ST_AsGeoJSON(geometry) AS geometry'
+        )
+        ->when(
+            $request->has('keyword'),
+            function ($query) use ($request) {
+                $keyword = $request->keyword;
+                return $query->whereRaw(
+                    "unaccent(name) ilike unaccent('%{$keyword}%')"
+                )->orWhereRaw(
+                    "unaccent(address) ilike unaccent('%{$keyword}%')"
+                );
+            }
+        )->orderBy('updated_at', 'desc')->paginate($perPage);
+
+        foreach ($vaccinationSupports->items() as $vaccinationSupport) {
+            $vaccinationSupport->neighborhood = $vaccinationSupport->getNeighborhood();
+        }
+
         return $vaccinationSupports;
     }
 
@@ -28,16 +81,34 @@ class VaccinationSupportController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $vaccinationSupport = new VaccinationSupport();
+        $vaccinationSupport->name = $request->name;
+        $vaccinationSupport->address = $request->address;
+        $vaccinationSupport->number = $request->number;
+        $vaccinationSupport->address_complement = $request->address_complement;
+
+        if (strlen($request->neighborhood) >= 3) {
+            $neighborhoodAlias =
+            TheNeighborhoodAlias::getOrCreate($request->neighborhood);
+
+            $vaccinationSupport
+            ->the_neighborhood_alias_id = $neighborhoodAlias->id;
+        }
+        $geometry = json_encode($request->geometry);
+
+        $vaccinationSupport->geometry = DB::raw("ST_SetSRID(ST_GeomFromGeoJSON('{$geometry}'), 3857)");
+
+        $vaccinationSupport->save();
+        return $vaccinationSupport;
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\VaccinationSupportPoint  $vaccinationSupportPoint
+     * @param  \App\Models\VaccinationSupport  $VaccinationSupport
      * @return \Illuminate\Http\Response
      */
-    public function show(VaccinationSupportPoint $vaccinationSupportPoint)
+    public function show(VaccinationSupport $VaccinationSupport)
     {
         //
     }
@@ -46,22 +117,41 @@ class VaccinationSupportController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\VaccinationSupportPoint  $vaccinationSupportPoint
+     * @param  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, VaccinationSupportPoint $vaccinationSupportPoint)
+    public function update(Request $request, $id)
     {
-        //
+        $vaccinationSupport = VaccinationSupport::find($id);
+        $vaccinationSupport->name = $request->name;
+        $vaccinationSupport->address = $request->address;
+        $vaccinationSupport->number = $request->number;
+        $vaccinationSupport->address_complement = $request->address_complement;
+
+        if (strlen($request->neighborhood) >= 3) {
+            $neighborhoodAlias =
+            TheNeighborhoodAlias::getOrCreate($request->neighborhood);
+
+            $vaccinationSupport
+            ->the_neighborhood_alias_id = $neighborhoodAlias->id;
+        }
+        $geometry = json_encode($request->geometry);
+
+        $vaccinationSupport->geometry = DB::raw("ST_SetSRID(ST_GeomFromGeoJSON('{$geometry}'), 3857)");
+
+        $vaccinationSupport->save();
+        return $vaccinationSupport;
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\VaccinationSupportPoint  $vaccinationSupportPoint
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(VaccinationSupportPoint $vaccinationSupportPoint)
+    public function destroy($id)
     {
-        //
+        $vaccinationSupport = VaccinationSupport::find($id);
+        $vaccinationSupport->delete();
     }
 }

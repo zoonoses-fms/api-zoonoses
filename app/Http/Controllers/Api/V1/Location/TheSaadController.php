@@ -18,9 +18,12 @@ class TheSaadController extends Controller
     public function index(Request $request)
     {
         if ($request->has('keyword')) {
-
             $keyword = $request->get('keyword');
-            $theSaads = TheSaad::searchByName($keyword);
+            if (empty($keyword)) {
+                $theSaads = TheSaad::get();
+            } else {
+                $theSaads = TheSaad::searchByName($keyword);
+            }
         } elseif ($request->has('type')) {
             $type = $request->get('type');
             if ($type == 'list') {
@@ -51,7 +54,6 @@ class TheSaadController extends Controller
     public function store(Request $request)
     {
         try {
-
             $feature = $request->all();
 
             $lastSaad = TheSaad::orderBy('gid', 'desc')->first();
@@ -96,7 +98,6 @@ class TheSaadController extends Controller
      */
     public function update(Request $request, $id)
     {
-
         try {
             $feature = $request->all();
 

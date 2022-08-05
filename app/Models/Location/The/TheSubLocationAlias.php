@@ -5,7 +5,7 @@ namespace App\Models\Location\The;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class TheSubLocationSpellingVariation extends Model
+class TheSubLocationAlias extends Model
 {
     use HasFactory;
 

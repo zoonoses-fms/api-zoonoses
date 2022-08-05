@@ -1,12 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\Api\V1\Ncrlo;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use App\Models\VaccinationCampaingSupport;
+use App\Models\Nominatim;
 use Illuminate\Http\Request;
 
-class VaccinationCampaingSupportController extends Controller
+class NominatimController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -32,10 +31,10 @@ class VaccinationCampaingSupportController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\VaccinationCampaingSupport  $vaccinationCampaingSupport
+     * @param  \App\Models\Nominatim  $nominatim
      * @return \Illuminate\Http\Response
      */
-    public function show(VaccinationCampaingSupport $vaccinationCampaingSupport)
+    public function show(Nominatim $nominatim)
     {
         //
     }
@@ -44,10 +43,10 @@ class VaccinationCampaingSupportController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\VaccinationCampaingSupport  $vaccinationCampaingSupport
+     * @param  \App\Models\Nominatim  $nominatim
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, VaccinationCampaingSupport $vaccinationCampaingSupport)
+    public function update(Request $request, Nominatim $nominatim)
     {
         //
     }
@@ -55,10 +54,10 @@ class VaccinationCampaingSupportController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\VaccinationCampaingSupport  $vaccinationCampaingSupport
+     * @param  \App\Models\Nominatim  $nominatim
      * @return \Illuminate\Http\Response
      */
-    public function destroy(VaccinationCampaingSupport $vaccinationCampaingSupport)
+    public function destroy(Nominatim $nominatim)
     {
         //
     }

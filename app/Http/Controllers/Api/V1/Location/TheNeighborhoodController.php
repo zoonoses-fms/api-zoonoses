@@ -20,11 +20,9 @@ class TheNeighborhoodController extends Controller
     public function index(Request $request)
     {
         if ($request->has('keyword')) {
-
             $keyword = $request->get('keyword');
             $theNeighborhoods = TheNeighborhood::searchByName($keyword);
         } elseif ($request->has('type')) {
-
             $type = $request->get('type');
             if ($type == 'list') {
                 $theNeighborhoods = TheSaad::orderBy('the_saads.name')->with('neighborhoods')->get();
@@ -54,7 +52,6 @@ class TheNeighborhoodController extends Controller
     public function store(Request $request)
     {
         try {
-
             $feature = $request->all();
 
             $lastNeighborhood  = TheNeighborhood::orderBy('gid', 'desc')->first();
@@ -101,7 +98,6 @@ class TheNeighborhoodController extends Controller
     public function update(Request $request, $id)
     {
         try {
-
             $feature = $request->all();
 
             $neighborhood = TheNeighborhood::find($id);
@@ -122,7 +118,6 @@ class TheNeighborhoodController extends Controller
             //throw $th;
             return $this->error('internal error', 503, $th);
         }
-        
     }
 
     /**

@@ -18,11 +18,11 @@ return new class extends Migration {
         $this->createSaadGeographies();
         $this->createNeighborhoodGeographies();
         $this->createBlockGeographies();
-        $this->createNeighborhoodSpellingVariations();
+        $this->createNeighborhoodAliases();
         $this->createNeighborhoodPopulations();
         $this->createSubLocations();
         $this->createSubLocationGeographies();
-        $this->createSubLocationSpellingVariations();
+        $this->createSubLocationAliases();
     }
 
     /**
@@ -32,11 +32,11 @@ return new class extends Migration {
      */
     public function down()
     {
-        $this->dropSubLocationSpellingVariations();
+        $this->dropSubLocationAliases();
         $this->dropSubLocationGeographies();
         $this->dropSubLocations();
         $this->dropNeighborhoodPopulations();
-        $this->dropNeighborhoodSpellingVariations();
+        $this->dropNeighborhoodAliases();
         $this->dropBlockGeographies();
         $this->dropNeighborhoodGeographies();
         $this->dropSaadGeographies();
@@ -267,13 +267,13 @@ return new class extends Migration {
     }
 
     /**
-     * Run the create the_neighborhood_spelling_variations.
+     * Run the create the_neighborhood_aliases.
      *
      * @return void
      */
-    public function createNeighborhoodSpellingVariations()
+    public function createNeighborhoodAliases()
     {
-        Schema::create('the_neighborhood_spelling_variations', function (Blueprint $table) {
+        Schema::create('the_neighborhood_aliases', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->string('standardized');
@@ -286,13 +286,13 @@ return new class extends Migration {
     }
 
     /**
-     * Reverse the the_neighborhood_spelling_variations.
+     * Reverse the the_neighborhood_aliases.
      *
      * @return void
      */
-    public function dropNeighborhoodSpellingVariations()
+    public function dropNeighborhoodAliases()
     {
-        Schema::dropIfExists('the_neighborhood_spelling_variations');
+        Schema::dropIfExists('the_neighborhood_aliases');
     }
 
     /**
@@ -323,13 +323,13 @@ return new class extends Migration {
     }
 
     /**
-     * Run the create the_neighborhood_spelling_variations.
+     * Run the create the_neighborhood_aliases.
      *
      * @return void
      */
-    public function createSubLocationSpellingVariations()
+    public function createSubLocationAliases()
     {
-        Schema::create('the_sub_location_spelling_variations', function (Blueprint $table) {
+        Schema::create('the_sub_location_aliases', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->string('standardized');
@@ -342,12 +342,12 @@ return new class extends Migration {
     }
 
     /**
-     * Reverse the the_neighborhood_spelling_variations.
+     * Reverse the the_neighborhood_aliases.
      *
      * @return void
      */
-    public function dropSubLocationSpellingVariations()
+    public function dropSubLocationAliases()
     {
-        Schema::dropIfExists('the_sub_location_spelling_variations');
+        Schema::dropIfExists('the_sub_location_aliases');
     }
 };

@@ -19,12 +19,12 @@ return new class extends Migration
             $table->string('address')->nullable();
             $table->string('number')->nullable();
             $table->string('address_complement')->nullable();
-            $table->unsignedBigInteger('the_neighborhood_spelling_variation_id')->nullable();
+            $table->unsignedBigInteger('the_neighborhood_alias_id')->nullable();
             $table->geometry('geometry', 'GEOMETRY', '3857')->nullable();
             $table->softDeletes();
             $table->timestamps();
-            $table->foreign('the_neighborhood_spelling_variation_id')
-              ->references('id')->on('the_neighborhood_spelling_variations');
+            $table->foreign('the_neighborhood_alias_id')
+              ->references('id')->on('the_neighborhood_aliases');
         });
     }
 

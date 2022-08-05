@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class VaccinationCampaign extends Model
+class Campaign extends Model
 {
     use HasFactory;
 
@@ -18,11 +18,17 @@ class VaccinationCampaign extends Model
         'year',
         'start',
         'end',
-        'goal'
+        'goal',
+        'coordinator_cost',
+        'supervisor_cost',
+        'vaccinator_cost',
+        'vaccine_cost',
+        'mileage_cost',
+        'driver_cost'
     ];
 
-    public function supports()
+    public function cycles()
     {
-        return $this->hasMany(VaccinationCampaingSupport::class, 'vaccination_campaign_id');
+        return $this->hasMany(CampaignCycle::class, 'campaign_id')->orderBy('start', 'desc');
     }
 }
