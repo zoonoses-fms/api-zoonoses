@@ -36,12 +36,14 @@ class CampaignCycleController extends Controller
     {
         $request->validate([
             'number' => 'required',
+            'description' => 'required',
             'start' => 'required',
             'campaign_id' => 'required'
         ]);
 
         $cycle = CampaignCycle::create([
             'number' => $request->number,
+            'description' => $request->description,
             'start' => $request->start,
             'end' => $request->end,
             'campaign_id' => $request->campaign_id
@@ -107,6 +109,7 @@ class CampaignCycleController extends Controller
     {
         $cycle = CampaignCycle::findOrFail($id);
         $cycle->number = $request->number;
+        $cycle->description = $request->description;
         $cycle->start = $request->start;
         $cycle->end = $request->end;
 

@@ -24,6 +24,7 @@ class CampaignCycle extends Model
     protected $fillable = [
         'campaign_id',
         'number',
+        'description',
         'start',
         'end'
     ];

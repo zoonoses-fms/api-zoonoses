@@ -18,6 +18,7 @@ return new class extends Migration {
             $table->date('start');
             $table->date('end')->nullable();
             $table->integer('goal')->nullable();
+            $table->unsignedBigInteger('coordinator_id')->nullable();
             $table->decimal('coordinator_cost', 12, 2)->default(0)->nullable();
             $table->decimal('supervisor_cost', 12, 2)->default(0)->nullable();
             $table->decimal('assistant_cost', 12, 2)->default(0)->nullable();
@@ -25,6 +26,8 @@ return new class extends Migration {
             $table->decimal('vaccine_cost', 12, 2)->default(0)->nullable();
             $table->decimal('mileage_cost', 12, 2)->default(0)->nullable();
             $table->decimal('driver_cost', 12, 2)->default(0)->nullable();
+            $table->foreign('coordinator_id')
+              ->references('id')->on('vaccination_workers');
             $table->timestamps();
         });
     }

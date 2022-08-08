@@ -17,7 +17,21 @@ class VaccinationWorkerController extends Controller
     {
         if ($request->has('list_type')) {
             $campaign_cycle_id = $request->campaign_cycle_id;
-            if ($request->list_type == 'free') {
+            if ($request->list_type == 'all') {
+                return VaccinationWorker::when(
+                    $request->has('keyword'),
+                    function ($query) use ($request) {
+                        $keyword = $request->keyword;
+                        return $query->whereRaw(
+                            "unaccent(name) ilike unaccent('%{$keyword}%')"
+                        )->orWhereRaw(
+                            "unaccent(registration) ilike unaccent('%{$keyword}%')"
+                        );
+                    }
+                )
+                ->orderBy('name', 'asc')
+                ->get();
+            } elseif ($request->list_type == 'free') {
                 $listNotFreeWorkers = VaccinationWorker::listNotFreeWorkers($campaign_cycle_id);
                 return VaccinationWorker::listFreeWorkers($request, $listNotFreeWorkers);
             } elseif ($request->list_type == 'coordinator') {
