@@ -52,7 +52,8 @@ class CampaignController extends Controller
             'vaccinator_cost' => $request->vaccinator_cost,
             'vaccine_cost' => $request->vaccine_cost,
             'mileage_cost' => $request->mileage_cost,
-            'driver_cost' => $request->driver_cost
+            'driver_cost' => $request->driver_cost,
+            'coordinator_id' => $request->coordinator_id
         ]);
 
         return $campaign;
@@ -121,6 +122,7 @@ class CampaignController extends Controller
         $campaign->vaccine_cost = $request->vaccine_cost;
         $campaign->mileage_cost = $request->mileage_cost;
         $campaign->driver_cost = $request->driver_cost;
+        $campaign->coordinator_id = $request->coordinator_id;
         $campaign->save();
 
         return $campaign;

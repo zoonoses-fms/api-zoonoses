@@ -24,7 +24,8 @@ class Campaign extends Model
         'vaccinator_cost',
         'vaccine_cost',
         'mileage_cost',
-        'driver_cost'
+        'driver_cost',
+        'coordinator_id'
     ];
 
     public function cycles()
