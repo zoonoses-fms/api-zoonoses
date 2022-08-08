@@ -59,3 +59,4 @@ Route::apiResource('user', UserController::class)->middleware('auth:sanctum');
 Route::apiResource('team', TeamController::class)->middleware('auth:sanctum');
 Route::get('core', [CoreController::class, 'index']);
 Route::get('plataform', [PlataformController::class, 'index']);
+Route::get('users/check-email/{email}', [UserController::class, 'checkEmail']);
