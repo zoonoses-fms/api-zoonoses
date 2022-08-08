@@ -35,11 +35,13 @@ class Geocoder
         $httpClient = new Client();
         $provider = new GoogleMapsPlaces($httpClient, env('GOOGLE_MAPS_API_KEY'));
         $geocoder = new StatefulGeocoder($provider, env('GOOGLE_MAPS_LOCALE', 'us'));
+        $place = true;
         return self::toArrayGeoJson(
             $geocoder->geocodeQuery(
                 GeocodeQuery::create($StringQuery)
                 ->withData('mode', GoogleMapsPlaces::GEOCODE_MODE_SEARCH)
-            )->all()
+            )->all(),
+            $place
         );
     }
 
@@ -99,11 +101,15 @@ class Geocoder
         );
     }
 
-    public static function toArrayGeoJson($locations)
+    public static function toArrayGeoJson($locations, $place = false)
     {
         $list = array();
         foreach ($locations as $location) {
-            $list[] = self::getArray($location);
+            if ($place) {
+                $list[] = self::getArray($location);
+            } else {
+                $list[] = json_decode(self::toGeoJson($location));
+            }
         }
         return $list;
     }
