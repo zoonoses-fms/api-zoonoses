@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('campaign_cycles', function (Blueprint $table) {
             $table->id();
             $table->integer('number');
+            $table->string('description');
             $table->date('start');
             $table->date('end')->nullable();
             $table->unsignedBigInteger('campaign_id');
