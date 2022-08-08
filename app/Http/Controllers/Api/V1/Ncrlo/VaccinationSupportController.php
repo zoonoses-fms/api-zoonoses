@@ -94,9 +94,11 @@ class VaccinationSupportController extends Controller
             $vaccinationSupport
             ->the_neighborhood_alias_id = $neighborhoodAlias->id;
         }
-        $geometry = json_encode($request->geometry);
+        if ($request->geometry != null) {
+            $geometry = json_encode($request->geometry);
 
-        $vaccinationSupport->geometry = DB::raw("ST_SetSRID(ST_GeomFromGeoJSON('{$geometry}'), 3857)");
+            $vaccinationSupport->geometry = DB::raw("ST_SetSRID(ST_GeomFromGeoJSON('{$geometry}'), 3857)");
+        }
 
         $vaccinationSupport->save();
         return $vaccinationSupport;
