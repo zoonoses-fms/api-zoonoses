@@ -18,6 +18,8 @@ return new class extends Migration
             $table->unsignedBigInteger('campaing_support_id')->nullable();
             $table->unsignedBigInteger('vaccination_point_id')->nullable();
             $table->unsignedBigInteger('supervisor_id')->nullable();
+            $table->integer('order')->nullable();
+            $table->double('area')->nullable();
             $table->integer('goal')->default(0)->nullable();
             $table->integer('male_dog_under_4m')->default(0)->nullable();
             $table->integer('female_dog_under_4m')->default(0)->nullable();

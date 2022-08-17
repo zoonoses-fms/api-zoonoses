@@ -15,8 +15,6 @@ return new class extends Migration {
         Schema::create('vaccination_points', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->integer('order')->nullable();
-            $table->integer('area')->nullable();
             $table->string('address')->nullable();
             $table->string('number')->nullable();
             $table->string('address_complement')->nullable();

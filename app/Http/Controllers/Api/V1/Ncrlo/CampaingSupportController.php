@@ -49,7 +49,7 @@ class CampaingSupportController extends Controller
                 'drivers',
                 'assistants',
                 'saads',
-                'points.point',
+                'points.point.neighborhoodAlias.neighborhood',
                 'points.vaccinators'
             ]
         )->findOrFail($id);

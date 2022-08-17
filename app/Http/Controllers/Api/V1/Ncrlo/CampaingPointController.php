@@ -61,7 +61,33 @@ class CampaingPointController extends Controller
     public function update(Request $request, $id)
     {
         $point = CampaingPoint::findOrFail($id);
+        $point->order = $request->order;
+        $point->area = $request->area;
         $point->goal = $request->goal;
+        $point->male_dog_under_4m = $request->male_dog_under_4m;
+        $point->female_dog_under_4m = $request->female_dog_under_4m;
+        $point->male_dog_major_4m_under_1y = $request->male_dog_major_4m_under_1y;
+        $point->female_dog_major_4m_under_1y = $request->female_dog_major_4m_under_1y;
+        $point->male_dog_major_1y_under_2y = $request->male_dog_major_1y_under_2y;
+        $point->female_dog_major_1y_under_2y = $request->female_dog_major_1y_under_2y;
+        $point->male_dog_major_2y_under_4y = $request->male_dog_major_2y_under_4y;
+        $point->female_dog_major_2y_under_4y = $request->female_dog_major_2y_under_4y;
+        $point->male_dog_major_4y = $request->male_dog_major_4y;
+        $point->female_dog_major_4y = $request->female_dog_major_4y;
+        $point->male_dogs = $request->male_dogs;
+        $point->female_dogs = $request->female_dogs;
+        $point->total_of_dogs = $request->total_of_dogs;
+        $point->male_cat = $request->male_cat;
+        $point->female_cat = $request->female_cat;
+        $point->total_of_cats = $request->total_of_cats;
+        $point->total = $request->total;
+        $point->bottle_received = $request->bottle_received;
+        $point->bottle_used_completely = $request->bottle_used_completely;
+        $point->bottle_used_partially = $request->bottle_used_partially;
+        $point->bottle_returned_completely = $request->bottle_returned_completely;
+        $point->bottle_returned_partially = $request->bottle_returned_partially;
+        $point->bottle_lost = $request->bottle_lost;
+
         $point->supervisor_id = $request->supervisor_id;
         $point->vaccinators()->sync($request->vaccinators);
         $point->save();
