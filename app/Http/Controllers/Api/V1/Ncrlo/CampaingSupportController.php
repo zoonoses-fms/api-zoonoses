@@ -49,6 +49,9 @@ class CampaingSupportController extends Controller
                 'drivers',
                 'assistants',
                 'saads',
+                'points' => function ($q) {
+                    $q->orderBy('area')->orderBy('order');
+                },
                 'points.point.neighborhoodAlias.neighborhood',
                 'points.vaccinators'
             ]
