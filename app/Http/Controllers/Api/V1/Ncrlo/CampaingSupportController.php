@@ -71,6 +71,7 @@ class CampaingSupportController extends Controller
     {
         $support = CampaingSupport::findOrFail($id);
         $support->goal = $request->goal;
+        $support->mileage = $request->mileage;
         $support->coordinator_id = $request->coordinator_id;
         $support->supervisors()->sync($request->supervisors);
         $support->drivers()->sync($request->drivers);

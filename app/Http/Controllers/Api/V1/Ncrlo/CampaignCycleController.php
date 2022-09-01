@@ -75,6 +75,13 @@ class CampaignCycleController extends Controller
                 return $campaign;
             } elseif (strcmp($request->map, 'point') === 0) {
                 $campaign = CampaignCycle::with([
+                    'supports.support' => function ($query) {
+                        $query->selectRaw(
+                            'vaccination_supports.*'
+                        )->selectRaw(
+                            'ST_AsGeoJSON(vaccination_supports.geometry) AS geometry'
+                        );
+                    },
                     'supports.points.point' => function ($query) {
                         $query->selectRaw(
                             'vaccination_points.*'
