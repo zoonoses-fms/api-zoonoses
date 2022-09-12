@@ -14,7 +14,7 @@ return new class extends Migration {
     {
         Schema::table('vaccination_workers', function (Blueprint $table) {
             $table->enum('type', ['ace', 'acs', 'fms'])->default('fms')->nullable();
-            $table->string('cpf')->nullable();
+            $table->string('cpf')->nullable()->change();
         });
     }
 
