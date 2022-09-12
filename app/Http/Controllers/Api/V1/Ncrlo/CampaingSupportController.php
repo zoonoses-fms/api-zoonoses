@@ -13,9 +13,14 @@ class CampaingSupportController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        if ($request->has('campaing_support_id')) {
+            $support = CampaingSupport::find($request->campaing_support_id);
+            $cycle = $support->cycle;
+            $supports = $cycle->supports()->with('support')->get();
+            return $supports;
+        }
     }
 
     /**
@@ -53,7 +58,8 @@ class CampaingSupportController extends Controller
                     $q->orderBy('area')->orderBy('order');
                 },
                 'points.point.neighborhoodAlias.neighborhood',
-                'points.vaccinators'
+                'points.vaccinators',
+                'points.annotators'
             ]
         )->findOrFail($id);
 

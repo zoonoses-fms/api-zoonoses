@@ -68,6 +68,16 @@ class CampaingSupport extends Model
         );
     }
 
+    public function vaccinators()
+    {
+        return $this->belongsToMany(
+            VaccinationWorker::class,
+            'vaccinator_support',
+            'campaing_support_id',
+            'vaccinator_id'
+        );
+    }
+
     public function saads()
     {
         return $this->belongsToMany(

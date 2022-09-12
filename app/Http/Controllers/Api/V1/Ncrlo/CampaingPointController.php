@@ -44,7 +44,8 @@ class CampaingPointController extends Controller
             [
                 'supervisor',
                 'point',
-                'vaccinators'
+                'vaccinators',
+                'annotators'
             ]
         )->findOrFail($id);
 
@@ -90,6 +91,7 @@ class CampaingPointController extends Controller
 
         $point->supervisor_id = $request->supervisor_id;
         $point->vaccinators()->sync($request->vaccinators);
+        $point->annotators()->sync($request->annotators);
         $point->save();
     }
 

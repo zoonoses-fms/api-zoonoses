@@ -29,6 +29,16 @@ class CampaingPoint extends Model
         );
     }
 
+    public function annotators()
+    {
+        return $this->belongsToMany(
+            VaccinationWorker::class,
+            'annotator_point',
+            'campaing_point_id',
+            'annotator_id'
+        );
+    }
+
     public function saads()
     {
         return $this->belongsToMany(
