@@ -53,6 +53,7 @@ class CampaingSupportController extends Controller
                 'supervisors',
                 'drivers',
                 'assistants',
+                'vaccinators',
                 'saads',
                 'points' => function ($q) {
                     $q->orderBy('area')->orderBy('order');
@@ -82,6 +83,7 @@ class CampaingSupportController extends Controller
         $support->supervisors()->sync($request->supervisors);
         $support->drivers()->sync($request->drivers);
         $support->assistants()->sync($request->assistants);
+        $support->vaccinators()->sync($request->vaccinators);
         $support->saads()->sync($request->saads);
 
         $support->save();

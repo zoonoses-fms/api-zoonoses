@@ -72,6 +72,10 @@ class VaccinationWorker extends Model
                 foreach ($point->vaccinators as $vaccinator) {
                     $listNotFree[] = $vaccinator->id;
                 }
+
+                foreach ($point->annotators as $annotator) {
+                    $listNotFree[] = $annotator->id;
+                }
             }
             if ($support->coordinator_id != null) {
                 $listNotFree[] = $support->coordinator_id;

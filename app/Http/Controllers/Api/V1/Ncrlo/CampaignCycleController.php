@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Api\V1\Ncrlo;
 use App\Http\Controllers\Controller;
 use App\Models\CampaignCycle;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Barryvdh\DomPDF\Facade\Pdf;
+use DateTime;
 
 class CampaignCycleController extends Controller
 {
@@ -62,7 +65,7 @@ class CampaignCycleController extends Controller
     {
         if ($request->has('map')) {
             if (strcmp($request->map, 'support') === 0) {
-                $campaign = CampaignCycle::with([
+                $cycle = CampaignCycle::with([
                     'supports.support' => function ($query) {
                         $query->selectRaw(
                             'vaccination_supports.*'
@@ -72,9 +75,9 @@ class CampaignCycleController extends Controller
                     }
                 ])->findOrFail($id);
 
-                return $campaign;
+                return $cycle;
             } elseif (strcmp($request->map, 'point') === 0) {
-                $campaign = CampaignCycle::with([
+                $cycle = CampaignCycle::with([
                     'supports.support' => function ($query) {
                         $query->selectRaw(
                             'vaccination_supports.*'
@@ -91,18 +94,19 @@ class CampaignCycleController extends Controller
                     }
                 ])->findOrFail($id);
 
-                return $campaign;
+                return $cycle;
             }
         }
-        $campaign = CampaignCycle::with([
+        $cycle = CampaignCycle::with([
             'supports.support.neighborhoodAlias.neighborhood',
             'supports.supervisors',
             'supports.drivers',
             'supports.assistants',
+            'supports.vaccinators',
             'supports.saads'
         ])->findOrFail($id);
 
-        return $campaign;
+        return $cycle;
     }
 
     /**
@@ -142,5 +146,32 @@ class CampaignCycleController extends Controller
             $support->delete();
         }
         $cycle->delete();
+    }
+
+    public function report(Request $request, $id)
+    {
+        $today = date("m-d-Y");
+        $cycle = CampaignCycle::with([
+            'supports.coordinator',
+            'supports.support.neighborhoodAlias.neighborhood',
+            'supports.supervisors',
+            'supports.drivers',
+            'supports.assistants',
+            'supports.vaccinators',
+            'supports.saads',
+            'supports.points.point',
+            'supports.points.supervisor',
+            'supports.points.vaccinators',
+            'supports.points.annotators',
+        ])->findOrFail($id);
+
+        return PDF::loadView(
+            'ncrlo.location',
+            [
+                'cycle' => $cycle,
+                'today' => $today,
+            ]
+        )->download("Relatório de Locação de Pessoal {$today}.pdf");
+        //return view('receipt');
     }
 }
