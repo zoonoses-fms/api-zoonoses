@@ -39,9 +39,9 @@ class UserController extends Controller
             $perPage = 5;
         }
 
-        if ($request->query('search') && count($request->get('search')) > 0) {
-            $search = $request->get('search');
-            $users = User::with(['plataforms', 'cores', 'abilities'])->where('name', 'like', '%' . $search . '%')->paginate($perPage);
+        if ($request->has('search') && strlen($request->search) > 0) {
+            $search = $request->search;
+            $users = User::with(['plataforms', 'cores', 'abilities'])->where('name', 'ilike', '%' . $search . '%')->paginate($perPage);
         } else {
             $users = User::with(['plataforms', 'cores', 'abilities'])->paginate($perPage);
         }

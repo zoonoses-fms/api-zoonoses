@@ -25,9 +25,9 @@ class TeamController extends Controller
             $perPage = 5;
         }
 
-        if ($request->query('search') && count($request->get('search')) > 0) {
-            $search = $request->get('search');
-            $teams = Team::with(['core'])->where('name', 'like', '%' . $search . '%')->paginate($perPage);
+        if ($request->has('search') && count($request->search) > 0) {
+            $search = $request->search;
+            $teams = Team::with(['core'])->where('name', 'ilike', '%' . $search . '%')->paginate($perPage);
         } else {
             $teams = Team::with(['core'])->paginate($perPage);
         }
