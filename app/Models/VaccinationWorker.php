@@ -86,6 +86,12 @@ class VaccinationWorker extends Model
             foreach ($support->drivers as $driver) {
                 $listNotFree[] = $driver->id;
             }
+            foreach ($support->ruralSupervisors as $ruralSupervisor) {
+                $listNotFree[] = $ruralSupervisor->id;
+            }
+            foreach ($support->ruralAssistants as $ruralAssistant) {
+                $listNotFree[] = $ruralAssistant->id;
+            }
         }
         return array_unique($listNotFree);
     }

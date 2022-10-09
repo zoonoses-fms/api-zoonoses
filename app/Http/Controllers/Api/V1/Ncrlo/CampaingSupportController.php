@@ -85,6 +85,9 @@ class CampaingSupportController extends Controller
         $support->assistants()->sync($request->assistants);
         $support->vaccinators()->sync($request->vaccinators);
         $support->saads()->sync($request->saads);
+        $support->is_rural = $request->is_rural;
+        $support->ruralSupervisors()->sync($request->rural_supervisors);
+        $support->ruralAssistants()->sync($request->rural_assistants);
 
         $support->save();
     }
@@ -115,6 +118,8 @@ class CampaingSupportController extends Controller
         $support->drivers()->sync([]);
         $support->assistants()->sync([]);
         $support->saads()->sync([]);
+        $support->ruralSupervisors()->sync([]);
+        $support->ruralAssistants()->sync([]);
 
         $support->delete();
     }

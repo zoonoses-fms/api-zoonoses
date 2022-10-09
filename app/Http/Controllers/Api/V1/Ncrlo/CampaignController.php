@@ -41,15 +41,22 @@ class CampaignController extends Controller
             'start' => 'required'
         ]);
 
+
         $campaign = Campaign::create([
             'year' => $request->year,
             'start' => $request->start,
             'end' => $request->end,
             'goal' => $request->goal,
+
             'coordinator_cost' => $request->coordinator_cost,
-            'assistant_cost' => $request->assistant_cost,
             'supervisor_cost' => $request->supervisor_cost,
+            'assistant_cost' => $request->assistant_cost,
             'vaccinator_cost' => $request->vaccinator_cost,
+            'annotator_cost' => $request->annotator_cost,
+
+            'rural_supervisor_cost' => $request->rural_supervisor_cost,
+            'rural_assistant_cost' => $request->rural_assistant_cost,
+
             'vaccine_cost' => $request->vaccine_cost,
             'mileage_cost' => $request->mileage_cost,
             'driver_cost' => $request->driver_cost,
@@ -115,10 +122,16 @@ class CampaignController extends Controller
         $campaign->start = $request->start;
         $campaign->end = $request->end;
         $campaign->goal = $request->goal;
+
         $campaign->coordinator_cost = $request->coordinator_cost;
-        $campaign->assistant_cost = $request->assistant_cost;
         $campaign->supervisor_cost = $request->supervisor_cost;
+        $campaign->assistant_cost = $request->assistant_cost;
         $campaign->vaccinator_cost = $request->vaccinator_cost;
+        $campaign->annotators_cost = $request->annotators_cost;
+
+        $campaign->rural_supervisor_cost = $request->rural_supervisor_cost;
+        $campaign->rural_assistant_cost = $request->rural_assistant_cost;
+
         $campaign->vaccine_cost = $request->vaccine_cost;
         $campaign->mileage_cost = $request->mileage_cost;
         $campaign->driver_cost = $request->driver_cost;

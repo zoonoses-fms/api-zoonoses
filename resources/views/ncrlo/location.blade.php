@@ -61,15 +61,16 @@
                 <img src="img/logo_teresina.jpg" alt="logo">
             </div>
             <div class="logo-text">
-                <p>Gerência de Zoonoses GEZOON</p>
-                <p>Fundação Municipal de Saúde</p>
-                <p>Núcleo de Controle da Raiva, Leishmaniose e Outras Zoonoses - NCRLO</p>
+                <strong>Prefeitura Municipal de Teresina</strong><br />
+                <strong>Fundação Municipal de Saúde</strong><br />
+                <strong>Gerência de Zoonoses GEZOON</strong><br />
+                <strong>Núcleo de Controle da Raiva, Leishmaniose e Outras Zoonoses - NCRLO</strong><br />
             </div>
         </div>
         <br />
         <br />
         <div class="content">
-            <h5>{{ $cycle->description }} Início: {{ $cycle->start }} - Fim: {{ $cycle->end }}</h5>
+            <h3>{{ $cycle->description }} Início: {{ $cycle->start }} - Fim: {{ $cycle->end }}</h3>
             <ol>
                 @foreach ($cycle->supports as $support)
                     <li>
@@ -78,53 +79,78 @@
                         @isset($support->coordinator->name)
                             <strong> Coordenador: {{ $support->coordinator->name }} </strong>
                         @endisset
+
+                        @if (count($support->supervisors) > 0)
+                            <br />
+                            <strong>Supervisores: </strong>
+                            <ul>
+                                @foreach ($support->supervisors as $supervisor)
+                                    <li>{{ $supervisor->name }}</li>
+                                @endforeach
+                            </ul>
+                        @endif
+
+                        @if (count($support->assistants) > 0)
+                            <br />
+                            <strong>Apoiadores: </strong>
+                            <ul>
+                                @foreach ($support->assistants as $assistant)
+                                    <li>{{ $assistant->name }}</li>
+                                @endforeach
+                            </ul>
+                        @endif
+
+                        @if (count($support->drivers) > 0)
+                            <br />
+                            <strong>Motoristas: </strong>
+                            <ul>
+                                @foreach ($support->drivers as $driver)
+                                    <li>{{ $driver->name }}</li>
+                                @endforeach
+                            </ul>
+                        @endif
+
+                        @if (count($support->vaccinators) > 0)
+                            <br />
+                            <strong>Vacinadores reserva: </strong>
+                            <ul>
+                                @foreach ($support->vaccinators as $vaccinator)
+                                    <li>{{ $vaccinator->name }}</li>
+                                @endforeach
+                            </ul>
+                        @endif
+
                         <br />
-                        <strong>Supervisores: </strong>
-                        <ul>
-                            @foreach ($support->supervisors as $supervisor)
-                                <li>{{ $supervisor->name }}</li>
-                            @endforeach
-                        </ul>
-                        <strong>Auxiliares: </strong>
-                        <ul>
-                            @foreach ($support->assistants as $assistant)
-                                <li>{{ $assistant->name }}</li>
-                            @endforeach
-                        </ul>
-                        <strong>Motoristas: </strong>
-                        <ul>
-                            @foreach ($support->drivers as $driver)
-                                <li>{{ $driver->name }}</li>
-                            @endforeach
-                        </ul>
-                        <strong>Vacinadores reserva: </strong>
-                        <ul>
-                            @foreach ($support->vaccinators as $vaccinator)
-                                <li>{{ $vaccinator->name }}</li>
-                            @endforeach
-                        </ul>
                         <strong>Postos de Vacina</strong>
+                        <br />
                         <ul>
                             @foreach ($support->points as $point)
                                 <li>
-                                    <strong> Ponto de Apoio: {{ $point->point->name }} </strong>
+                                    <strong> Posto: {{ $point->point->name }} </strong>
                                     <br />
                                     @isset($point->supervisor->name)
                                         <strong> Supervisor: {{ $point->supervisor->name }} </strong>
                                     @endisset
+
+                                    @if (count($point->vaccinators) > 0)
+                                        <br />
+                                        <strong>Vacidadores: </strong>
+                                        <ul>
+                                            @foreach ($point->vaccinators as $vaccinator)
+                                                <li>{{ $vaccinator->name }}</li>
+                                            @endforeach
+                                        </ul>
+                                    @endif
+                                    @if (count($point->vaccinators) > 0)
+                                        <br />
+                                        <strong>Anotadores: </strong>
+                                        <ul>
+                                            @foreach ($point->annotators as $annotator)
+                                                <li>{{ $annotator->name }}</li>
+                                            @endforeach
+                                        </ul>
+                                    @endif
                                     <br />
-                                    <strong>Vacidadores: </strong>
-                                    <ul>
-                                        @foreach ($point->vaccinators as $vaccinator)
-                                            <li>{{ $vaccinator->name }}</li>
-                                        @endforeach
-                                    </ul>
-                                    <strong>Anotadores: </strong>
-                                    <ul>
-                                        @foreach ($point->annotators as $annotator)
-                                            <li>{{ $annotator->name }}</li>
-                                        @endforeach
-                                    </ul>
                                 </li>
                             @endforeach
                         </ul>

@@ -92,4 +92,24 @@ class CampaingSupport extends Model
     {
         return $this->hasMany(CampaingPoint::class, 'campaing_support_id');
     }
+
+    public function ruralSupervisors()
+    {
+        return $this->belongsToMany(
+            VaccinationWorker::class,
+            'rural_supervisor_support',
+            'campaing_support_id',
+            'rural_supervisor_id'
+        );
+    }
+
+    public function ruralAssistants()
+    {
+        return $this->belongsToMany(
+            VaccinationWorker::class,
+            'rural_assistant_support',
+            'campaing_support_id',
+            'rural_assistant_id'
+        );
+    }
 }

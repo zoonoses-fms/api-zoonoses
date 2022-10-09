@@ -103,6 +103,8 @@ class CampaignCycleController extends Controller
             'supports.drivers',
             'supports.assistants',
             'supports.vaccinators',
+            'supports.ruralSupervisors',
+            'supports.ruralAssistants',
             'supports.saads'
         ])->findOrFail($id);
 
@@ -158,6 +160,8 @@ class CampaignCycleController extends Controller
             'supports.drivers',
             'supports.assistants',
             'supports.vaccinators',
+            'supports.ruralSupervisors',
+            'supports.ruralAssistants',
             'supports.saads',
             'supports.points.point',
             'supports.points.supervisor',
