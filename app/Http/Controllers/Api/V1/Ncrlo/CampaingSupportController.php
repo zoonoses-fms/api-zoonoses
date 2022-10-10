@@ -101,7 +101,7 @@ class CampaingSupportController extends Controller
     public function destroy($id)
     {
         $support = CampaingSupport::with([
-            'campaing',
+            'cycle',
             'support',
             'coordinator',
             'supervisors',

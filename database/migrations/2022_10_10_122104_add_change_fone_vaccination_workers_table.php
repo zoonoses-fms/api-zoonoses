@@ -13,8 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('campaing_supports', function (Blueprint $table) {
-            $table->boolean('is_rural')->default(false)->nullable();
+        Schema::table('vaccination_workers', function (Blueprint $table) {
+            $table->string('phone')->nullable()->change();
         });
     }
 
@@ -25,8 +25,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('campaing_supports', function (Blueprint $table) {
-            $table->dropColumn('is_rural');
+        Schema::table('vaccination_workers', function (Blueprint $table) {
+            //
         });
     }
 };
