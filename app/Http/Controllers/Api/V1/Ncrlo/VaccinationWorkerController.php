@@ -48,7 +48,7 @@ class VaccinationWorkerController extends Controller
                 $request->list_type == 'vaccinators' ||
                 $request->list_type == 'assistants' ||
                 $request->list_type == 'annotators' ||
-                // $request->list_type == 'rural_supervisors' ||
+                $request->list_type == 'rural_supervisors' ||
                 $request->list_type == 'rural_assistants'
             ) {
                 $ids = $request->ids;
