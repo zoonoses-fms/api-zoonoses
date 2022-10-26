@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1\Ncrlo;
 use App\Http\Controllers\Controller;
 use App\Models\CampaingSupport;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class CampaingSupportController extends Controller
 {
@@ -122,5 +123,36 @@ class CampaingSupportController extends Controller
         $support->ruralAssistants()->sync([]);
 
         $support->delete();
+    }
+
+    public function report(Request $request, $id)
+    {
+        $today = date("m-d-Y");
+        $support = CampaingSupport::with([
+            'coordinator',
+            'support.neighborhoodAlias.neighborhood',
+            'supervisors',
+            'drivers',
+            'ruralSupervisors',
+            'ruralAssistants',
+            'assistants',
+            'vaccinators',
+            'ruralSupervisors',
+            'ruralAssistants',
+            'saads',
+            'points.point',
+            'points.supervisor',
+            'points.vaccinators',
+            'points.annotators',
+        ])->findOrFail($id);
+
+        return PDF::loadView(
+            'ncrlo.frequency_list',
+            [
+                'support' => $support,
+                'today' => $today,
+            ]
+        )->download("Relatório de Locação de Pessoal {$today}.pdf");
+        //return view('receipt');
     }
 }

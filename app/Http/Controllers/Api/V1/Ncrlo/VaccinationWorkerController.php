@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\VaccinationWorker;
 use App\Models\CampaignCycle;
+use App\Models\Plataform;
+use Illuminate\Validation\ValidationException;
 use stdClass;
 
 class VaccinationWorkerController extends Controller
@@ -141,7 +143,7 @@ class VaccinationWorkerController extends Controller
         $worker->delete();
     }
 
-        /**
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
@@ -262,5 +264,183 @@ class VaccinationWorkerController extends Controller
         }
 
         return $allocations;
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function login(Request $request)
+    {
+        try {
+            $request->validate([
+                'registration' => 'required',
+                'plataforma_uuid' => 'required',
+                'plataforma_password' => 'required'
+            ]);
+
+            $plataform = Plataform::where(
+                'uuid',
+                '=',
+                $request->plataforma_uuid
+            )->where(
+                'password',
+                '=',
+                $request->plataforma_password
+            )->first();
+
+            if (!$plataform) {
+                throw ValidationException::withMessages([
+                    'plataform' => ['Credenciais incorretas'],
+                ]);
+            }
+
+            $worker = VaccinationWorker::where('registration', $request->registration)->firstOrFail();
+
+            if (!$worker) {
+                throw ValidationException::withMessages([
+                    'worker' => ['Credenciais incorretas'],
+                ]);
+            }
+
+            return $this->success($worker);
+        } catch (ValidationException $e) {
+            $erros = $e->errors();
+            return $this->error('Login failed', 501, $erros);
+        }
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function searchLocations(Request $request)
+    {
+        try {
+            $request->validate([
+                'registration' => 'required',
+                'cycle_id' => 'required'
+            ]);
+
+            $cycle_id = $request->cycle_id;
+
+            $cycle = CampaignCycle::find($cycle_id);
+
+            $workers = VaccinationWorker::when(
+                $request->has('registration'),
+                function ($query) use ($request) {
+                    $registration = $request->registration;
+                    return $query->where('registration', $registration);
+                }
+            )->orderBy('updated_at', 'desc')->get();
+
+            $allocations = new stdClass();
+            $allocations->coordinations = [];
+            $allocations->supervisors = [];
+            $allocations->pointVaccinators = [];
+            $allocations->pointAnnotators = [];
+            $allocations->ruralSupervisors = [];
+            $allocations->ruralAssistants = [];
+            $allocations->ruralVaccinators = [];
+
+            $workerIds = [];
+
+            foreach ($workers as $worker) {
+                $workerIds[] = $worker->id;
+            }
+
+            $coordinations = $cycle->supports->whereIn('coordinator_id', $workerIds);
+
+            if (count($coordinations) > 0) {
+                foreach ($coordinations as $coordinator) {
+                    $coordinator->load('support');
+                    $coordinator->load('points.point');
+                }
+                $allocations->coordinations = array_merge(
+                    $allocations->coordinations,
+                    $coordinations->toArray()
+                );
+            }
+
+            foreach ($cycle->supports as $support) {
+                if ($support->is_rural) {
+                    $ruralSupervisors = $support
+                        ->ruralSupervisors()
+                        ->wherePivotIn('rural_supervisor_id', $workerIds)
+                        ->get();
+
+                    if (count($ruralSupervisors) > 0) {
+                        $support->load('points.point');
+
+                        $allocations->ruralSupervisors[] = $support;
+                    }
+
+                    $ruralAssistants = $support
+                        ->ruralAssistants()
+                        ->wherePivotIn('rural_assistant_id', $workerIds)
+                        ->get();
+
+                    if (count($ruralAssistants) > 0) {
+                        $support->load('points.point');
+
+                        $allocations->ruralAssistants[] = $support;
+                    }
+
+                    $ruralVaccinators = $support
+                        ->vaccinators()
+                        ->wherePivot('vaccinator_id', $worker->id)
+                        ->get();
+
+                    if (count($ruralVaccinators) > 0) {
+                        $support->load('points.point');
+
+                        $allocations->ruralVaccinators[] = $support;
+                    }
+                } else {
+                    $supervisors = $support->points()->whereIn('supervisor_id', $workerIds)->get();
+                    if (count($supervisors) > 0) {
+                        foreach ($supervisors as $supervisor) {
+                            $supervisor->load('point');
+                        }
+                        $allocations->supervisors = array_merge(
+                            $allocations->supervisors,
+                            $supervisors->toArray()
+                        );
+                    }
+
+                    foreach ($support->points as $point) {
+                        $pointVaccinators = $point
+                        ->vaccinators()
+                        ->wherePivotIn('vaccinator_id', $workerIds)
+                        ->get();
+
+                        if (count($pointVaccinators) > 0) {
+                            $point->load('point');
+
+                            $allocations->pointVaccinators[] = $point;
+                        }
+
+                        $pointAnnotators = $point
+                        ->annotators()
+                        ->wherePivotIn('annotator_id', $workerIds)
+                        ->get();
+
+                        if (count($pointAnnotators) > 0) {
+                            $point->load('point');
+
+                            $allocations->pointAnnotators[] = $point;
+                        }
+                    }
+                }
+            }
+
+
+            return $allocations;
+        } catch (ValidationException $e) {
+            $erros = $e->errors();
+            return $this->error('failed', 501, $erros);
+        }
     }
 }

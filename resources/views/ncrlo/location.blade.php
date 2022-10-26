@@ -74,7 +74,12 @@
             <ol>
                 @foreach ($cycle->supports as $support)
                     <li>
-                        <strong> Ponto de Apoio: {{ $support->support->name }} </strong>
+                        @if ($support->is_rural)
+                            <strong> Área: {{ $support->support->name }} </strong>
+                        @else
+                            <strong> Ponto de Apoio: {{ $support->support->name }} </strong>
+                        @endif
+
                         <br />
                         @isset($support->coordinator->name)
                             <strong> Coordenador: {{ $support->coordinator->name }} </strong>
@@ -86,6 +91,26 @@
                             <ul>
                                 @foreach ($support->supervisors as $supervisor)
                                     <li>{{ $supervisor->name }}</li>
+                                @endforeach
+                            </ul>
+                        @endif
+
+                        @if (count($support->ruralSupervisors) > 0)
+                            <br />
+                            <strong>Supervisores: </strong>
+                            <ul>
+                                @foreach ($support->ruralSupervisors as $ruralSupervisor)
+                                    <li>{{ $ruralSupervisor->name }}</li>
+                                @endforeach
+                            </ul>
+                        @endif
+
+                        @if (count($support->ruralAssistants) > 0)
+                            <br />
+                            <strong>Auxiliares: </strong>
+                            <ul>
+                                @foreach ($support->ruralAssistants as $ruralAssistant)
+                                    <li>{{ $ruralAssistant->name }}</li>
                                 @endforeach
                             </ul>
                         @endif
@@ -112,7 +137,12 @@
 
                         @if (count($support->vaccinators) > 0)
                             <br />
-                            <strong>Vacinadores reserva: </strong>
+                            @if ($support->is_rural)
+                                <strong>Vacinadores: </strong>
+                            @else
+                                <strong>Vacinadores reserva: </strong>
+                            @endif
+
                             <ul>
                                 @foreach ($support->vaccinators as $vaccinator)
                                     <li>{{ $vaccinator->name }}</li>
@@ -121,7 +151,12 @@
                         @endif
 
                         <br />
-                        <strong>Postos de Vacina</strong>
+                        @if ($support->is_rural)
+                            <strong> Localidade </strong>
+                        @else
+                            <strong>Postos de Vacina</strong>
+                        @endif
+
                         <br />
                         <ul>
                             @foreach ($support->points as $point)

@@ -158,6 +158,8 @@ class CampaignCycleController extends Controller
             'supports.support.neighborhoodAlias.neighborhood',
             'supports.supervisors',
             'supports.drivers',
+            'supports.ruralSupervisors',
+            'supports.ruralAssistants',
             'supports.assistants',
             'supports.vaccinators',
             'supports.ruralSupervisors',

@@ -45,7 +45,7 @@ class AuthenticatedController extends Controller
 
             if (!$plataform) {
                 throw ValidationException::withMessages([
-                    'email' => ['Credenciais incorretas'],
+                    'plataform' => ['Credenciais incorretas'],
                 ]);
             }
 
