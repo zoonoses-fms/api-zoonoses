@@ -152,16 +152,21 @@
 
                         <br />
                         @if ($support->is_rural)
-                            <strong> Localidade </strong>
+                            <strong> Localidade: </strong>
                         @else
-                            <strong>Postos de Vacina</strong>
+                            <strong>Postos de Vacina:</strong>
                         @endif
 
                         <br />
                         <ul>
                             @foreach ($support->points as $point)
                                 <li>
-                                    <strong> Posto: {{ $point->point->name }} </strong>
+                                    @if ($support->is_rural)
+                                        <strong> {{ $point->point->name }} </strong>
+                                    @else
+                                        <strong> Posto: {{ $point->point->name }} </strong>
+                                    @endif
+
                                     <br />
                                     @isset($point->supervisor->name)
                                         <strong> Supervisor: {{ $point->supervisor->name }} </strong>

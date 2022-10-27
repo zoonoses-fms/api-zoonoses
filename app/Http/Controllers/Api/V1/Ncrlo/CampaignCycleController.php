@@ -152,7 +152,7 @@ class CampaignCycleController extends Controller
 
     public function report(Request $request, $id)
     {
-        $today = date("m-d-Y");
+        $today = date("d-m-Y");
         $cycle = CampaignCycle::with([
             'supports.coordinator',
             'supports.support.neighborhoodAlias.neighborhood',

@@ -8,10 +8,11 @@
     <title>Relatório de Locação de Pessoal</title>
     <style>
         .conteiner {
-            margin: 5% 3%;
+            margin: 0;
         }
 
         .date {
+            margin: 0;
             width: 80px;
             margin-left: auto;
             margin-right: 0;
@@ -22,6 +23,10 @@
             margin-right: auto;
             display: block;
             font-style: italic;
+        }
+
+        .header {
+            width: 100%;
         }
 
         .center {
@@ -48,6 +53,53 @@
         .logo-header img {
             width: 100px;
         }
+
+        ol {
+            margin-left: 0;
+        }
+
+        .flex-box {
+            display: flex;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .border {
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+
+        .name {
+            width: 40%;
+        }
+
+        td {
+            height: 30px;
+        }
+
+        td.line {
+            border-bottom: 1px solid;
+            width: 60%;
+        }
+
+        .line-vaccinator {
+            width: 40%;
+        }
+
+        .line-mat {
+            width: 5%;
+        }
+
+        .line-origin {
+            width: 5%;
+        }
+
+        .line-name {
+            width: 25%;
+        }
     </style>
 </head>
 
@@ -64,166 +116,155 @@
                 <strong>Prefeitura Municipal de Teresina</strong><br />
                 <strong>Fundação Municipal de Saúde</strong><br />
                 <strong>Gerência de Zoonoses GEZOON</strong><br />
-                <strong>Núcleo de Controle da Raiva, Leishmaniose e Outras Zoonoses - NCRLO</strong><br />
+                <strong>Núcleo de Controle da Raiva, Leishmaniose e Outras Zoonoses - NCRLOZ</strong><br />
+            </div>
+            <div class="center" style="text-align:center">
+                <h2>Frequência</h2>
             </div>
         </div>
-        <br />
-        <br />
+
         <div class="content">
-            <ol>
-                <li>
+
+            @if ($support->is_rural)
+                <div>
+                    <strong> Área: {{ $support->support->name }} </strong>
+                </div>
+            @else
+                <div>
+                    <strong> Ponto de Apoio: {{ $support->support->name }} </strong>
+                </div>
+            @endif
+
+            @isset($support->coordinator->name)
+                <table>
+                    <tr>
+                        <td class="name">
+                            Coordenador: {{ $support->coordinator->registration }} - {{ $support->coordinator->name }} -
+                            {{ $support->coordinator->phone }}
+                        </td>
+                        <td class="line">
+                        </td>
+                    </tr>
+                </table>
+            @endisset
+
+            @if (count($support->supervisors) > 0)
+                <div>
+                    <strong>Supervisores: </strong>
+                </div>
+
+                <table>
+                    @foreach ($support->supervisors as $supervisor)
+                        <tr>
+                            <td class="name">
+                                {{ $supervisor->registration }} - {{ $supervisor->name }} - {{ $supervisor->phone }}
+                            </td>
+                            <td class="line">
+
+                            </td>
+                        </tr>
+                    @endforeach
+                </table>
+            @endif
+
+            @if (count($support->ruralSupervisors) > 0)
+                <div>
+                    <strong>Supervisores Rural: </strong>
+                </div>
+                <table>
+                    @foreach ($support->ruralSupervisors as $ruralSupervisor)
+                        <tr>
+                            <td class="name">
+                                {{ $ruralSupervisor->registration }} - {{ $ruralSupervisor->name }} -
+                                {{ $ruralSupervisor->phone }}:
+                            </td>
+                            <td class="line"></td>
+                        </tr>
+                    @endforeach
+                </table>
+            @endif
+
+            @if (count($support->ruralAssistants) > 0)
+                <div>
+                    <strong>Auxiliares: </strong>
+                </div>
+                <table>
+                    @foreach ($support->ruralAssistants as $ruralAssistant)
+                        <tr>
+                            <td class="name">
+                                {{ $ruralAssistant->registration }} - {{ $ruralAssistant->name }} -
+                                {{ $ruralAssistant->phone }}:
+                            </td>
+                            <td class="line"></td>
+                        </tr>
+                    @endforeach
+                </table>
+            @endif
+
+            @if (count($support->assistants) > 0)
+                <div>
+                    <strong>Apoiadores: </strong>
+                </div>
+                <table>
+                    @foreach ($support->assistants as $assistant)
+                        <tr>
+                            <td class="name">
+                                {{ $assistant->registration }} - {{ $assistant->name }} - {{ $assistant->phone }}:
+                            </td>
+                            <td class="line"></td>
+                        </tr>
+                    @endforeach
+                </table>
+            @endif
+
+            @if (count($support->drivers) > 0)
+                <div>
+                    <strong>Motoristas: </strong>
+                </div>
+
+                <table>
+                    @foreach ($support->drivers as $driver)
+                        <tr>
+                            <td class="name">
+                                {{ $driver->registration }} - {{ $driver->name }} - {{ $driver->phone }}:
+                            </td>
+                            <td class="line"></td>
+                        </tr>
+                    @endforeach
+                </table>
+            @endif
+
+            @if (count($support->vaccinators) > 0)
+                <div>
                     @if ($support->is_rural)
-                        <strong> Área: {{ $support->support->name }} </strong>
+                        <strong>Vacinadores: </strong>
                     @else
-                        <strong> Ponto de Apoio: {{ $support->support->name }} </strong>
+                        <strong>Vacinadores reserva: </strong>
                     @endif
-
-                    <br />
-                    @isset($support->coordinator->name)
-                        <strong>
-                            Coordenador: {{ $support->coordinator->registration }} - {{ $support->coordinator->name }}
-                        </strong>
-                        <br />
-                        <br />
-                        <hr />
-                    @endisset
-
-                    @if (count($support->supervisors) > 0)
-                        <br />
-                        <strong>Supervisores: </strong>
-                        <ul>
-                            @foreach ($support->supervisors as $supervisor)
-                                <li>{{ $supervisor->registration }} - {{ $supervisor->name }}
-                                    <br />
-                                    <br />
-                                    <hr />
-                                </li>
-                            @endforeach
-                        </ul>
-                    @endif
-
-                    @if (count($support->ruralSupervisors) > 0)
-                        <br />
-                        <strong>Supervisores: </strong>
-                        <ul>
-                            @foreach ($support->ruralSupervisors as $ruralSupervisor)
-                                <li>
-                                    {{ $ruralSupervisor->registration }} - {{ $ruralSupervisor->name }}
-                                    <br />
-                                    <br />
-                                    <hr />
-                                </li>
-                            @endforeach
-                        </ul>
-                    @endif
-
-                    @if (count($support->ruralAssistants) > 0)
-                        <br />
-                        <strong>Auxiliares: </strong>
-                        <ul>
-                            @foreach ($support->ruralAssistants as $ruralAssistant)
-                                <li>
-                                    {{ $ruralAssistant->registration }} - {{ $ruralAssistant->name }}
-                                    <br />
-                                    <br />
-                                    <hr />
-                                </li>
-                            @endforeach
-                        </ul>
-                    @endif
-
-                    @if (count($support->assistants) > 0)
-                        <br />
-                        <strong>Apoiadores: </strong>
-                        <ul>
-                            @foreach ($support->assistants as $assistant)
-                                <li>
-                                    {{ $assistant->registration }} - {{ $assistant->name }}
-                                    <br />
-                                    <br />
-                                    <hr />
-                                </li>
-                            @endforeach
-                        </ul>
-                    @endif
-
-                    @if (count($support->drivers) > 0)
-                        <br />
-                        <strong>Motoristas: </strong>
-                        <ul>
-                            @foreach ($support->drivers as $driver)
-                                <li>
-                                    {{ $driver->registration }} - {{ $driver->name }}
-                                    <br />
-                                    <br />
-                                    <hr />
-                                </li>
-                            @endforeach
-                        </ul>
-                    @endif
-
-                    @if (count($support->vaccinators) > 0)
-                        <br />
-                        @if ($support->is_rural)
-                            <strong>Vacinadores: </strong>
-                        @else
-                            <strong>Vacinadores reserva: </strong>
-                        @endif
-
-                        <ul>
-                            @foreach ($support->vaccinators as $vaccinator)
-                                <li>
-                                    {{ $vaccinator->registration }} - {{ $vaccinator->name }}
-                                    <br />
-                                    <br />
-                                    <hr />
-                                </li>
-                            @endforeach
-                        </ul>
-                    @endif
-
-                    <br />
-                    @if ($support->is_rural)
-                        <strong> Localidade </strong>
-                    @else
-                        <strong>Postos de Vacina</strong>
-                    @endif
-
-                    <br />
-                    <ul>
-                        @foreach ($support->points as $point)
-                            <li>
-                                <strong> Posto: {{ $point->point->name }} </strong>
-                                <br />
-                                @isset($point->supervisor->name)
-                                    <strong> Supervisor: {{ $point->supervisor->name }} </strong>
-                                @endisset
-
-                                @if (count($point->vaccinators) > 0)
-                                    <br />
-                                    <strong>Vacidadores: </strong>
-                                    <ul>
-                                        @foreach ($point->vaccinators as $vaccinator)
-                                            <li>{{ $vaccinator->name }}</li>
-                                        @endforeach
-                                    </ul>
-                                @endif
-                                @if (count($point->vaccinators) > 0)
-                                    <br />
-                                    <strong>Anotadores: </strong>
-                                    <ul>
-                                        @foreach ($point->annotators as $annotator)
-                                            <li>{{ $annotator->name }}</li>
-                                        @endforeach
-                                    </ul>
-                                @endif
-                                <br />
-                            </li>
-                        @endforeach
-                    </ul>
-                    <br />
-                </li>
-            </ol>
+                </div>
+                <table class="table-vacination">
+                    <thead>
+                        <th class="border">Mat.</th>
+                        <th class="border">Nome</th>
+                        <th class="border">Fone</th>
+                        <th class="border">FMS</th>
+                        <th class="border">ACE</th>
+                        <th class="border">ACS</th>
+                        <th class="border">Assinatura</th>
+                    </thead>
+                    @foreach ($support->vaccinators as $vaccinator)
+                        <tr>
+                            <td class="border line-mat"> {{ $vaccinator->registration }} </td>
+                            <td class="border line-name"> {{ $vaccinator->name }} </td>
+                            <td class="border"> {{ $vaccinator->phone }} </td>
+                            <td class="border line-origin"></td>
+                            <td class="border line-origin"></td>
+                            <td class="border line-origin"></td>
+                            <td class="border line-vaccinator"></td>
+                        </tr>
+                    @endforeach
+                </table>
+            @endif
 
         </div>
         <div class="footer">

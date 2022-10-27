@@ -127,7 +127,7 @@ class CampaingSupportController extends Controller
 
     public function report(Request $request, $id)
     {
-        $today = date("m-d-Y");
+        $today = date("d-m-Y");
         $support = CampaingSupport::with([
             'coordinator',
             'support.neighborhoodAlias.neighborhood',
@@ -152,7 +152,7 @@ class CampaingSupportController extends Controller
                 'support' => $support,
                 'today' => $today,
             ]
-        )->download("Relatório de Locação de Pessoal {$today}.pdf");
+        )->setPaper('a4', 'landscape')->download("Relatório de Locação de Pessoal {$today}.pdf");
         //return view('receipt');
     }
 }
