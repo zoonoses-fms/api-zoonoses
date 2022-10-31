@@ -125,7 +125,7 @@ class CampaingSupportController extends Controller
         $support->delete();
     }
 
-    public function report(Request $request, $id)
+    public function allocation(Request $request, $id)
     {
         $today = date("d-m-Y");
         $support = CampaingSupport::with([
@@ -152,7 +152,7 @@ class CampaingSupportController extends Controller
                 'support' => $support,
                 'today' => $today,
             ]
-        )->setPaper('a4', 'landscape')->download("Relatório de Locação de Pessoal {$today}.pdf");
+        )->setPaper('a4', 'landscape')->download("Frequência Locação de Pessoal {$today}.pdf");
         //return view('receipt');
     }
 }

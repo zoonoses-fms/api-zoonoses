@@ -10,9 +10,10 @@ use App\Http\Controllers\Api\V1\Ncrlo\VaccinationWorkerController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('campaign/cycle/report/{id}', [CampaignCycleController::class, 'report']);
+Route::get('campaign/cycle/allocation/{id}', [CampaignCycleController::class, 'allocation']);
 Route::apiResource('campaign/cycle', CampaignCycleController::class)
     ->middleware('auth:sanctum');
-Route::get('campaign/support/report/{id}', [CampaingSupportController::class, 'report']);
+Route::get('campaign/support/allocation/{id}', [CampaingSupportController::class, 'allocation']);
 Route::apiResource('campaign/support', CampaingSupportController::class)
     ->middleware('auth:sanctum');
 Route::apiResource('campaign/point', CampaingPointController::class)

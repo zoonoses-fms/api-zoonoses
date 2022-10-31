@@ -222,13 +222,25 @@
                     <strong>Motoristas: </strong>
                 </div>
 
-                <table>
+                <table class="table-vacination">
+                    <thead>
+                        <th class="border">Mat.</th>
+                        <th class="border">Nome</th>
+                        <th class="border">Fone</th>
+                        <th class="border">FMS</th>
+                        <th class="border">ACE</th>
+                        <th class="border">ACS</th>
+                        <th class="border">Assinatura</th>
+                    </thead>
                     @foreach ($support->drivers as $driver)
                         <tr>
-                            <td class="name">
-                                {{ $driver->registration }} - {{ $driver->name }} - {{ $driver->phone }}:
-                            </td>
-                            <td class="line"></td>
+                            <td class="border line-mat"> {{ $driver->registration }} </td>
+                            <td class="border line-name"> {{ $driver->name }} </td>
+                            <td class="border"> {{ $driver->phone }} </td>
+                            <td class="border line-origin"></td>
+                            <td class="border line-origin"></td>
+                            <td class="border line-origin"></td>
+                            <td class="border line-vaccinator"></td>
                         </tr>
                     @endforeach
                 </table>
@@ -266,6 +278,66 @@
                 </table>
             @endif
 
+            <div>
+                <strong>Colaboradores: </strong>
+            </div>
+            <table class="table-vacination">
+                <thead>
+                    <th class="border">Mat.</th>
+                    <th class="border">Nome</th>
+                    <th class="border">Fone</th>
+                    <th class="border">FMS</th>
+                    <th class="border">ACE</th>
+                    <th class="border">ACS</th>
+                    <th class="border">Assinatura</th>
+                </thead>
+                <tr>
+                    <td class="border line-mat"></td>
+                    <td class="border line-name"></td>
+                    <td class="border"></td>
+                    <td class="border line-origin"></td>
+                    <td class="border line-origin"></td>
+                    <td class="border line-origin"></td>
+                    <td class="border line-vaccinator"></td>
+                </tr>
+                <tr>
+                    <td class="border line-mat"></td>
+                    <td class="border line-name"></td>
+                    <td class="border"></td>
+                    <td class="border line-origin"></td>
+                    <td class="border line-origin"></td>
+                    <td class="border line-origin"></td>
+                    <td class="border line-vaccinator"></td>
+                </tr>
+                <tr>
+                    <td class="border line-mat"></td>
+                    <td class="border line-name"></td>
+                    <td class="border"></td>
+                    <td class="border line-origin"></td>
+                    <td class="border line-origin"></td>
+                    <td class="border line-origin"></td>
+                    <td class="border line-vaccinator"></td>
+                </tr>
+                <tr>
+                    <td class="border line-mat"></td>
+                    <td class="border line-name"></td>
+                    <td class="border"></td>
+                    <td class="border line-origin"></td>
+                    <td class="border line-origin"></td>
+                    <td class="border line-origin"></td>
+                    <td class="border line-vaccinator"></td>
+                </tr>
+                <tr>
+                    <td class="border line-mat"></td>
+                    <td class="border line-name"></td>
+                    <td class="border"></td>
+                    <td class="border line-origin"></td>
+                    <td class="border line-origin"></td>
+                    <td class="border line-origin"></td>
+                    <td class="border line-vaccinator"></td>
+                </tr>
+
+            </table>
         </div>
         <div class="footer">
             <hr />

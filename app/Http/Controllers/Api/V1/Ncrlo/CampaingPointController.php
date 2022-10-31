@@ -93,6 +93,7 @@ class CampaingPointController extends Controller
         $point->vaccinators()->sync($request->vaccinators);
         $point->annotators()->sync($request->annotators);
         $point->save();
+        return $point;
     }
 
     /**
