@@ -38,4 +38,45 @@ class CampaignCycle extends Model
     {
         return $this->hasMany(CampaingSupport::class, 'campaign_cycle_id')->orderBy('updated_at', 'desc');
     }
+
+    public function payrolls()
+    {
+        return $this->belongsToMany(
+            VaccinationWorker::class,
+            'payroll_cycle',
+            'campaign_cycle_id',
+            'payroll_id'
+        );
+    }
+
+    public function statistics()
+    {
+        return $this->belongsToMany(
+            VaccinationWorker::class,
+            'statistic_cycle',
+            'campaign_cycle_id',
+            'statistic_id'
+        );
+    }
+
+    public function transports()
+    {
+        return $this->belongsToMany(
+            VaccinationWorker::class,
+            'transport_cycle',
+            'campaign_cycle_id',
+            'transport_id'
+        );
+    }
+
+
+    public function coldChains()
+    {
+        return $this->belongsToMany(
+            VaccinationWorker::class,
+            'cold_chain_cycle',
+            'campaign_cycle_id',
+            'cold_chain_id'
+        );
+    }
 }

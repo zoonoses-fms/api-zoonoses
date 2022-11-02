@@ -125,6 +125,10 @@ class CampaignCycleController extends Controller
         $cycle->description = $request->description;
         $cycle->start = $request->start;
         $cycle->end = $request->end;
+        $cycle->payrolls()->sync($request->payrolls);
+        $cycle->statistics()->sync($request->statistics);
+        $cycle->transports()->sync($request->transports);
+        $cycle->coldChains()->sync($request->cold_chains);
 
         $cycle->save();
 

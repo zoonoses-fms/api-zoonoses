@@ -102,7 +102,11 @@ class CampaignController extends Controller
             }
         }
         $campaign = Campaign::with([
-            'cycles'
+            'cycles',
+            'cycles.payrolls',
+            'cycles.statistics',
+            'cycles.transports',
+            'cycles.coldChains'
         ])->findOrFail($id);
 
         return $campaign;

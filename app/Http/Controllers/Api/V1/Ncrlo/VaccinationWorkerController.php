@@ -19,6 +19,19 @@ class VaccinationWorkerController extends Controller
      */
     public function index(Request $request)
     {
+        $listType = array(
+            'supervisors',
+            'drivers',
+            'vaccinators',
+            'assistants',
+            'annotators',
+            'rural_supervisors',
+            'payrolls',
+            'statistics',
+            'transports',
+            'cold_chains'
+        );
+
         if ($request->has('list_type')) {
             $campaign_cycle_id = $request->campaign_cycle_id;
             if ($request->list_type == 'all') {
@@ -44,15 +57,7 @@ class VaccinationWorkerController extends Controller
                 $index = array_search($coordinator_id, $listNotFreeWorkers);
                 unset($listNotFreeWorkers[$index]);
                 return VaccinationWorker::listFreeWorkers($request, $listNotFreeWorkers);
-            } elseif (
-                $request->list_type == 'supervisors' ||
-                $request->list_type == 'drivers' ||
-                $request->list_type == 'vaccinators' ||
-                $request->list_type == 'assistants' ||
-                $request->list_type == 'annotators' ||
-                $request->list_type == 'rural_supervisors' ||
-                $request->list_type == 'rural_assistants'
-            ) {
+            } elseif (in_array($request->list_type, $listType)) {
                 $ids = $request->ids;
                 $listNotFreeWorkers = VaccinationWorker::listNotFreeWorkers($campaign_cycle_id);
                 foreach ($ids as $id) {
