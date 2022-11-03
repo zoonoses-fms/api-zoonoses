@@ -309,9 +309,6 @@ class CampaignCycleController extends Controller
             $cycle->goal += $support->goal;
         }
 
-
-
-
         return $cycle;
 
         /*
@@ -448,7 +445,7 @@ class CampaignCycleController extends Controller
 
             $cycle->total_of_cats += $support->total_of_cats;
             $cycle->total += $support->total;
-            $cycle->goal += $support->goral;
+            $cycle->goal += $support->goal;
         }
 
         if ($request->has('details')) {

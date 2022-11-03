@@ -132,6 +132,7 @@
                         <th class="border">Gatas</th>
                         <th class="border">Total Gatos</th>
                         <th class="border">Total</th>
+                        <th class="border">Cobertura</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -143,7 +144,12 @@
                         <td class="border"> {{ $cycle->female_cat }} </td>
                         <td class="border"> {{ $cycle->total_of_cats }} </td>
                         <td class="border"> {{ $cycle->total }} </td>
-                    </tr>
+                        @if ($cycle->total > 0 && $cycle->goal > 0)
+                            <td class="border"> {{ $cycle->total / ($cycle->goal / 100) }}% </td>
+                        @else
+                            <td class="border"> 0% </td>
+                        @endif
+                        < </tr>
                 </tbody>
             </table>
 
@@ -162,6 +168,7 @@
                                 <th class="border">Gatas</th>
                                 <th class="border">Total Gatos</th>
                                 <th class="border">Total</th>
+                                <th class="border">Cobertura</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -173,6 +180,11 @@
                                 <td class="border"> {{ $support->female_cat }} </td>
                                 <td class="border"> {{ $support->total_of_cats }} </td>
                                 <td class="border"> {{ $support->total }} </td>
+                                @if ($support->total > 0 && $support->goal > 0)
+                                    <td class="border"> {{ $support->total / ($support->goal / 100) }}% </td>
+                                @else
+                                    <td class="border"> 0% </td>
+                                @endif
                             </tr>
                         </tbody>
                     </table>
@@ -187,6 +199,7 @@
                                 <th class="border">Gatas</th>
                                 <th class="border">Total Gatos</th>
                                 <th class="border">Total</th>
+                                <th class="border">Cobertura</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -200,6 +213,11 @@
                                     <td class="border"> {{ $point->female_cat }} </td>
                                     <td class="border"> {{ $point->total_of_cats }} </td>
                                     <td class="border"> {{ $point->total }} </td>
+                                    @if ($point->total > 0 && $point->goal > 0)
+                                        <td class="border"> {{ $point->total / ($point->goal / 100) }}% </td>
+                                    @else
+                                        <td class="border"> 0% </td>
+                                    @endif
                                 </tr>
                             @endforeach
                         </tbody>
