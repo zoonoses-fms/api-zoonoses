@@ -125,7 +125,7 @@ class CampaingSupportController extends Controller
         $support->delete();
     }
 
-    public function allocation(Request $request, $id)
+    public function frequency(Request $request, $id)
     {
         $today = date("d-m-Y");
         $support = CampaingSupport::with([

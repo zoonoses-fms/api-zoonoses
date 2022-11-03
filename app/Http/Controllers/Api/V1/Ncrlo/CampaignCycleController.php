@@ -197,35 +197,6 @@ class CampaignCycleController extends Controller
             'supports.points.annotators',
         ])->findOrFail($id);
 
-        /*
-            "goal": 0,
-            "male_dog_under_4m": 0,
-            "female_dog_under_4m": 0,
-
-            "male_dog_major_4m_under_1y": 0,
-            "female_dog_major_4m_under_1y": 0,
-
-            "male_dog_major_1y_under_2y": 0,
-            "female_dog_major_1y_under_2y": 0,
-
-            "male_dog_major_2y_under_4y": 0,
-            "female_dog_major_2y_under_4y": 0,
-
-            "male_dog_major_4y": 0,
-            "female_dog_major_4y": 0,
-
-            "male_dogs": 0,
-            "female_dogs": 0,
-
-            "total_of_dogs": 0,
-
-            "male_cat": 0,
-            "female_cat": 0,
-
-            "total_of_cats": 0,
-            "total": 0,
-        */
-
         $cycle->male_dog_under_4m = 0;
         $cycle->female_dog_under_4m = 0;
 
@@ -349,6 +320,167 @@ class CampaignCycleController extends Controller
         )->download("Relatório de Locação de Pessoal {$today}.pdf");
         */
 
+        //return view('receipt');
+    }
+
+    public function reportPdf(Request $request, $id)
+    {
+        $today = date("d-m-Y");
+        $cycle = CampaignCycle::with([
+            'supports.support.neighborhoodAlias.neighborhood',
+            'supports.saads',
+            'supports.points.point',
+            'supports.points.supervisor',
+            'supports.points.vaccinators',
+            'supports.points.annotators',
+        ])->findOrFail($id);
+
+        $cycle->male_dog_under_4m = 0;
+        $cycle->female_dog_under_4m = 0;
+
+        $cycle->male_dog_major_4m_under_1y = 0;
+        $cycle->female_dog_major_4m_under_1y = 0;
+
+        $cycle->male_dog_major_1y_under_2y = 0;
+        $cycle->female_dog_major_1y_under_2y = 0;
+
+        $cycle->male_dog_major_2y_under_4y = 0;
+        $cycle->female_dog_major_2y_under_4y = 0;
+
+        $cycle->male_dog_major_4y = 0;
+        $cycle->female_dog_major_4y = 0;
+
+        $cycle->male_dogs = 0;
+        $cycle->female_dogs = 0;
+
+        $cycle->total_of_dogs = 0;
+
+        $cycle->male_cat = 0;
+        $cycle->female_cat = 0;
+
+        $cycle->total_of_cats = 0;
+        $cycle->total = 0;
+
+        foreach ($cycle->supports as $support) {
+            $support->male_dog_under_4m = 0;
+            $support->female_dog_under_4m = 0;
+
+            $support->male_dog_major_4m_under_1y = 0;
+            $support->female_dog_major_4m_under_1y = 0;
+
+            $support->male_dog_major_1y_under_2y = 0;
+            $support->female_dog_major_1y_under_2y = 0;
+
+            $support->male_dog_major_2y_under_4y = 0;
+            $support->female_dog_major_2y_under_4y = 0;
+
+            $support->male_dog_major_4y = 0;
+            $support->female_dog_major_4y = 0;
+
+            $support->male_dogs = 0;
+            $support->female_dogs = 0;
+
+            $support->total_of_dogs = 0;
+
+            $support->male_cat = 0;
+            $support->female_cat = 0;
+
+            $support->total_of_cats = 0;
+            $support->total = 0;
+
+            foreach ($support->points as $point) {
+                $support->male_dog_under_4m += $point->male_dog_under_4m;
+                $support->female_dog_under_4m += $point->female_dog_under_4m;
+
+                $support->male_dog_major_4m_under_1y += $point->male_dog_major_4m_under_1y;
+                $support->female_dog_major_4m_under_1y += $point->female_dog_major_4m_under_1y;
+
+                $support->male_dog_major_1y_under_2y += $point->male_dog_major_1y_under_2y;
+                $support->female_dog_major_1y_under_2y += $point->female_dog_major_1y_under_2y;
+
+                $support->male_dog_major_2y_under_4y += $point->male_dog_major_2y_under_4y;
+                $support->female_dog_major_2y_under_4y += $point->female_dog_major_2y_under_4y;
+
+                $support->male_dog_major_4y += $point->male_dog_major_4y;
+                $support->female_dog_major_4y += $point->female_dog_major_4y;
+
+                $support->male_dogs += $point->male_dogs;
+                $support->female_dogs += $point->female_dogs;
+
+                $support->total_of_dogs += $point->total_of_dogs;
+
+                $support->male_cat += $point->male_cat;
+                $support->female_cat += $point->female_cat;
+
+                $support->total_of_cats += $point->total_of_cats;
+                $support->total += $point->total;
+            }
+
+            $cycle->male_dog_under_4m += $support->male_dog_under_4m;
+            $cycle->female_dog_under_4m += $support->female_dog_under_4m;
+
+            $cycle->male_dog_major_4m_under_1y += $support->male_dog_major_4m_under_1y;
+            $cycle->female_dog_major_4m_under_1y += $support->female_dog_major_4m_under_1y;
+
+            $cycle->male_dog_major_1y_under_2y += $support->male_dog_major_1y_under_2y;
+            $cycle->female_dog_major_1y_under_2y += $support->female_dog_major_1y_under_2y;
+
+            $cycle->male_dog_major_2y_under_4y += $support->male_dog_major_2y_under_4y;
+            $cycle->female_dog_major_2y_under_4y += $support->female_dog_major_2y_under_4y;
+
+            $cycle->male_dog_major_4y += $support->male_dog_major_4y;
+            $cycle->female_dog_major_4y += $support->female_dog_major_4y;
+
+            $cycle->male_dogs += $support->male_dogs;
+            $cycle->female_dogs += $support->female_dogs;
+
+            $cycle->total_of_dogs += $support->total_of_dogs;
+
+            $cycle->male_cat += $support->male_cat;
+            $cycle->female_cat += $support->female_cat;
+
+            $cycle->total_of_cats += $support->total_of_cats;
+            $cycle->total += $support->total;
+        }
+
+        if ($request->has('details')) {
+            return PDF::loadView(
+                'ncrlo.cycle_report_details',
+                [
+                    'cycle' => $cycle,
+                    'today' => $today,
+                ]
+            )->download("Relatório de Vacinação {$today}.pdf");
+        } else {
+            return PDF::loadView(
+                'ncrlo.cycle_report',
+                [
+                    'cycle' => $cycle,
+                    'today' => $today,
+                ]
+            )->download("Relatório de Vacinação {$today}.pdf");
+        }
+
+        //return view('receipt');
+    }
+
+    public function frequency(Request $request, $id)
+    {
+        $today = date("d-m-Y");
+        $cycle = CampaignCycle::with([
+            'payrolls',
+            'statistics',
+            'transports',
+            'coldChains'
+        ])->findOrFail($id);
+
+        return PDF::loadView(
+            'ncrlo.frequency_list_support',
+            [
+                'cycle' => $cycle,
+                'today' => $today,
+            ]
+        )->setPaper('a4', 'landscape')->download("Frequência Locação de Pessoal {$today}.pdf");
         //return view('receipt');
     }
 }
