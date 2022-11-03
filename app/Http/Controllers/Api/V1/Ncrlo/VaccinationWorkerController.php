@@ -26,6 +26,7 @@ class VaccinationWorkerController extends Controller
             'assistants',
             'annotators',
             'rural_supervisors',
+            'rural_assistants',
             'payrolls',
             'statistics',
             'transports',

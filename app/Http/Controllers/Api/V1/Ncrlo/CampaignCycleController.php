@@ -222,6 +222,7 @@ class CampaignCycleController extends Controller
 
         $cycle->total_of_cats = 0;
         $cycle->total = 0;
+        $cycle->goal = 0;
 
         foreach ($cycle->supports as $support) {
             $support->male_dog_under_4m = 0;
@@ -249,6 +250,7 @@ class CampaignCycleController extends Controller
 
             $support->total_of_cats = 0;
             $support->total = 0;
+            $support->goal = 0;
 
             foreach ($support->points as $point) {
                 $support->male_dog_under_4m += $point->male_dog_under_4m;
@@ -276,6 +278,7 @@ class CampaignCycleController extends Controller
 
                 $support->total_of_cats += $point->total_of_cats;
                 $support->total += $point->total;
+                $support->goal += $point->goal;
             }
 
             $cycle->male_dog_under_4m += $support->male_dog_under_4m;
@@ -303,6 +306,7 @@ class CampaignCycleController extends Controller
 
             $cycle->total_of_cats += $support->total_of_cats;
             $cycle->total += $support->total;
+            $cycle->goal += $support->goal;
         }
 
 
@@ -360,6 +364,7 @@ class CampaignCycleController extends Controller
 
         $cycle->total_of_cats = 0;
         $cycle->total = 0;
+        $cycle->goal = 0;
 
         foreach ($cycle->supports as $support) {
             $support->male_dog_under_4m = 0;
@@ -387,6 +392,7 @@ class CampaignCycleController extends Controller
 
             $support->total_of_cats = 0;
             $support->total = 0;
+            $support->goal = 0;
 
             foreach ($support->points as $point) {
                 $support->male_dog_under_4m += $point->male_dog_under_4m;
@@ -414,6 +420,7 @@ class CampaignCycleController extends Controller
 
                 $support->total_of_cats += $point->total_of_cats;
                 $support->total += $point->total;
+                $support->goal += $point->goal;
             }
 
             $cycle->male_dog_under_4m += $support->male_dog_under_4m;
@@ -441,6 +448,7 @@ class CampaignCycleController extends Controller
 
             $cycle->total_of_cats += $support->total_of_cats;
             $cycle->total += $support->total;
+            $cycle->goal += $support->goral;
         }
 
         if ($request->has('details')) {
