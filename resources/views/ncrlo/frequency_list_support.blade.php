@@ -106,7 +106,7 @@
 <body>
     <div class="conteiner">
         <div class="date">
-            <strong>{{ $today }}</strong>
+            <strong>{{ $currentDate }}</strong>
         </div>
         <div class="header">
             <div class="logo-header">
@@ -119,76 +119,39 @@
                 <strong>Núcleo de Controle da Raiva, Leishmaniose e Outras Zoonoses - NCRLOZ</strong><br />
             </div>
             <div class="center" style="text-align:center">
-                <h2>Frequência</h2>
+                <h3>Frequência</h3>
             </div>
         </div>
 
         <div class="content">
-            <div>
-                <strong> {{ $cycle->description }} </strong>
-            </div>
 
-            @if (count($cycle->payrolls) > 0)
+            @if (count($cycle->beforeColdChains) > 0)
                 <div>
-                    <strong> Folha de pagamento </strong>
+                    <strong> {{ $cycle->description }} </strong>
+                    <strong>- Rede de Frio {{ $before }} </strong>
                 </div>
-
-                <table class="table-vacination">
-                    <thead>
-                        <th class="border">Mat.</th>
-                        <th class="border">Nome</th>
-                        <th class="border">Fone</th>
-                        <th class="border">FMS</th>
-                        <th class="border">ACE</th>
-                        <th class="border">ACS</th>
-                        <th class="border">Assinatura</th>
-                    </thead>
-                    @foreach ($cycle->payrolls as $payroll)
-                        <tr>
-                            <td class="border line-mat"> {{ $payroll->registration }} </td>
-                            <td class="border line-name"> {{ $payroll->name }} </td>
-                            <td class="border"> {{ $payroll->phone }} </td>
-                            <td class="border line-origin"></td>
-                            <td class="border line-origin"></td>
-                            <td class="border line-origin"></td>
-                            <td class="border line-vaccinator"></td>
-                        </tr>
-                    @endforeach
+                <table>
+                    <tr>
+                        <td class="name">
+                            Coordenador: {{ $cycle->coldChainCoordinator->registration }} -
+                            {{ $cycle->coldChainCoordinator->name }} -
+                            {{ $cycle->coldChainCoordinator->phone }}
+                        </td>
+                        <td class="line">
+                        </td>
+                    </tr>
                 </table>
-            @endif
-
-            @if (count($cycle->statistics) > 0)
-                <div>
-                    <strong> Estatística </strong>
-                </div>
-                <table class="table-vacination">
-                    <thead>
-                        <th class="border">Mat.</th>
-                        <th class="border">Nome</th>
-                        <th class="border">Fone</th>
-                        <th class="border">FMS</th>
-                        <th class="border">ACE</th>
-                        <th class="border">ACS</th>
-                        <th class="border">Assinatura</th>
-                    </thead>
-                    @foreach ($cycle->statistics as $statistic)
-                        <tr>
-                            <td class="border line-mat"> {{ $statistic->registration }} </td>
-                            <td class="border line-name"> {{ $statistic->name }} </td>
-                            <td class="border"> {{ $statistic->phone }} </td>
-                            <td class="border line-origin"></td>
-                            <td class="border line-origin"></td>
-                            <td class="border line-origin"></td>
-                            <td class="border line-vaccinator"></td>
-                        </tr>
-                    @endforeach
+                <table style="margin-bottom: 10px">
+                    <tr>
+                        <td class="name">
+                            Enfermeira: {{ $cycle->coldChainNurse->registration }} - {{ $cycle->coldChainNurse->name }}
+                            -
+                            {{ $cycle->coldChainNurse->phone }}
+                        </td>
+                        <td class="line">
+                        </td>
+                    </tr>
                 </table>
-            @endif
-
-            @if (count($cycle->transports) > 0)
-                <div>
-                    <strong> Estatística </strong>
-                </div>
                 <table class="table-vacination">
                     <thead>
                         <th class="border">Mat.</th>
@@ -199,39 +162,11 @@
                         <th class="border">ACS</th>
                         <th class="border">Assinatura</th>
                     </thead>
-                    @foreach ($cycle->transports as $transport)
+                    @foreach ($cycle->beforeColdChains as $beforeColdChain)
                         <tr>
-                            <td class="border line-mat"> {{ $transport->registration }} </td>
-                            <td class="border line-name"> {{ $transport->name }} </td>
-                            <td class="border"> {{ $transport->phone }} </td>
-                            <td class="border line-origin"></td>
-                            <td class="border line-origin"></td>
-                            <td class="border line-origin"></td>
-                            <td class="border line-vaccinator"></td>
-                        </tr>
-                    @endforeach
-                </table>
-            @endif
-
-            @if (count($cycle->coldChains) > 0)
-                <div>
-                    <strong> Estatística </strong>
-                </div>
-                <table class="table-vacination">
-                    <thead>
-                        <th class="border">Mat.</th>
-                        <th class="border">Nome</th>
-                        <th class="border">Fone</th>
-                        <th class="border">FMS</th>
-                        <th class="border">ACE</th>
-                        <th class="border">ACS</th>
-                        <th class="border">Assinatura</th>
-                    </thead>
-                    @foreach ($cycle->coldChains as $coldChain)
-                        <tr>
-                            <td class="border line-mat"> {{ $coldChain->registration }} </td>
-                            <td class="border line-name"> {{ $coldChain->name }} </td>
-                            <td class="border"> {{ $coldChain->phone }} </td>
+                            <td class="border line-mat"> {{ $beforeColdChain->registration }} </td>
+                            <td class="border line-name"> {{ $beforeColdChain->name }} </td>
+                            <td class="border"> {{ $beforeColdChain->phone }} </td>
                             <td class="border line-origin"></td>
                             <td class="border line-origin"></td>
                             <td class="border line-origin"></td>
@@ -301,6 +236,7 @@
                 </tr>
 
             </table>
+
         </div>
         <div class="footer">
             <hr />
@@ -311,6 +247,565 @@
                 </address>
             </div>
         </div>
+
+    </div>
+    <div style="page-break-after: always"></div>
+    <div class="conteiner">
+        <div class="date">
+            <strong>{{ $currentDate }}</strong>
+        </div>
+        <div class="header">
+            <div class="logo-header">
+                <img src="img/logo_teresina.jpg" alt="logo">
+            </div>
+            <div class="logo-text">
+                <strong>Prefeitura Municipal de Teresina</strong><br />
+                <strong>Fundação Municipal de Saúde</strong><br />
+                <strong>Gerência de Zoonoses GEZOON</strong><br />
+                <strong>Núcleo de Controle da Raiva, Leishmaniose e Outras Zoonoses - NCRLOZ</strong><br />
+            </div>
+            <div class="center" style="text-align:center">
+                <h2>Frequência</h2>
+            </div>
+        </div>
+
+        <div class="content">
+
+            @if (count($cycle->startColdChains) > 0)
+                <div>
+                    <strong> {{ $cycle->description }} </strong>
+                    <strong>- Rede de Frio {{ $start }} </strong>
+                </div>
+                <table>
+                    <tr>
+                        <td class="name">
+                            Coordenador: {{ $cycle->coldChainCoordinator->registration }} -
+                            {{ $cycle->coldChainCoordinator->name }} -
+                            {{ $cycle->coldChainCoordinator->phone }}
+                        </td>
+                        <td class="line">
+                        </td>
+                    </tr>
+                </table>
+                <table style="margin-bottom: 10px">
+                    <tr>
+                        <td class="name">
+                            Enfermeira: {{ $cycle->coldChainNurse->registration }} -
+                            {{ $cycle->coldChainNurse->name }} -
+                            {{ $cycle->coldChainNurse->phone }}
+                        </td>
+                        <td class="line">
+                        </td>
+                    </tr>
+                </table>
+                <table class="table-vacination">
+                    <thead>
+                        <th class="border">Mat.</th>
+                        <th class="border">Nome</th>
+                        <th class="border">Fone</th>
+                        <th class="border">FMS</th>
+                        <th class="border">ACE</th>
+                        <th class="border">ACS</th>
+                        <th class="border">Assinatura</th>
+                    </thead>
+                    @foreach ($cycle->startColdChains as $startColdChain)
+                        <tr>
+                            <td class="border line-mat"> {{ $startColdChain->registration }} </td>
+                            <td class="border line-name"> {{ $startColdChain->name }} </td>
+                            <td class="border"> {{ $startColdChain->phone }} </td>
+                            <td class="border line-origin"></td>
+                            <td class="border line-origin"></td>
+                            <td class="border line-origin"></td>
+                            <td class="border line-vaccinator"></td>
+                        </tr>
+                    @endforeach
+                </table>
+            @endif
+
+            <div>
+                <strong>Motoristas: </strong>
+            </div>
+            @if (count($cycle->driverColdChains) > 0)
+
+                <table class="table-vacination">
+                    <thead>
+                        <th class="border">Mat.</th>
+                        <th class="border">Nome</th>
+                        <th class="border">Fone</th>
+                        <th class="border">FMS</th>
+                        <th class="border">ACE</th>
+                        <th class="border">ACS</th>
+                        <th class="border">Assinatura</th>
+                    </thead>
+                    @foreach ($cycle->driverColdChains as $driverColdChain)
+                        <tr>
+                            <td class="border line-mat"> {{ $driverColdChain->registration }} </td>
+                            <td class="border line-name"> {{ $driverColdChain->name }} </td>
+                            <td class="border"> {{ $driverColdChain->phone }} </td>
+                            <td class="border line-origin"></td>
+                            <td class="border line-origin"></td>
+                            <td class="border line-origin"></td>
+                            <td class="border line-vaccinator"></td>
+                        </tr>
+                    @endforeach
+                </table>
+            @endif
+
+            <div>
+                <strong>Colaboradores: </strong>
+            </div>
+            <table class="table-vacination">
+                <thead>
+                    <th class="border">Mat.</th>
+                    <th class="border">Nome</th>
+                    <th class="border">Fone</th>
+                    <th class="border">FMS</th>
+                    <th class="border">ACE</th>
+                    <th class="border">ACS</th>
+                    <th class="border">Assinatura</th>
+                </thead>
+                <tr>
+                    <td class="border line-mat"></td>
+                    <td class="border line-name"></td>
+                    <td class="border"></td>
+                    <td class="border line-origin"></td>
+                    <td class="border line-origin"></td>
+                    <td class="border line-origin"></td>
+                    <td class="border line-vaccinator"></td>
+                </tr>
+                <tr>
+                    <td class="border line-mat"></td>
+                    <td class="border line-name"></td>
+                    <td class="border"></td>
+                    <td class="border line-origin"></td>
+                    <td class="border line-origin"></td>
+                    <td class="border line-origin"></td>
+                    <td class="border line-vaccinator"></td>
+                </tr>
+                <tr>
+                    <td class="border line-mat"></td>
+                    <td class="border line-name"></td>
+                    <td class="border"></td>
+                    <td class="border line-origin"></td>
+                    <td class="border line-origin"></td>
+                    <td class="border line-origin"></td>
+                    <td class="border line-vaccinator"></td>
+                </tr>
+                <tr>
+                    <td class="border line-mat"></td>
+                    <td class="border line-name"></td>
+                    <td class="border"></td>
+                    <td class="border line-origin"></td>
+                    <td class="border line-origin"></td>
+                    <td class="border line-origin"></td>
+                    <td class="border line-vaccinator"></td>
+                </tr>
+                <tr>
+                    <td class="border line-mat"></td>
+                    <td class="border line-name"></td>
+                    <td class="border"></td>
+                    <td class="border line-origin"></td>
+                    <td class="border line-origin"></td>
+                    <td class="border line-origin"></td>
+                    <td class="border line-vaccinator"></td>
+                </tr>
+
+            </table>
+
+        </div>
+        <div class="footer">
+            <hr />
+            <div class="center">
+                <address>
+                    Rua Minas Gerais, Nº 909 – Bairro Matadouro. zona Norte. <br />
+                    Teresina - PI, 64018-560
+                </address>
+            </div>
+        </div>
+
+    </div>
+    <div style="page-break-after: always"></div>
+    <div class="conteiner">
+        <div class="date">
+            <strong>{{ $currentDate }}</strong>
+        </div>
+        <div class="header">
+            <div class="logo-header">
+                <img src="img/logo_teresina.jpg" alt="logo">
+            </div>
+            <div class="logo-text">
+                <strong>Prefeitura Municipal de Teresina</strong><br />
+                <strong>Fundação Municipal de Saúde</strong><br />
+                <strong>Gerência de Zoonoses GEZOON</strong><br />
+                <strong>Núcleo de Controle da Raiva, Leishmaniose e Outras Zoonoses - NCRLOZ</strong><br />
+            </div>
+            <div class="center" style="text-align:center">
+                <h2>Frequência</h2>
+            </div>
+        </div>
+
+        <div class="content">
+
+            @if (count($cycle->statistics) > 0)
+                <div>
+                    <strong> {{ $cycle->description }} </strong>
+                    <strong>- Estatística {{ $start }} </strong>
+                </div>
+                <table style="margin-bottom: 10px">
+                    <tr>
+                        <td class="name">
+                            Coordenador: {{ $cycle->statisticCoordinator->registration }} -
+                            {{ $cycle->statisticCoordinator->name }} -
+                            {{ $cycle->statisticCoordinator->phone }}
+                        </td>
+                        <td class="line">
+                        </td>
+                    </tr>
+                </table>
+                <table class="table-vacination">
+                    <thead>
+                        <th class="border">Mat.</th>
+                        <th class="border">Nome</th>
+                        <th class="border">Fone</th>
+                        <th class="border">FMS</th>
+                        <th class="border">ACE</th>
+                        <th class="border">ACS</th>
+                        <th class="border">Assinatura</th>
+                    </thead>
+                    @foreach ($cycle->statistics as $statistic)
+                        <tr>
+                            <td class="border line-mat"> {{ $statistic->registration }} </td>
+                            <td class="border line-name"> {{ $statistic->name }} </td>
+                            <td class="border"> {{ $statistic->phone }} </td>
+                            <td class="border line-origin"></td>
+                            <td class="border line-origin"></td>
+                            <td class="border line-origin"></td>
+                            <td class="border line-vaccinator"></td>
+                        </tr>
+                    @endforeach
+                </table>
+            @endif
+
+            <div>
+                <strong>Colaboradores: </strong>
+            </div>
+            <table class="table-vacination">
+                <thead>
+                    <th class="border">Mat.</th>
+                    <th class="border">Nome</th>
+                    <th class="border">Fone</th>
+                    <th class="border">FMS</th>
+                    <th class="border">ACE</th>
+                    <th class="border">ACS</th>
+                    <th class="border">Assinatura</th>
+                </thead>
+                <tr>
+                    <td class="border line-mat"></td>
+                    <td class="border line-name"></td>
+                    <td class="border"></td>
+                    <td class="border line-origin"></td>
+                    <td class="border line-origin"></td>
+                    <td class="border line-origin"></td>
+                    <td class="border line-vaccinator"></td>
+                </tr>
+                <tr>
+                    <td class="border line-mat"></td>
+                    <td class="border line-name"></td>
+                    <td class="border"></td>
+                    <td class="border line-origin"></td>
+                    <td class="border line-origin"></td>
+                    <td class="border line-origin"></td>
+                    <td class="border line-vaccinator"></td>
+                </tr>
+                <tr>
+                    <td class="border line-mat"></td>
+                    <td class="border line-name"></td>
+                    <td class="border"></td>
+                    <td class="border line-origin"></td>
+                    <td class="border line-origin"></td>
+                    <td class="border line-origin"></td>
+                    <td class="border line-vaccinator"></td>
+                </tr>
+                <tr>
+                    <td class="border line-mat"></td>
+                    <td class="border line-name"></td>
+                    <td class="border"></td>
+                    <td class="border line-origin"></td>
+                    <td class="border line-origin"></td>
+                    <td class="border line-origin"></td>
+                    <td class="border line-vaccinator"></td>
+                </tr>
+                <tr>
+                    <td class="border line-mat"></td>
+                    <td class="border line-name"></td>
+                    <td class="border"></td>
+                    <td class="border line-origin"></td>
+                    <td class="border line-origin"></td>
+                    <td class="border line-origin"></td>
+                    <td class="border line-vaccinator"></td>
+                </tr>
+
+            </table>
+
+        </div>
+        <div class="footer">
+            <hr />
+            <div class="center">
+                <address>
+                    Rua Minas Gerais, Nº 909 – Bairro Matadouro. zona Norte. <br />
+                    Teresina - PI, 64018-560
+                </address>
+            </div>
+        </div>
+
+    </div>
+    <div style="page-break-after: always"></div>
+    <div class="conteiner">
+        <div class="date">
+            <strong>{{ $currentDate }}</strong>
+        </div>
+        <div class="header">
+            <div class="logo-header">
+                <img src="img/logo_teresina.jpg" alt="logo">
+            </div>
+            <div class="logo-text">
+                <strong>Prefeitura Municipal de Teresina</strong><br />
+                <strong>Fundação Municipal de Saúde</strong><br />
+                <strong>Gerência de Zoonoses GEZOON</strong><br />
+                <strong>Núcleo de Controle da Raiva, Leishmaniose e Outras Zoonoses - NCRLOZ</strong><br />
+            </div>
+            <div class="center" style="text-align:center">
+                <h2>Frequência</h2>
+            </div>
+        </div>
+
+        <div class="content">
+
+            @if (count($cycle->transports) > 0)
+                <div>
+                    <strong> {{ $cycle->description }} </strong>
+                    <strong>- Apoio GETRANS {{ $start }} </strong>
+                </div>
+                <table class="table-vacination">
+                    <thead>
+                        <th class="border">Mat.</th>
+                        <th class="border">Nome</th>
+                        <th class="border">Fone</th>
+                        <th class="border">FMS</th>
+                        <th class="border">ACE</th>
+                        <th class="border">ACS</th>
+                        <th class="border">Assinatura</th>
+                    </thead>
+                    @foreach ($cycle->transports as $transport)
+                        <tr>
+                            <td class="border line-mat"> {{ $transport->registration }} </td>
+                            <td class="border line-name"> {{ $transport->name }} </td>
+                            <td class="border"> {{ $transport->phone }} </td>
+                            <td class="border line-origin"></td>
+                            <td class="border line-origin"></td>
+                            <td class="border line-origin"></td>
+                            <td class="border line-vaccinator"></td>
+                        </tr>
+                    @endforeach
+                </table>
+            @endif
+
+            <div>
+                <strong>Colaboradores: </strong>
+            </div>
+            <table class="table-vacination">
+                <thead>
+                    <th class="border">Mat.</th>
+                    <th class="border">Nome</th>
+                    <th class="border">Fone</th>
+                    <th class="border">FMS</th>
+                    <th class="border">ACE</th>
+                    <th class="border">ACS</th>
+                    <th class="border">Assinatura</th>
+                </thead>
+                <tr>
+                    <td class="border line-mat"></td>
+                    <td class="border line-name"></td>
+                    <td class="border"></td>
+                    <td class="border line-origin"></td>
+                    <td class="border line-origin"></td>
+                    <td class="border line-origin"></td>
+                    <td class="border line-vaccinator"></td>
+                </tr>
+                <tr>
+                    <td class="border line-mat"></td>
+                    <td class="border line-name"></td>
+                    <td class="border"></td>
+                    <td class="border line-origin"></td>
+                    <td class="border line-origin"></td>
+                    <td class="border line-origin"></td>
+                    <td class="border line-vaccinator"></td>
+                </tr>
+                <tr>
+                    <td class="border line-mat"></td>
+                    <td class="border line-name"></td>
+                    <td class="border"></td>
+                    <td class="border line-origin"></td>
+                    <td class="border line-origin"></td>
+                    <td class="border line-origin"></td>
+                    <td class="border line-vaccinator"></td>
+                </tr>
+                <tr>
+                    <td class="border line-mat"></td>
+                    <td class="border line-name"></td>
+                    <td class="border"></td>
+                    <td class="border line-origin"></td>
+                    <td class="border line-origin"></td>
+                    <td class="border line-origin"></td>
+                    <td class="border line-vaccinator"></td>
+                </tr>
+                <tr>
+                    <td class="border line-mat"></td>
+                    <td class="border line-name"></td>
+                    <td class="border"></td>
+                    <td class="border line-origin"></td>
+                    <td class="border line-origin"></td>
+                    <td class="border line-origin"></td>
+                    <td class="border line-vaccinator"></td>
+                </tr>
+
+            </table>
+
+        </div>
+        <div class="footer">
+            <hr />
+            <div class="center">
+                <address>
+                    Rua Minas Gerais, Nº 909 – Bairro Matadouro. zona Norte. <br />
+                    Teresina - PI, 64018-560
+                </address>
+            </div>
+        </div>
+
+    </div>
+    <div style="page-break-after: always"></div>
+    <div class="conteiner">
+        <div class="date">
+            <strong>{{ $currentDate }}</strong>
+        </div>
+        <div class="header">
+            <div class="logo-header">
+                <img src="img/logo_teresina.jpg" alt="logo">
+            </div>
+            <div class="logo-text">
+                <strong>Prefeitura Municipal de Teresina</strong><br />
+                <strong>Fundação Municipal de Saúde</strong><br />
+                <strong>Gerência de Zoonoses GEZOON</strong><br />
+                <strong>Núcleo de Controle da Raiva, Leishmaniose e Outras Zoonoses - NCRLOZ</strong><br />
+            </div>
+            <div class="center" style="text-align:center">
+                <h2>Frequência</h2>
+            </div>
+        </div>
+
+        <div class="content">
+
+            @if (count($cycle->zoonoses) > 0)
+                <div>
+                    <strong> {{ $cycle->description }} </strong>
+                    <strong>- Apoio GEZOON {{ $start }} </strong>
+                </div>
+                <table class="table-vacination">
+                    <thead>
+                        <th class="border">Mat.</th>
+                        <th class="border">Nome</th>
+                        <th class="border">Fone</th>
+                        <th class="border">FMS</th>
+                        <th class="border">ACE</th>
+                        <th class="border">ACS</th>
+                        <th class="border">Assinatura</th>
+                    </thead>
+                    @foreach ($cycle->zoonoses as $zoonose)
+                        <tr>
+                            <td class="border line-mat"> {{ $zoonose->registration }} </td>
+                            <td class="border line-name"> {{ $zoonose->name }} </td>
+                            <td class="border"> {{ $zoonose->phone }} </td>
+                            <td class="border line-origin"></td>
+                            <td class="border line-origin"></td>
+                            <td class="border line-origin"></td>
+                            <td class="border line-vaccinator"></td>
+                        </tr>
+                    @endforeach
+                </table>
+            @endif
+
+            <div>
+                <strong>Colaboradores: </strong>
+            </div>
+            <table class="table-vacination">
+                <thead>
+                    <th class="border">Mat.</th>
+                    <th class="border">Nome</th>
+                    <th class="border">Fone</th>
+                    <th class="border">FMS</th>
+                    <th class="border">ACE</th>
+                    <th class="border">ACS</th>
+                    <th class="border">Assinatura</th>
+                </thead>
+                <tr>
+                    <td class="border line-mat"></td>
+                    <td class="border line-name"></td>
+                    <td class="border"></td>
+                    <td class="border line-origin"></td>
+                    <td class="border line-origin"></td>
+                    <td class="border line-origin"></td>
+                    <td class="border line-vaccinator"></td>
+                </tr>
+                <tr>
+                    <td class="border line-mat"></td>
+                    <td class="border line-name"></td>
+                    <td class="border"></td>
+                    <td class="border line-origin"></td>
+                    <td class="border line-origin"></td>
+                    <td class="border line-origin"></td>
+                    <td class="border line-vaccinator"></td>
+                </tr>
+                <tr>
+                    <td class="border line-mat"></td>
+                    <td class="border line-name"></td>
+                    <td class="border"></td>
+                    <td class="border line-origin"></td>
+                    <td class="border line-origin"></td>
+                    <td class="border line-origin"></td>
+                    <td class="border line-vaccinator"></td>
+                </tr>
+                <tr>
+                    <td class="border line-mat"></td>
+                    <td class="border line-name"></td>
+                    <td class="border"></td>
+                    <td class="border line-origin"></td>
+                    <td class="border line-origin"></td>
+                    <td class="border line-origin"></td>
+                    <td class="border line-vaccinator"></td>
+                </tr>
+                <tr>
+                    <td class="border line-mat"></td>
+                    <td class="border line-name"></td>
+                    <td class="border"></td>
+                    <td class="border line-origin"></td>
+                    <td class="border line-origin"></td>
+                    <td class="border line-origin"></td>
+                    <td class="border line-vaccinator"></td>
+                </tr>
+
+            </table>
+
+        </div>
+        <div class="footer">
+            <hr />
+            <div class="center">
+                <address>
+                    Rua Minas Gerais, Nº 909 – Bairro Matadouro. zona Norte. <br />
+                    Teresina - PI, 64018-560
+                </address>
+            </div>
+        </div>
+
     </div>
 </body>
 

@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Barryvdh\DomPDF\Facade\Pdf;
 use DateTime;
+use DateInterval;
 
 class CampaignCycleController extends Controller
 {
@@ -49,8 +50,19 @@ class CampaignCycleController extends Controller
             'description' => $request->description,
             'start' => $request->start,
             'end' => $request->end,
-            'campaign_id' => $request->campaign_id
+            'campaign_id' => $request->campaign_id,
+            'statistic_coordinator_id' => $request->statistic_coordinator_id,
+            'cold_chain_coordinator_id' => $request->cold_chain_coordinator_id,
+            'cold_chain_nurse_id' => $request->cold_chain_nurse_id
         ]);
+        $cycle->statistics()->sync($request->statistics);
+        $cycle->transports()->sync($request->transports);
+        $cycle->beforeColdChains()->sync($request->before_cold_chains);
+        $cycle->startColdChains()->sync($request->start_cold_chains);
+        $cycle->driverColdChains()->sync($request->driver_cold_chains);
+        $cycle->zoonoses()->sync($request->zoonoses);
+
+        $cycle->save();
 
         return $cycle;
     }
@@ -125,10 +137,15 @@ class CampaignCycleController extends Controller
         $cycle->description = $request->description;
         $cycle->start = $request->start;
         $cycle->end = $request->end;
-        $cycle->payrolls()->sync($request->payrolls);
+        $cycle->statistic_coordinator_id = $request->statistic_coordinator_id;
+        $cycle->cold_chain_coordinator_id = $request->cold_chain_coordinator_id;
+        $cycle->cold_chain_nurse_id = $request->cold_chain_nurse_id;
         $cycle->statistics()->sync($request->statistics);
         $cycle->transports()->sync($request->transports);
-        $cycle->coldChains()->sync($request->cold_chains);
+        $cycle->beforeColdChains()->sync($request->before_cold_chains);
+        $cycle->startColdChains()->sync($request->start_cold_chains);
+        $cycle->driverColdChains()->sync($request->driver_cold_chains);
+        $cycle->zoonoses()->sync($request->zoonoses);
 
         $cycle->save();
 
@@ -471,19 +488,37 @@ class CampaignCycleController extends Controller
 
     public function frequency(Request $request, $id)
     {
-        $today = date("d-m-Y");
+        $today = new DateTime();
         $cycle = CampaignCycle::with([
-            'payrolls',
+            'coldChainCoordinator',
+            'coldChainNurse',
+            'beforeColdChains',
+            'startColdChains',
+            'statisticCoordinator',
             'statistics',
             'transports',
-            'coldChains'
+            'zoonoses'
+
         ])->findOrFail($id);
+
+        $start = new DateTime($cycle->start);
+        $before = new DateTime($cycle->start);
+        //Subtract a day using DateInterval
+        $before->sub(new DateInterval('P1D'));
+
+        //Get the date in a YYYY-MM-DD format.
+        $before = $before->format('d/m/Y');
+        $start = $start->format('d/m/Y');
+        $currentDate = $today->format('d/m/Y');
+        $today = $today->format('Y-m-d');
 
         return PDF::loadView(
             'ncrlo.frequency_list_support',
             [
                 'cycle' => $cycle,
-                'today' => $today,
+                'currentDate' => $currentDate,
+                'start' => $start,
+                'before' => $before,
             ]
         )->setPaper('a4', 'landscape')->download("Frequência Locação de Pessoal {$today}.pdf");
         //return view('receipt');

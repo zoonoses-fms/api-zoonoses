@@ -103,10 +103,12 @@ class CampaignController extends Controller
         }
         $campaign = Campaign::with([
             'cycles',
-            'cycles.payrolls',
             'cycles.statistics',
             'cycles.transports',
-            'cycles.coldChains'
+            'cycles.beforeColdChains',
+            'cycles.startColdChains',
+            'cycles.driverColdChains',
+            'cycles.zoonoses'
         ])->findOrFail($id);
 
         return $campaign;

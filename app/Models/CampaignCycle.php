@@ -39,14 +39,9 @@ class CampaignCycle extends Model
         return $this->hasMany(CampaingSupport::class, 'campaign_cycle_id')->orderBy('updated_at', 'desc');
     }
 
-    public function payrolls()
+    public function statisticCoordinator()
     {
-        return $this->belongsToMany(
-            VaccinationWorker::class,
-            'payroll_cycle',
-            'campaign_cycle_id',
-            'payroll_id'
-        );
+        return $this->belongsTo(VaccinationWorker::class, 'statistic_coordinator_id');
     }
 
     public function statistics()
@@ -56,6 +51,46 @@ class CampaignCycle extends Model
             'statistic_cycle',
             'campaign_cycle_id',
             'statistic_id'
+        );
+    }
+
+    public function coldChainCoordinator()
+    {
+        return $this->belongsTo(VaccinationWorker::class, 'cold_chain_coordinator_id');
+    }
+
+    public function coldChainNurse()
+    {
+        return $this->belongsTo(VaccinationWorker::class, 'cold_chain_nurse_id');
+    }
+
+    public function beforeColdChains()
+    {
+        return $this->belongsToMany(
+            VaccinationWorker::class,
+            'before_cold_chain_cycle',
+            'campaign_cycle_id',
+            'before_cold_chain_id'
+        );
+    }
+
+    public function startColdChains()
+    {
+        return $this->belongsToMany(
+            VaccinationWorker::class,
+            'start_cold_chain_cycle',
+            'campaign_cycle_id',
+            'start_cold_chain_id'
+        );
+    }
+
+    public function driverColdChains()
+    {
+        return $this->belongsToMany(
+            VaccinationWorker::class,
+            'driver_cold_chain_cycle',
+            'campaign_cycle_id',
+            'driver_cold_chain_id'
         );
     }
 
@@ -69,14 +104,13 @@ class CampaignCycle extends Model
         );
     }
 
-
-    public function coldChains()
+    public function zoonoses()
     {
         return $this->belongsToMany(
             VaccinationWorker::class,
-            'cold_chain_cycle',
+            'zoonoses_cycle',
             'campaign_cycle_id',
-            'cold_chain_id'
+            'zoonoses_id'
         );
     }
 }
