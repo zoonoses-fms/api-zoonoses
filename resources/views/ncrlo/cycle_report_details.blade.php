@@ -113,7 +113,7 @@
                 <strong>Núcleo de Controle da Raiva, Leishmaniose e Outras Zoonoses - NCRLOZ</strong><br />
             </div>
             <div class="center" style="text-align:center">
-                <h2>Relatório de Vicinação</h2>
+                <h2>Relatório de Vacinação</h2>
             </div>
         </div>
 
@@ -169,7 +169,7 @@
             @if (count($cycle->supports) > 0)
                 @foreach ($cycle->supports as $support)
                     <div>
-                        <h4> {{ $support->support->name }} </h4>
+                        <h4> {{ $support->support->name }} - {{ $support->saads[0]->name }}</h4>
                     </div>
                     <table>
                         <thead>
