@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Barryvdh\DomPDF\Facade\Pdf;
 use DateTime;
 use DateInterval;
+use stdClass;
 
 class CampaignCycleController extends Controller
 {
@@ -205,6 +206,7 @@ class CampaignCycleController extends Controller
     public function report(Request $request, $id)
     {
         $today = date("d-m-Y");
+        $arraySaad = [];
         $cycle = CampaignCycle::with([
             'supports.support.neighborhoodAlias.neighborhood',
             'supports.saads',
@@ -269,6 +271,51 @@ class CampaignCycleController extends Controller
             $support->total = 0;
             $support->goal = 0;
 
+            $indexSaad = null;
+
+            foreach ($arraySaad as $saad) {
+                if ($support->saads[0]->id == $saad->id) {
+                    $indexSaad = $saad->id;
+                    break;
+                }
+            }
+
+            if ($indexSaad == null) {
+                $saad = new stdClass();
+                $saad->id = $support->saads[0]->id;
+                $saad->name = $support->saads[0]->name;
+                $indexSaad = $support->saads[0]->id;
+
+                $arraySaad[$indexSaad] = $saad;
+
+                $arraySaad[$indexSaad]->male_dog_under_4m = 0;
+                $arraySaad[$indexSaad]->female_dog_under_4m = 0;
+
+                $arraySaad[$indexSaad]->male_dog_major_4m_under_1y = 0;
+                $arraySaad[$indexSaad]->female_dog_major_4m_under_1y = 0;
+
+                $arraySaad[$indexSaad]->male_dog_major_1y_under_2y = 0;
+                $arraySaad[$indexSaad]->female_dog_major_1y_under_2y = 0;
+
+                $arraySaad[$indexSaad]->male_dog_major_2y_under_4y = 0;
+                $arraySaad[$indexSaad]->female_dog_major_2y_under_4y = 0;
+
+                $arraySaad[$indexSaad]->male_dog_major_4y = 0;
+                $arraySaad[$indexSaad]->female_dog_major_4y = 0;
+
+                $arraySaad[$indexSaad]->male_dogs = 0;
+                $arraySaad[$indexSaad]->female_dogs = 0;
+
+                $arraySaad[$indexSaad]->total_of_dogs = 0;
+
+                $arraySaad[$indexSaad]->male_cat = 0;
+                $arraySaad[$indexSaad]->female_cat = 0;
+
+                $arraySaad[$indexSaad]->total_of_cats = 0;
+                $arraySaad[$indexSaad]->total = 0;
+                $arraySaad[$indexSaad]->goal = 0;
+            }
+
             foreach ($support->points as $point) {
                 $support->male_dog_under_4m += $point->male_dog_under_4m;
                 $support->female_dog_under_4m += $point->female_dog_under_4m;
@@ -298,6 +345,33 @@ class CampaignCycleController extends Controller
                 $support->goal += $point->goal;
             }
 
+            $arraySaad[$indexSaad]->male_dog_under_4m += $support->male_dog_under_4m;
+            $arraySaad[$indexSaad]->female_dog_under_4m += $support->female_dog_under_4m;
+
+            $arraySaad[$indexSaad]->male_dog_major_4m_under_1y += $support->male_dog_major_4m_under_1y;
+            $arraySaad[$indexSaad]->female_dog_major_4m_under_1y += $support->female_dog_major_4m_under_1y;
+
+            $arraySaad[$indexSaad]->male_dog_major_1y_under_2y += $support->male_dog_major_1y_under_2y;
+            $arraySaad[$indexSaad]->female_dog_major_1y_under_2y += $support->female_dog_major_1y_under_2y;
+
+            $arraySaad[$indexSaad]->male_dog_major_2y_under_4y += $support->male_dog_major_2y_under_4y;
+            $arraySaad[$indexSaad]->female_dog_major_2y_under_4y += $support->female_dog_major_2y_under_4y;
+
+            $arraySaad[$indexSaad]->male_dog_major_4y += $support->male_dog_major_4y;
+            $arraySaad[$indexSaad]->female_dog_major_4y += $support->female_dog_major_4y;
+
+            $arraySaad[$indexSaad]->male_dogs += $support->male_dogs;
+            $arraySaad[$indexSaad]->female_dogs += $support->female_dogs;
+
+            $arraySaad[$indexSaad]->total_of_dogs += $support->total_of_dogs;
+
+            $arraySaad[$indexSaad]->male_cat += $support->male_cat;
+            $arraySaad[$indexSaad]->female_cat += $support->female_cat;
+
+            $arraySaad[$indexSaad]->total_of_cats += $support->total_of_cats;
+            $arraySaad[$indexSaad]->total += $support->total;
+            $arraySaad[$indexSaad]->goal += $support->goal;
+
             $cycle->male_dog_under_4m += $support->male_dog_under_4m;
             $cycle->female_dog_under_4m += $support->female_dog_under_4m;
 
@@ -326,24 +400,14 @@ class CampaignCycleController extends Controller
             $cycle->goal += $support->goal;
         }
 
+        $cycle->saads = $arraySaad;
         return $cycle;
-
-        /*
-        return PDF::loadView(
-            'ncrlo.location',
-            [
-                'cycle' => $cycle,
-                'today' => $today,
-            ]
-        )->download("Relatório de Locação de Pessoal {$today}.pdf");
-        */
-
-        //return view('receipt');
     }
 
     public function reportPdf(Request $request, $id)
     {
         $today = date("d-m-Y");
+        $arraySaad = [];
         $cycle = CampaignCycle::with([
             'supports.support.neighborhoodAlias.neighborhood',
             'supports.saads',
@@ -408,6 +472,51 @@ class CampaignCycleController extends Controller
             $support->total = 0;
             $support->goal = 0;
 
+            $indexSaad = null;
+
+            foreach ($arraySaad as $saad) {
+                if ($support->saads[0]->id == $saad->id) {
+                    $indexSaad = $saad->id;
+                    break;
+                }
+            }
+
+            if ($indexSaad == null) {
+                $saad = new stdClass();
+                $saad->id = $support->saads[0]->id;
+                $saad->name = $support->saads[0]->name;
+                $indexSaad = $support->saads[0]->id;
+
+                $arraySaad[$indexSaad] = $saad;
+
+                $arraySaad[$indexSaad]->male_dog_under_4m = 0;
+                $arraySaad[$indexSaad]->female_dog_under_4m = 0;
+
+                $arraySaad[$indexSaad]->male_dog_major_4m_under_1y = 0;
+                $arraySaad[$indexSaad]->female_dog_major_4m_under_1y = 0;
+
+                $arraySaad[$indexSaad]->male_dog_major_1y_under_2y = 0;
+                $arraySaad[$indexSaad]->female_dog_major_1y_under_2y = 0;
+
+                $arraySaad[$indexSaad]->male_dog_major_2y_under_4y = 0;
+                $arraySaad[$indexSaad]->female_dog_major_2y_under_4y = 0;
+
+                $arraySaad[$indexSaad]->male_dog_major_4y = 0;
+                $arraySaad[$indexSaad]->female_dog_major_4y = 0;
+
+                $arraySaad[$indexSaad]->male_dogs = 0;
+                $arraySaad[$indexSaad]->female_dogs = 0;
+
+                $arraySaad[$indexSaad]->total_of_dogs = 0;
+
+                $arraySaad[$indexSaad]->male_cat = 0;
+                $arraySaad[$indexSaad]->female_cat = 0;
+
+                $arraySaad[$indexSaad]->total_of_cats = 0;
+                $arraySaad[$indexSaad]->total = 0;
+                $arraySaad[$indexSaad]->goal = 0;
+            }
+
             foreach ($support->points as $point) {
                 $support->male_dog_under_4m += $point->male_dog_under_4m;
                 $support->female_dog_under_4m += $point->female_dog_under_4m;
@@ -437,6 +546,33 @@ class CampaignCycleController extends Controller
                 $support->goal += $point->goal;
             }
 
+            $arraySaad[$indexSaad]->male_dog_under_4m += $support->male_dog_under_4m;
+            $arraySaad[$indexSaad]->female_dog_under_4m += $support->female_dog_under_4m;
+
+            $arraySaad[$indexSaad]->male_dog_major_4m_under_1y += $support->male_dog_major_4m_under_1y;
+            $arraySaad[$indexSaad]->female_dog_major_4m_under_1y += $support->female_dog_major_4m_under_1y;
+
+            $arraySaad[$indexSaad]->male_dog_major_1y_under_2y += $support->male_dog_major_1y_under_2y;
+            $arraySaad[$indexSaad]->female_dog_major_1y_under_2y += $support->female_dog_major_1y_under_2y;
+
+            $arraySaad[$indexSaad]->male_dog_major_2y_under_4y += $support->male_dog_major_2y_under_4y;
+            $arraySaad[$indexSaad]->female_dog_major_2y_under_4y += $support->female_dog_major_2y_under_4y;
+
+            $arraySaad[$indexSaad]->male_dog_major_4y += $support->male_dog_major_4y;
+            $arraySaad[$indexSaad]->female_dog_major_4y += $support->female_dog_major_4y;
+
+            $arraySaad[$indexSaad]->male_dogs += $support->male_dogs;
+            $arraySaad[$indexSaad]->female_dogs += $support->female_dogs;
+
+            $arraySaad[$indexSaad]->total_of_dogs += $support->total_of_dogs;
+
+            $arraySaad[$indexSaad]->male_cat += $support->male_cat;
+            $arraySaad[$indexSaad]->female_cat += $support->female_cat;
+
+            $arraySaad[$indexSaad]->total_of_cats += $support->total_of_cats;
+            $arraySaad[$indexSaad]->total += $support->total;
+            $arraySaad[$indexSaad]->goal += $support->goal;
+
             $cycle->male_dog_under_4m += $support->male_dog_under_4m;
             $cycle->female_dog_under_4m += $support->female_dog_under_4m;
 
@@ -464,6 +600,8 @@ class CampaignCycleController extends Controller
             $cycle->total += $support->total;
             $cycle->goal += $support->goal;
         }
+
+        $cycle->saads = $arraySaad;
 
         if ($request->has('details')) {
             return PDF::loadView(

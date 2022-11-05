@@ -157,6 +157,47 @@
                 </tbody>
             </table>
 
+            @if (count($cycle->saads) > 0)
+                <table>
+                    <thead>
+                        <tr>
+                            <th class="border">Nome</th>
+                            <th class="border">Cães</th>
+                            <th class="border">Cadelas</th>
+                            <th class="border">Total Cães</th>
+                            <th class="border">Gatos</th>
+                            <th class="border">Gatas</th>
+                            <th class="border">Total Gatos</th>
+                            <th class="border">Total</th>
+                            <th class="border">Meta</th>
+                            <th class="border">Cobertura</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($cycle->saads as $saad)
+                            <tr>
+                                <td class="border"> {{ $saad->name }} </td>
+                                <td class="border"> {{ $saad->male_dogs }} </td>
+                                <td class="border"> {{ $saad->female_dogs }} </td>
+                                <td class="border"> {{ $saad->total_of_dogs }} </td>
+                                <td class="border"> {{ $saad->male_cat }} </td>
+                                <td class="border"> {{ $saad->female_cat }} </td>
+                                <td class="border"> {{ $saad->total_of_cats }} </td>
+                                <td class="border"> {{ $saad->total }} </td>
+                                <td class="border"> {{ $saad->goal }} </td>
+                                @if ($saad->total > 0 && $saad->goal > 0)
+                                    <td class="border">
+                                        {{ number_format($saad->total / ($saad->goal / 100), 2, ',', ' ') }}%
+                                    </td>
+                                @else
+                                    <td class="border"> 0% </td>
+                                @endif
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            @endif
+
             @if (count($cycle->supports) > 0)
                 @foreach ($cycle->supports as $support)
                     <div>
