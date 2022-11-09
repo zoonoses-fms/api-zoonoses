@@ -36,7 +36,7 @@ class CampaignCycle extends Model
 
     public function supports()
     {
-        return $this->hasMany(CampaingSupport::class, 'campaign_cycle_id')->orderBy('updated_at', 'desc');
+        return $this->hasMany(CampaingSupport::class, 'campaign_cycle_id')->orderBy('order', 'asc');
     }
 
     public function statisticCoordinator()

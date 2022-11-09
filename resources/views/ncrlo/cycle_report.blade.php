@@ -249,7 +249,6 @@
                                 <th class="border">Total Gatos</th>
                                 <th class="border">Total</th>
                                 <th class="border">Meta</th>
-                                <th class="border">Cobertura</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -264,13 +263,6 @@
                                     <td class="border"> {{ $point->total_of_cats }} </td>
                                     <td class="border"> {{ $point->total }} </td>
                                     <td class="border"> {{ $point->goal }} </td>
-                                    @if ($point->total > 0 && $point->goal > 0)
-                                        <td class="border">
-                                            {{ number_format($point->total / ($point->goal / 100), 2, ',', ' ') }}%
-                                        </td>
-                                    @else
-                                        <td class="border"> 0% </td>
-                                    @endif
                                 </tr>
                             @endforeach
                         </tbody>

@@ -78,6 +78,7 @@ class CampaingSupportController extends Controller
     public function update(Request $request, $id)
     {
         $support = CampaingSupport::findOrFail($id);
+        $support->order = $request->order;
         $support->goal = $request->goal;
         $support->mileage = $request->mileage;
         $support->coordinator_id = $request->coordinator_id;

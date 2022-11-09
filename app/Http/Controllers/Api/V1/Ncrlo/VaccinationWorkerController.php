@@ -25,7 +25,6 @@ class VaccinationWorkerController extends Controller
             'vaccinators',
             'assistants',
             'annotators',
-            'rural_supervisors',
             'rural_assistants',
             'statistics',
             'transports',
@@ -42,9 +41,13 @@ class VaccinationWorkerController extends Controller
             'cold_chain_nurse'
         );
 
+        $listTypeFree = array('free');
+
+        $listTypeAll = array('all', 'rural_supervisors');
+
         if ($request->has('list_type')) {
             $campaign_cycle_id = $request->campaign_cycle_id;
-            if ($request->list_type == 'all') {
+            if (in_array($request->list_type, $listTypeAll)) {
                 return VaccinationWorker::when(
                     $request->has('keyword'),
                     function ($query) use ($request) {
@@ -58,7 +61,7 @@ class VaccinationWorkerController extends Controller
                 )
                 ->orderBy('name', 'asc')
                 ->get();
-            } elseif ($request->list_type == 'free') {
+            } elseif (in_array($request->list_type, $listTypeFree)) {
                 $listNotFreeWorkers = VaccinationWorker::listNotFreeWorkers($campaign_cycle_id);
                 return VaccinationWorker::listFreeWorkers($request, $listNotFreeWorkers);
             } elseif (in_array($request->list_type, $listTypeCoordinator)) {
