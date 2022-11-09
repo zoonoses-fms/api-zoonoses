@@ -60,7 +60,16 @@ class CampaignController extends Controller
             'vaccine_cost' => $request->vaccine_cost,
             'mileage_cost' => $request->mileage_cost,
             'driver_cost' => $request->driver_cost,
-            'coordinator_id' => $request->coordinator_id
+            'coordinator_id' => $request->coordinator_id,
+
+            'statistic_coordinator_cost' => $request->statistic_coordinator_cost,
+            'cold_chain_coordinator_cost' => $request->cold_chain_coordinator_cost,
+            'cold_chain_nurse_cost' => $request->cold_chain_nurse_cost,
+            'statistic_cost' => $request->statistic_cost,
+            'cold_chain_cost' => $request->cold_chain_cost,
+            'zoonoses_cost' => $request->zoonoses_cost,
+            'transport_cost' => $request->transport_cost,
+
         ]);
 
         return $campaign;
@@ -142,6 +151,15 @@ class CampaignController extends Controller
         $campaign->mileage_cost = $request->mileage_cost;
         $campaign->driver_cost = $request->driver_cost;
         $campaign->coordinator_id = $request->coordinator_id;
+
+        $campaign->statistic_coordinator_cost = $request->statistic_coordinator_cost;
+        $campaign->cold_chain_coordinator_cost = $request->cold_chain_coordinator_cost;
+        $campaign->cold_chain_nurse_cost = $request->cold_chain_nurse_cost;
+        $campaign->statistic_cost = $request->statistic_cost;
+        $campaign->cold_chain_cost = $request->cold_chain_cost;
+        $campaign->zoonoses_cost = $request->zoonoses_cost;
+        $campaign->transport_cost = $request->transport_cost;
+
         $campaign->save();
 
         return $campaign;
