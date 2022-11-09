@@ -71,12 +71,15 @@ class VaccinationWorkerController extends Controller
                 unset($listNotFreeWorkers[$index]);
                 return VaccinationWorker::listFreeWorkers($request, $listNotFreeWorkers);
             } elseif (in_array($request->list_type, $listType)) {
-                $ids = $request->ids;
                 $listNotFreeWorkers = VaccinationWorker::listNotFreeWorkers($campaign_cycle_id);
-                foreach ($ids as $id) {
-                    $index = array_search($id, $listNotFreeWorkers);
-                    unset($listNotFreeWorkers[$index]);
+                if ($request->has('ids')) {
+                    $ids = $request->ids;
+                    foreach ($ids as $id) {
+                        $index = array_search($id, $listNotFreeWorkers);
+                        unset($listNotFreeWorkers[$index]);
+                    }
                 }
+
                 return VaccinationWorker::listFreeWorkers($request, $listNotFreeWorkers);
             }
         }
