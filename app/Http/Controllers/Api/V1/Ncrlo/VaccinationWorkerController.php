@@ -25,7 +25,6 @@ class VaccinationWorkerController extends Controller
             'vaccinators',
             'assistants',
             'annotators',
-            'rural_assistants',
             'statistics',
             'transports',
             'before_cold_chains',
@@ -43,7 +42,7 @@ class VaccinationWorkerController extends Controller
 
         $listTypeFree = array('free');
 
-        $listTypeAll = array('all', 'rural_supervisors');
+        $listTypeAll = array('all', 'rural_supervisors', 'rural_assistants');
 
         if ($request->has('list_type')) {
             $campaign_cycle_id = $request->campaign_cycle_id;
