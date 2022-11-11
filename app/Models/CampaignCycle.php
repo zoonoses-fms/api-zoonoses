@@ -84,33 +84,63 @@ class CampaignCycle extends Model
         );
     }
 
-    public function driverColdChains()
+    public function beforeDriverColdChains()
     {
         return $this->belongsToMany(
             VaccinationWorker::class,
-            'driver_cold_chain_cycle',
+            'before_driver_cold_chain_cycle',
             'campaign_cycle_id',
-            'driver_cold_chain_id'
+            'before_driver_cold_chain_id'
         );
     }
 
-    public function transports()
+    public function startDriverColdChains()
     {
         return $this->belongsToMany(
             VaccinationWorker::class,
-            'transport_cycle',
+            'start_driver_cold_chain_cycle',
             'campaign_cycle_id',
-            'transport_id'
+            'start_driver_cold_chain_id'
         );
     }
 
-    public function zoonoses()
+    public function beforeTransports()
     {
         return $this->belongsToMany(
             VaccinationWorker::class,
-            'zoonoses_cycle',
+            'before_transport_cycle',
             'campaign_cycle_id',
-            'zoonoses_id'
+            'before_transport_id'
+        );
+    }
+
+    public function startTransports()
+    {
+        return $this->belongsToMany(
+            VaccinationWorker::class,
+            'start_transport_cycle',
+            'campaign_cycle_id',
+            'start_transport_id'
+        );
+    }
+
+    public function beforeZoonoses()
+    {
+        return $this->belongsToMany(
+            VaccinationWorker::class,
+            'before_zoonoses_cycle',
+            'campaign_cycle_id',
+            'before_zoonoses_id'
+        );
+    }
+
+    public function startZoonoses()
+    {
+        return $this->belongsToMany(
+            VaccinationWorker::class,
+            'start_zoonoses_cycle',
+            'campaign_cycle_id',
+            'start_zoonoses_id'
         );
     }
 }

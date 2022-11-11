@@ -43,7 +43,7 @@ class CampaignCycleController extends Controller
             'number' => 'required',
             'description' => 'required',
             'start' => 'required',
-            'campaign_id' => 'required'
+            'campaing_id' => 'required'
         ]);
 
         $cycle = CampaignCycle::create([
@@ -51,17 +51,24 @@ class CampaignCycleController extends Controller
             'description' => $request->description,
             'start' => $request->start,
             'end' => $request->end,
-            'campaign_id' => $request->campaign_id,
+            'campaing_id' => $request->campaing_id,
             'statistic_coordinator_id' => $request->statistic_coordinator_id,
             'cold_chain_coordinator_id' => $request->cold_chain_coordinator_id,
             'cold_chain_nurse_id' => $request->cold_chain_nurse_id
         ]);
         $cycle->statistics()->sync($request->statistics);
-        $cycle->transports()->sync($request->transports);
+
+        $cycle->beforeTransports()->sync($request->before_transports);
+        $cycle->startTransports()->sync($request->start_transports);
+
         $cycle->beforeColdChains()->sync($request->before_cold_chains);
         $cycle->startColdChains()->sync($request->start_cold_chains);
-        $cycle->driverColdChains()->sync($request->driver_cold_chains);
-        $cycle->zoonoses()->sync($request->zoonoses);
+
+        $cycle->beforeDriverColdChains()->sync($request->before_driver_cold_chains);
+        $cycle->startDriverColdChains()->sync($request->start_driver_cold_chains);
+
+        $cycle->beforeZoonoses()->sync($request->before_zoonoses);
+        $cycle->startZoonoses()->sync($request->start_zoonoses);
 
         $cycle->save();
 
@@ -142,11 +149,18 @@ class CampaignCycleController extends Controller
         $cycle->cold_chain_coordinator_id = $request->cold_chain_coordinator_id;
         $cycle->cold_chain_nurse_id = $request->cold_chain_nurse_id;
         $cycle->statistics()->sync($request->statistics);
-        $cycle->transports()->sync($request->transports);
+
+        $cycle->beforeTransports()->sync($request->before_transports);
+        $cycle->startTransports()->sync($request->start_transports);
+
         $cycle->beforeColdChains()->sync($request->before_cold_chains);
         $cycle->startColdChains()->sync($request->start_cold_chains);
-        $cycle->driverColdChains()->sync($request->driver_cold_chains);
-        $cycle->zoonoses()->sync($request->zoonoses);
+
+        $cycle->beforeDriverColdChains()->sync($request->before_driver_cold_chains);
+        $cycle->startDriverColdChains()->sync($request->start_driver_cold_chains);
+
+        $cycle->beforeZoonoses()->sync($request->before_zoonoses);
+        $cycle->startZoonoses()->sync($request->start_zoonoses);
 
         $cycle->save();
 
@@ -632,10 +646,14 @@ class CampaignCycleController extends Controller
             'coldChainNurse',
             'beforeColdChains',
             'startColdChains',
+            'beforeDriverColdChains',
+            'startDriverColdChains',
             'statisticCoordinator',
             'statistics',
-            'transports',
-            'zoonoses'
+            'beforeTransports',
+            'startTransports',
+            'beforeZoonoses',
+            'startZoonoses'
 
         ])->findOrFail($id);
 
@@ -660,5 +678,153 @@ class CampaignCycleController extends Controller
             ]
         )->setPaper('a4', 'landscape')->download("Frequência Locação de Pessoal {$today}.pdf");
         //return view('receipt');
+    }
+
+    public function payroll(Request $request, $id)
+    {
+        $today = new DateTime();
+        $cycle = CampaignCycle::with([
+            'campaing',
+            'coldChainCoordinator',
+            'coldChainNurse',
+            'beforeColdChains',
+            'startColdChains',
+            'beforeDriverColdChains',
+            'startDriverColdChains',
+            'statisticCoordinator',
+            'statistics',
+            'beforeTransports',
+            'startTransports',
+            'beforeZoonoses',
+            'startZoonoses',
+            'supports.coordinator',
+            'supports.supervisors',
+            'supports.assistants',
+            'supports.drivers',
+            'supports.vaccinators',
+            'supports.ruralSupervisors',
+            'supports.ruralAssistants',
+            'supports.points.vaccinators',
+            'supports.points.annotators',
+
+        ])->findOrFail($id);
+
+        // return $cycle;
+
+        $start = new DateTime($cycle->start);
+        $before = new DateTime($cycle->start);
+        //Subtract a day using DateInterval
+        $before->sub(new DateInterval('P1D'));
+
+        //Get the date in a YYYY-MM-DD format.
+        $before = $before->format('d/m/Y');
+        $start = $start->format('d/m/Y');
+        $currentDate = $today->format('d/m/Y');
+        $today = $today->format('Y-m-d');
+
+        $total['cycle']['total'] = 0;
+        $total['before']['total'] = 0;
+        $total['before']['cold_chain'] = 0;
+        $total['before']['driver_cold_chain'] = 0;
+        $total['before']['transport'] = 0;
+        $total['before']['zoonose'] = 0;
+
+        $total['before']['total'] += $cycle->campaing->cold_chain_coordinator_cost;
+        $total['before']['total'] += $cycle->campaing->cold_chain_nurse_cost;
+
+        $total['before']['cold_chain'] += ($cycle->campaing->cold_chain_cost * count($cycle->beforeColdChains));
+        $total['before']['total' ] += $total['before']['cold_chain'];
+
+        $total['before']['driver_cold_chain'] += ($cycle->campaing->driver_cost * count($cycle->beforeDriverColdChains));
+        $total['before']['total'] += $total['before']['driver_cold_chain'];
+
+        $total['before']['transport'] += ($cycle->campaing->transport_cost * count($cycle->beforeTransports));
+        $total['before']['total'] += $total['before']['transport'];
+
+        $total['before']['zoonose'] += ($cycle->campaing->zoonoses_cost * count($cycle->beforeZoonoses));
+        $total['before']['total'] += $total['before']['zoonose'];
+
+        $total['cycle']['total'] += $total['before']['total'];
+
+        $total['start']['total'] = 0;
+        $total['start']['cold_chain'] = 0;
+        $total['start']['driver_cold_chain'] = 0;
+        $total['start']['transport'] = 0;
+        $total['start']['zoonose'] = 0;
+        $total['start']['statistic'] = 0;
+        $total['start']['vaccinator'] = 0;
+        $total['start']['annotator'] = 0;
+        $total['start']['rural_supervisor'] = 0;
+        $total['start']['rural_assistant'] = 0;
+        $total['start']['coordinator'] = 0;
+        $total['start']['supervisor'] = 0;
+        $total['start']['assistant'] = 0;
+
+        $total['start']['total'] += $cycle->campaing->cold_chain_coordinator_cost;
+        $total['start']['total'] += $cycle->campaing->cold_chain_nurse_cost;
+
+        $total['start']['cold_chain'] += ($cycle->campaing->cold_chain_cost * count($cycle->startColdChains));
+        $total['start']['total'] += $total['start']['cold_chain'];
+
+        $total['start']['driver_cold_chain'] += ($cycle->campaing->driver_cost * count($cycle->startDriverColdChains));
+        $total['start']['total'] += $total['start']['driver_cold_chain'];
+
+        $total['start']['transport'] += ($cycle->campaing->transport_cost * count($cycle->startTransports));
+        $total['start']['total'] += $total['start']['transport'];
+
+        $total['start']['zoonose'] += ($cycle->campaing->zoonoses_cost * count($cycle->startZoonoses));
+        $total['start']['total'] += $total['start']['zoonose'];
+
+        $total['start']['total'] += $cycle->campaing->statistic_coordinator_cost;
+        $total['start']['statistic'] += ($cycle->campaing->statisic_cost * count($cycle->statistics));
+        $total['start']['total'] += $total['start']['statistic'];
+
+        foreach ($cycle->supports as $support) {
+
+            $total['start']['vaccinator'] += ($cycle->campaing->vaccinator_cost * count($support->vaccinators));
+            $total['start']['total'] += $total['start']['vaccinator'];
+
+            if ($support->is_rural) {
+                $total['start']['rural_supervisor'] += ($cycle->campaing->rural_supervisor_cost * count($support->ruralSupervisors));
+                $total['start']['total'] += $total['start']['rural_supervisor'];
+
+                $total['start']['rural_assistant'] += ($cycle->campaing->rural_assistant_cost * count($support->ruralAssistants));
+                $total['start']['total'] += $total['start']['rural_assistant'];
+            } else {
+                if ($support->coordinator) {
+                    $total['start']['coordinator'] += $cycle->campaing->coordinator_cost;
+                }
+
+                $total['start']['supervisor'] += ($cycle->campaing->supervisor_cost * count($support->supervisors));
+                $total['start']['total'] += $total['start']['supervisor'];
+
+                $total['start']['assistant'] += ($cycle->campaing->assistant_cost * count($support->assistants));
+                $total['start']['total'] += $total['start']['assistant'];
+            }
+
+
+            foreach ($support->points as $point) {
+                $total['start']['vaccinator'] += ($cycle->campaing->vaccinator_cost * count($point->vaccinators));
+                $total['start']['total'] += $total['start']['vaccinator'];
+
+                $total['start']['annotator'] += ($cycle->campaing->vaccinator_cost * count($point->annotators));
+                $total['start']['total'] += $total['start']['annotator'];
+                $total['start']['annotator'];
+            }
+        }
+
+        $total['cycle']['total'] += $total['start']['total'];
+
+        setlocale(LC_MONETARY, 'pt_BR');
+        return PDF::loadView(
+            'ncrlo.payroll',
+            [
+                'cycle' => $cycle,
+                'currentDate' => $currentDate,
+                'start' => $start,
+                'before' => $before,
+                'total' => $total,
+            ]
+        )->setPaper('a4', 'landscape')->download("Folha de pagamento {$today}.pdf");
     }
 }

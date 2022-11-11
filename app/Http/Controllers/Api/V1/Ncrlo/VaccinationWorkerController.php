@@ -25,12 +25,7 @@ class VaccinationWorkerController extends Controller
             'vaccinators',
             'assistants',
             'annotators',
-            'statistics',
-            'transports',
-            'before_cold_chains',
-            'start_cold_chains',
-            'driver_cold_chains',
-            'zoonoses'
+            'statistics'
         );
 
         $listTypeCoordinator = array(
@@ -42,7 +37,19 @@ class VaccinationWorkerController extends Controller
 
         $listTypeFree = array('free');
 
-        $listTypeAll = array('all', 'rural_supervisors', 'rural_assistants');
+        $listTypeAll = array(
+            'all',
+            'rural_supervisors',
+            'rural_assistants',
+            'before_transports',
+            'start_transports',
+            'before_cold_chains',
+            'start_cold_chains',
+            'before_driver_cold_chains',
+            'start_driver_cold_chains',
+            'before_zoonoses',
+            'start_zoonoses'
+        );
 
         if ($request->has('list_type')) {
             $campaign_cycle_id = $request->campaign_cycle_id;

@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\V1\Ncrlo\VaccinationPointController;
 use App\Http\Controllers\Api\V1\Ncrlo\VaccinationWorkerController;
 use Illuminate\Support\Facades\Route;
 
+Route::get('campaign/cycle/payroll/{id}', [CampaignCycleController::class, 'payroll']);
 Route::get('campaign/cycle/report/{id}', [CampaignCycleController::class, 'report']);
 Route::get('campaign/cycle/allocation/{id}', [CampaignCycleController::class, 'allocation']);
 Route::get('campaign/cycle/frequency/{id}', [CampaignCycleController::class, 'frequency']);
