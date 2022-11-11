@@ -167,10 +167,12 @@
                     </tr>
                 @endforeach
 
-                <tr>
-                    <td class="border" colspan="3"> SubTotal equipe da Rede de Frio </td>
-                    <td class="border">R$ {{ number_format($total['before']['cold_chain'], 2, ',', ' ') }} </td>
-                </tr>
+                @if ($total['before']['cold_chain'] > 0)
+                    <tr>
+                        <td class="border" colspan="3"> SubTotal equipe da Rede de Frio </td>
+                        <td class="border">R$ {{ number_format($total['before']['cold_chain'], 2, ',', ' ') }} </td>
+                    </tr>
+                @endif
 
                 @foreach ($cycle->beforeDriverColdChains as $beforeDriverColdChain)
                     <tr>
@@ -181,10 +183,13 @@
                     </tr>
                 @endforeach
 
-                <tr>
-                    <td class="border" colspan="3"> SubTotal motorista da Rede de Frio</td>
-                    <td class="border">R$ {{ number_format($total['before']['driver_cold_chain'], 2, ',', ' ') }} </td>
-                </tr>
+                @if ($total['before']['driver_cold_chain'] > 0)
+                    <tr>
+                        <td class="border" colspan="3"> SubTotal motorista da Rede de Frio</td>
+                        <td class="border">R$ {{ number_format($total['before']['driver_cold_chain'], 2, ',', ' ') }}
+                        </td>
+                    </tr>
+                @endif
 
                 @foreach ($cycle->beforeTransports as $beforeTransport)
                     <tr>
@@ -195,10 +200,12 @@
                     </tr>
                 @endforeach
 
-                <tr>
-                    <td class="border" colspan="3"> SubTotal apoio da GETRANS</td>
-                    <td class="border">R$ {{ number_format($total['before']['transport'], 2, ',', ' ') }} </td>
-                </tr>
+                @if ($total['before']['transport'] > 0)
+                    <tr>
+                        <td class="border" colspan="3"> SubTotal apoio da GETRANS</td>
+                        <td class="border">R$ {{ number_format($total['before']['transport'], 2, ',', ' ') }} </td>
+                    </tr>
+                @endif
 
                 @foreach ($cycle->beforeZoonoses as $beforeZoonose)
                     <tr>
@@ -209,14 +216,20 @@
                     </tr>
                 @endforeach
 
-                <tr>
-                    <td class="border" colspan="3"> SubTotal apoio da GEZOON</td>
-                    <td class="border">R$ {{ number_format($total['before']['zoonose'], 2, ',', ' ') }} </td>
-                </tr>
-                <tr>
-                    <td class="border" colspan="3"> Total de {{ $before }}</td>
-                    <td class="border">R$ {{ number_format($total['before']['total'], 2, ',', ' ') }} </td>
-                </tr>
+                @if ($total['before']['zoonose'] > 0)
+                    <tr>
+                        <td class="border" colspan="3"> SubTotal apoio da GEZOON</td>
+                        <td class="border">R$ {{ number_format($total['before']['zoonose'], 2, ',', ' ') }} </td>
+                    </tr>
+                @endif
+
+                @if ($total['before']['total'] > 0)
+                    <tr>
+                        <td class="border" colspan="3"> Total de {{ $before }}</td>
+                        <td class="border">R$ {{ number_format($total['before']['total'], 2, ',', ' ') }} </td>
+                    </tr>
+                @endif
+
 
 
             </table>
@@ -270,8 +283,9 @@
                         <td class="border line-mat"> {{ $cycle->coldChainCoordinator->registration }} </td>
                         <td class="border line-name"> {{ $cycle->coldChainCoordinator->name }} </td>
                         <td class="border"> Coordenador da Rede de Frio</td>
-                        <td class="border"> R$
-                            {{ number_format($cycle->campaing->cold_chain_coordinator_cost, 2, ',', ' ') }}</td>
+                        <td class="border">
+                            R$ {{ number_format($cycle->campaing->cold_chain_coordinator_cost, 2, ',', ' ') }}
+                        </td>
                     </tr>
                 @endif
                 @if ($cycle->coldChainNurse)
@@ -279,7 +293,8 @@
                         <td class="border line-mat"> {{ $cycle->coldChainNurse->registration }} </td>
                         <td class="border line-name"> {{ $cycle->coldChainNurse->name }} </td>
                         <td class="border"> Enfermeira da Rede de Frio</td>
-                        <td class="border">R$ {{ number_format($cycle->campaing->cold_chain_nurse_cost, 2, ',', ' ') }}
+                        <td class="border">
+                            R$ {{ number_format($cycle->campaing->cold_chain_nurse_cost, 2, ',', ' ') }}
                         </td>
                     </tr>
                 @endif
@@ -296,10 +311,12 @@
                     </tr>
                 @endforeach
 
-                <tr>
-                    <td class="border" colspan="3"> SubTotal equipe da Rede de Frio </td>
-                    <td class="border">R$ {{ number_format($total['start']['cold_chain'], 2, ',', ' ') }} </td>
-                </tr>
+                @if ($total['start']['cold_chain'] > 0)
+                    <tr>
+                        <td class="border" colspan="3"> SubTotal equipe da Rede de Frio </td>
+                        <td class="border">R$ {{ number_format($total['start']['cold_chain'], 2, ',', ' ') }} </td>
+                    </tr>
+                @endif
 
                 @foreach ($cycle->startDriverColdChains as $startDriverColdChain)
                     <tr>
@@ -310,10 +327,13 @@
                     </tr>
                 @endforeach
 
-                <tr>
-                    <td class="border" colspan="3"> SubTotal motorista da Rede de Frio</td>
-                    <td class="border">R$ {{ number_format($total['start']['driver_cold_chain'], 2, ',', ' ') }} </td>
-                </tr>
+                @if ($total['start']['driver_cold_chain'] > 0)
+                    <tr>
+                        <td class="border" colspan="3"> SubTotal motorista da Rede de Frio</td>
+                        <td class="border">R$ {{ number_format($total['start']['driver_cold_chain'], 2, ',', ' ') }}
+                        </td>
+                    </tr>
+                @endif
 
                 @foreach ($cycle->startTransports as $startTransport)
                     <tr>
@@ -324,10 +344,12 @@
                     </tr>
                 @endforeach
 
-                <tr>
-                    <td class="border" colspan="3"> SubTotal apoio da GETRANS</td>
-                    <td class="border">R$ {{ number_format($total['start']['transport'], 2, ',', ' ') }} </td>
-                </tr>
+                @if ($total['start']['transport'] > 0)
+                    <tr>
+                        <td class="border" colspan="3"> SubTotal apoio da GETRANS</td>
+                        <td class="border">R$ {{ number_format($total['start']['transport'], 2, ',', ' ') }} </td>
+                    </tr>
+                @endif
 
                 @foreach ($cycle->startZoonoses as $startZoonose)
                     <tr>
@@ -338,10 +360,12 @@
                     </tr>
                 @endforeach
 
-                <tr>
-                    <td class="border" colspan="3"> SubTotal apoio da GEZOON</td>
-                    <td class="border">R$ {{ number_format($total['start']['zoonose'], 2, ',', ' ') }} </td>
-                </tr>
+                @if ($total['start']['zoonose'] > 0)
+                    <tr>
+                        <td class="border" colspan="3"> SubTotal apoio da GEZOON</td>
+                        <td class="border">R$ {{ number_format($total['start']['zoonose'], 2, ',', ' ') }} </td>
+                    </tr>
+                @endif
 
                 @if (!$cycle->supports[0]->is_rural)
                     @foreach ($cycle->supports as $support)
@@ -356,11 +380,15 @@
                             </tr>
                         @endif
                     @endforeach
-                    <tr>
-                        <td class="border" colspan="3"> SubTotal Coordenador</td>
-                        <td class="border">R$ {{ number_format($total['start']['coordinator'], 2, ',', ' ') }}
-                        </td>
-                    </tr>
+
+                    @if ($total['start']['coordinator'] > 0)
+                        <tr>
+                            <td class="border" colspan="3"> SubTotal Coordenador</td>
+                            <td class="border">R$ {{ number_format($total['start']['coordinator'], 2, ',', ' ') }}
+                            </td>
+                        </tr>
+                    @endif
+
                 @endif
                 @foreach ($cycle->supports as $support)
                     @if ($support->is_rural)
@@ -388,17 +416,23 @@
                     @endif
                 @endforeach
                 @if ($cycle->supports[0]->is_rural)
-                    <tr>
-                        <td class="border" colspan="3"> SubTotal Supervisor Rural</td>
-                        <td class="border">R$ {{ number_format($total['start']['rural_supervisor'], 2, ',', ' ') }}
-                        </td>
-                    </tr>
+                    @if ($total['start']['rural_supervisor'] > 0)
+                        <tr>
+                            <td class="border" colspan="3"> SubTotal Supervisor Rural</td>
+                            <td class="border">R$
+                                {{ number_format($total['start']['rural_supervisor'], 2, ',', ' ') }}
+                            </td>
+                        </tr>
+                    @endif
                 @else
-                    <tr>
-                        <td class="border" colspan="3"> SubTotal Supervisor</td>
-                        <td class="border">R$ {{ number_format($total['start']['supervisor'], 2, ',', ' ') }}
-                        </td>
-                    </tr>
+                    @if ($total['start']['supervisor'] > 0)
+                        <tr>
+                            <td class="border" colspan="3"> SubTotal Supervisor</td>
+                            <td class="border">R$ {{ number_format($total['start']['supervisor'], 2, ',', ' ') }}
+                            </td>
+                        </tr>
+                    @endif
+
                 @endif
 
 
@@ -428,17 +462,22 @@
                     @endif
                 @endforeach
                 @if ($cycle->supports[0]->is_rural)
-                    <tr>
-                        <td class="border" colspan="3"> SubTotal Auxiliar Rural</td>
-                        <td class="border">R$ {{ number_format($total['start']['rural_assistant'], 2, ',', ' ') }}
-                        </td>
-                    </tr>
+                    @if ($total['start']['rural_assistant'] > 0)
+                        <tr>
+                            <td class="border" colspan="3"> SubTotal Auxiliar Rural</td>
+                            <td class="border">R$ {{ number_format($total['start']['rural_assistant'], 2, ',', ' ') }}
+                            </td>
+                        </tr>
+                    @endif
                 @else
-                    <tr>
-                        <td class="border" colspan="3"> SubTotal Auxiliar</td>
-                        <td class="border">R$ {{ number_format($total['start']['assistant'], 2, ',', ' ') }}
-                        </td>
-                    </tr>
+                    @if ($total['start']['assistant'] > 0)
+                        <tr>
+                            <td class="border" colspan="3"> SubTotal Auxiliar</td>
+                            <td class="border">R$ {{ number_format($total['start']['assistant'], 2, ',', ' ') }}
+                            </td>
+                        </tr>
+                    @endif
+
                 @endif
 
                 @foreach ($cycle->supports as $support)
@@ -466,11 +505,13 @@
                     @endforeach
                 @endforeach
 
-                <tr>
-                    <td class="border" colspan="3"> SubTotal Vacinadores</td>
-                    <td class="border">R$ {{ number_format($total['start']['vaccinator'], 2, ',', ' ') }}
-                    </td>
-                </tr>
+                @if ($total['start']['vaccinator'] > 0)
+                    <tr>
+                        <td class="border" colspan="3"> SubTotal Vacinadores</td>
+                        <td class="border">R$ {{ number_format($total['start']['vaccinator'], 2, ',', ' ') }}
+                        </td>
+                    </tr>
+                @endif
 
                 @if (!$cycle->supports[0]->is_rural)
                     @foreach ($cycle->supports as $support)
@@ -488,14 +529,22 @@
                         @endforeach
                     @endforeach
 
+                    @if ($total['start']['annotator'] > 0)
+                        <tr>
+                            <td class="border" colspan="3"> SubTotal Anotador</td>
+                            <td class="border">R$ {{ number_format($total['start']['annotator'], 2, ',', ' ') }}
+                            </td>
+                        </tr>
+                    @endif
 
-                    <tr>
-                        <td class="border" colspan="3"> SubTotal Anotador</td>
-                        <td class="border">R$ {{ number_format($total['start']['annotator'], 2, ',', ' ') }}
-                        </td>
-                    </tr>
                 @endif
 
+                @if ($total['start']['total'] > 0)
+                    <tr>
+                        <td class="border" colspan="3"> Total de {{ $before }}</td>
+                        <td class="border">R$ {{ number_format($total['start']['total'], 2, ',', ' ') }} </td>
+                    </tr>
+                @endif
 
             </table>
         </div>

@@ -729,8 +729,13 @@ class CampaignCycleController extends Controller
         $total['before']['transport'] = 0;
         $total['before']['zoonose'] = 0;
 
-        $total['before']['total'] += $cycle->campaing->cold_chain_coordinator_cost;
-        $total['before']['total'] += $cycle->campaing->cold_chain_nurse_cost;
+        if (!is_null($cycle->coldChainCoordinator)) {
+            $total['before']['total'] += $cycle->campaing->cold_chain_coordinator_cost;
+        }
+
+        if (!is_null($cycle->coldChainNurse)) {
+            $total['before']['total'] += $cycle->campaing->cold_chain_nurse_cost;
+        }
 
         $total['before']['cold_chain'] += ($cycle->campaing->cold_chain_cost * count($cycle->beforeColdChains));
         $total['before']['total' ] += $total['before']['cold_chain'];
@@ -760,8 +765,13 @@ class CampaignCycleController extends Controller
         $total['start']['supervisor'] = 0;
         $total['start']['assistant'] = 0;
 
-        $total['start']['total'] += $cycle->campaing->cold_chain_coordinator_cost;
-        $total['start']['total'] += $cycle->campaing->cold_chain_nurse_cost;
+        if (!is_null($cycle->coldChainCoordinator)) {
+            $total['start']['total'] += $cycle->campaing->cold_chain_coordinator_cost;
+        }
+
+        if (!is_null($cycle->coldChainNurse)) {
+            $total['start']['total'] += $cycle->campaing->cold_chain_nurse_cost;
+        }
 
         $total['start']['cold_chain'] += ($cycle->campaing->cold_chain_cost * count($cycle->startColdChains));
         $total['start']['total'] += $total['start']['cold_chain'];
@@ -779,39 +789,53 @@ class CampaignCycleController extends Controller
         $total['start']['statistic'] += ($cycle->campaing->statisic_cost * count($cycle->statistics));
         $total['start']['total'] += $total['start']['statistic'];
 
-        foreach ($cycle->supports as $support) {
+        $registrationRuralSupervisors = [];
+        $registrationRuralAssistants = [];
 
+        foreach ($cycle->supports as $support) {
             $total['start']['vaccinator'] += ($cycle->campaing->vaccinator_cost * count($support->vaccinators));
-            $total['start']['total'] += $total['start']['vaccinator'];
 
             if ($support->is_rural) {
-                $total['start']['rural_supervisor'] += ($cycle->campaing->rural_supervisor_cost * count($support->ruralSupervisors));
-                $total['start']['total'] += $total['start']['rural_supervisor'];
+                for ($i = 0; $i < count($support->ruralSupervisors); $i++) {
+                    if (!in_array($support->ruralSupervisors[$i]->registration, $registrationRuralSupervisors)) {
+                        $total['start']['rural_supervisor'] += $cycle->campaing->rural_supervisor_cost;
+                        $registrationRuralSupervisors[] = $support->ruralSupervisors[$i]->registration;
+                    } else {
+                        unset($support->ruralSupervisors[$i]);
+                    }
+                }
 
-                $total['start']['rural_assistant'] += ($cycle->campaing->rural_assistant_cost * count($support->ruralAssistants));
-                $total['start']['total'] += $total['start']['rural_assistant'];
+                for ($i = 0; $i < count($support->ruralAssistants); $i++) {
+                    if (!in_array($support->ruralAssistants[$i]->registration, $registrationRuralAssistants)) {
+                        $total['start']['rural_assistant'] += $cycle->campaing->rural_assistant_cost;
+                        $registrationRuralAssistants[] = $support->ruralAssistants[$i]->registration;
+                    } else {
+                        unset($support->ruralAssistants[$i]);
+                    }
+                }
             } else {
-                if ($support->coordinator) {
+                if (!is_null($support->coordinator)) {
                     $total['start']['coordinator'] += $cycle->campaing->coordinator_cost;
                 }
 
                 $total['start']['supervisor'] += ($cycle->campaing->supervisor_cost * count($support->supervisors));
-                $total['start']['total'] += $total['start']['supervisor'];
-
                 $total['start']['assistant'] += ($cycle->campaing->assistant_cost * count($support->assistants));
-                $total['start']['total'] += $total['start']['assistant'];
             }
 
 
             foreach ($support->points as $point) {
                 $total['start']['vaccinator'] += ($cycle->campaing->vaccinator_cost * count($point->vaccinators));
-                $total['start']['total'] += $total['start']['vaccinator'];
-
                 $total['start']['annotator'] += ($cycle->campaing->vaccinator_cost * count($point->annotators));
-                $total['start']['total'] += $total['start']['annotator'];
-                $total['start']['annotator'];
             }
         }
+        $total['start']['total'] += $total['start']['rural_supervisor'];
+        $total['start']['total'] += $total['start']['rural_assistant'];
+
+        $total['start']['total'] += $total['start']['supervisor'];
+        $total['start']['total'] += $total['start']['assistant'];
+
+        $total['start']['total'] += $total['start']['vaccinator'];
+        $total['start']['total'] += $total['start']['annotator'];
 
         $total['cycle']['total'] += $total['start']['total'];
 
