@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Relatório de Locação de Pessoal</title>
+    <title>Folha de Pagamento</title>
     <style>
         .conteiner {
             margin: 0;
@@ -119,7 +119,7 @@
                 <strong>Núcleo de Controle da Raiva, Leishmaniose e Outras Zoonoses - NCRLOZ</strong><br />
             </div>
             <div class="center" style="text-align:center">
-                <h3>Frequência</h3>
+                <h3>Folha de pagamento </h3>
             </div>
         </div>
 
