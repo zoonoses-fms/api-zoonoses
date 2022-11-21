@@ -23,6 +23,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::prefix('v1')->group(
     function () {
         require __DIR__ . '/auth.php';
+        require __DIR__ . '/dataset.php';
 
         Route::prefix('map')->group(
             function () {

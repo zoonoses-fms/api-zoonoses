@@ -74,9 +74,8 @@ class DatasetController extends Controller
     {
         $user = $request->user();
 
-
-        if (!Gate::authorize('is-admin', $user)) {
-            return $this->error('Not authorized.', 403);
+        if (!$request->user()->tokenCan('zoonoses:admin')) {
+            return response()->json(['error' => 'Not authorized.'], 401);
         }
 
 
@@ -93,7 +92,6 @@ class DatasetController extends Controller
         $files = $request->file('datasets');
         foreach ($files as $file) {
             if (is_file($file)) {
-
                 $dataSets = Dataset::where([
                     'source' => $source,
                     'system' => $system,
@@ -142,7 +140,6 @@ class DatasetController extends Controller
                             'data' => 'Load data',
                             'code' => 201,
                         ],
-                        null,
                         201
                     );
                 } catch (Throwable $th) {

@@ -36,7 +36,7 @@ class TheNeighborhoodAlias extends MetaPhone
 
     public static function getOrCreate($name)
     {
-        $alias = self::getByName($name);
+        $alias = self::getByEqualsName($name);
 
         if ($alias === null) {
             $alias = self::createByName($name);
