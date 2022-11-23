@@ -92,7 +92,8 @@ class CampaignCycleController extends Controller
                         )->selectRaw(
                             'ST_AsGeoJSON(vaccination_supports.geometry) AS geometry'
                         );
-                    }
+                    },
+                    'supports.support.neighborhoodAlias.neighborhood'
                 ])->findOrFail($id);
 
                 return $cycle;
@@ -105,13 +106,15 @@ class CampaignCycleController extends Controller
                             'ST_AsGeoJSON(vaccination_supports.geometry) AS geometry'
                         );
                     },
+                    'supports.support.neighborhoodAlias.neighborhood',
                     'supports.points.point' => function ($query) {
                         $query->selectRaw(
                             'vaccination_points.*'
                         )->selectRaw(
                             'ST_AsGeoJSON(vaccination_points.geometry) AS geometry'
                         );
-                    }
+                    },
+                    'supports.points.point.neighborhoodAlias.neighborhood'
                 ])->findOrFail($id);
 
                 return $cycle;
@@ -850,5 +853,35 @@ class CampaignCycleController extends Controller
                 'total' => $total,
             ]
         )->setPaper('a4', 'landscape')->download("Folha de pagamento {$today}.pdf");
+    }
+
+        /**
+     * Display the specified resource.
+     *
+     * @param  int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function publicMap(Request $request, $id)
+    {
+        $cycle = CampaignCycle::with([
+            'supports.support' => function ($query) {
+                $query->selectRaw(
+                    'vaccination_supports.*'
+                )->selectRaw(
+                    'ST_AsGeoJSON(vaccination_supports.geometry) AS geometry'
+                );
+            },
+            'supports.support.neighborhoodAlias.neighborhood',
+            'supports.points.point' => function ($query) {
+                $query->selectRaw(
+                    'vaccination_points.*'
+                )->selectRaw(
+                    'ST_AsGeoJSON(vaccination_points.geometry) AS geometry'
+                );
+            },
+            'supports.points.point.neighborhoodAlias.neighborhood'
+        ])->findOrFail($id);
+
+        return $cycle;
     }
 }
