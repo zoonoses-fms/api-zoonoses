@@ -349,6 +349,124 @@
             </div>
         </div>
     </div>
+
+    @if (!$support->is_rural)
+        @foreach ($support->points as $point)
+            <div style="page-break-after: always"></div>
+            <div class="conteiner">
+                <div class="date">
+                    <strong>{{ $today }}</strong>
+                </div>
+                <div class="header">
+                    <div class="logo-header">
+                        <img src="img/logo_teresina.jpg" alt="logo">
+                    </div>
+                    <div class="logo-text">
+                        <strong>Prefeitura Municipal de Teresina</strong><br />
+                        <strong>Fundação Municipal de Saúde</strong><br />
+                        <strong>Gerência de Zoonoses GEZOON</strong><br />
+                        <strong>Núcleo de Controle da Raiva, Leishmaniose e Outras Zoonoses - NCRLOZ</strong><br />
+                    </div>
+                    <div class="center" style="text-align:center">
+                        <h2>Frequência</h2>
+                    </div>
+                </div>
+
+                <div class="content">
+                    <div>
+                        <strong> Posto de Vacina: {{ $point->point->name }} </strong>
+                    </div>
+
+                    @isset($point->supervisor->name)
+                        <div>
+                            <strong>Supervisor: </strong>
+                        </div>
+                        <table>
+                            <tr>
+                                <td class="name">
+                                    {{ $point->supervisor->registration }} -
+                                    {{ $point->supervisor->name }}
+                                    -
+                                    {{ $point->supervisor->phone }}
+                                </td>
+                                <td class="line">
+                                </td>
+                            </tr>
+                        </table>
+                    @endisset
+
+                    @if (count($point->vaccinators) > 0)
+                        <div>
+                            <strong>Vacinadores: </strong>
+                        </div>
+
+                        <table class="table-vacination">
+                            <thead>
+                                <th class="border">Mat.</th>
+                                <th class="border">Nome</th>
+                                <th class="border">Fone</th>
+                                <th class="border">FMS</th>
+                                <th class="border">ACE</th>
+                                <th class="border">ACS</th>
+                                <th class="border">Assinatura</th>
+                            </thead>
+                            @foreach ($point->vaccinators as $vaccinator)
+                                <tr>
+                                    <td class="border line-mat"> {{ $vaccinator->registration }} </td>
+                                    <td class="border line-name"> {{ $vaccinator->name }} </td>
+                                    <td class="border"> {{ $vaccinator->phone }} </td>
+                                    <td class="border line-origin"></td>
+                                    <td class="border line-origin"></td>
+                                    <td class="border line-origin"></td>
+                                    <td class="border line-vaccinator"></td>
+                                </tr>
+                            @endforeach
+                        </table>
+                    @endif
+
+                    @if (count($point->vaccinators) > 0)
+                        <div>
+                            <strong>Vacinadores: </strong>
+                        </div>
+
+                        <table class="table-vacination">
+                            <thead>
+                                <th class="border">Mat.</th>
+                                <th class="border">Nome</th>
+                                <th class="border">Fone</th>
+                                <th class="border">FMS</th>
+                                <th class="border">ACE</th>
+                                <th class="border">ACS</th>
+                                <th class="border">Assinatura</th>
+                            </thead>
+                            @foreach ($point->annotators as $annotator)
+                                <tr>
+                                    <td class="border line-mat"> {{ $annotator->registration }} </td>
+                                    <td class="border line-name"> {{ $annotator->name }} </td>
+                                    <td class="border"> {{ $annotator->phone }} </td>
+                                    <td class="border line-origin"></td>
+                                    <td class="border line-origin"></td>
+                                    <td class="border line-origin"></td>
+                                    <td class="border line-vaccinator"></td>
+                                </tr>
+                            @endforeach
+                        </table>
+                    @endif
+
+                </div>
+                <div class="footer">
+                    <hr />
+                    <div class="center">
+                        <address>
+                            Rua Minas Gerais, Nº 909 – Bairro Matadouro. zona Norte. <br />
+                            Teresina - PI, 64018-560
+                        </address>
+                    </div>
+                </div>
+            </div>
+        @endforeach
+    @endif
+
 </body>
 
 </html>

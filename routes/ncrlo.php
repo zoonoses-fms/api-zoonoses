@@ -21,6 +21,7 @@ Route::apiResource('campaign/cycle', CampaignCycleController::class)
 Route::get('campaign/support/frequency/{id}', [CampaingSupportController::class, 'frequency']);
 Route::apiResource('campaign/support', CampaingSupportController::class)
     ->middleware('auth:sanctum');
+Route::get('campaign/point/frequency/{id}', [CampaingPointController::class, 'frequency']);
 Route::apiResource('campaign/point', CampaingPointController::class)
     ->middleware('auth:sanctum');
 Route::apiResource('campaign', CampaignController::class);

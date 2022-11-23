@@ -41,7 +41,7 @@ class CampaignCycle extends Model
 
     public function statisticCoordinator()
     {
-        return $this->belongsTo(VaccinationWorker::class, 'statistic_coordinator_id');
+        return $this->belongsTo(VaccinationWorker::class, 'statistic_coordinator_id')->orderBy('name', 'asc');
     }
 
     public function statistics()
@@ -56,12 +56,12 @@ class CampaignCycle extends Model
 
     public function coldChainCoordinator()
     {
-        return $this->belongsTo(VaccinationWorker::class, 'cold_chain_coordinator_id');
+        return $this->belongsTo(VaccinationWorker::class, 'cold_chain_coordinator_id')->orderBy('name', 'asc');
     }
 
     public function coldChainNurse()
     {
-        return $this->belongsTo(VaccinationWorker::class, 'cold_chain_nurse_id');
+        return $this->belongsTo(VaccinationWorker::class, 'cold_chain_nurse_id')->orderBy('name', 'asc');
     }
 
     public function beforeColdChains()
@@ -71,7 +71,7 @@ class CampaignCycle extends Model
             'before_cold_chain_cycle',
             'campaign_cycle_id',
             'before_cold_chain_id'
-        );
+        )->orderBy('name', 'asc');
     }
 
     public function startColdChains()
@@ -81,7 +81,7 @@ class CampaignCycle extends Model
             'start_cold_chain_cycle',
             'campaign_cycle_id',
             'start_cold_chain_id'
-        );
+        )->orderBy('name', 'asc');
     }
 
     public function beforeDriverColdChains()
@@ -91,7 +91,7 @@ class CampaignCycle extends Model
             'before_driver_cold_chain_cycle',
             'campaign_cycle_id',
             'before_driver_cold_chain_id'
-        );
+        )->orderBy('name', 'asc');
     }
 
     public function startDriverColdChains()
@@ -101,7 +101,7 @@ class CampaignCycle extends Model
             'start_driver_cold_chain_cycle',
             'campaign_cycle_id',
             'start_driver_cold_chain_id'
-        );
+        )->orderBy('name', 'asc');
     }
 
     public function beforeTransports()
@@ -111,7 +111,7 @@ class CampaignCycle extends Model
             'before_transport_cycle',
             'campaign_cycle_id',
             'before_transport_id'
-        );
+        )->orderBy('name', 'asc');
     }
 
     public function startTransports()
@@ -121,7 +121,7 @@ class CampaignCycle extends Model
             'start_transport_cycle',
             'campaign_cycle_id',
             'start_transport_id'
-        );
+        )->orderBy('name', 'asc');
     }
 
     public function beforeZoonoses()
@@ -131,7 +131,7 @@ class CampaignCycle extends Model
             'before_zoonoses_cycle',
             'campaign_cycle_id',
             'before_zoonoses_id'
-        );
+        )->orderBy('name', 'asc');
     }
 
     public function startZoonoses()
@@ -141,6 +141,6 @@ class CampaignCycle extends Model
             'start_zoonoses_cycle',
             'campaign_cycle_id',
             'start_zoonoses_id'
-        );
+        )->orderBy('name', 'asc');
     }
 }

@@ -11,12 +11,12 @@ class CampaingPoint extends Model
 
     public function support()
     {
-        return $this->belongsTo(CampaingSupport::class, 'campaing_support_id');
+        return $this->belongsTo(CampaingSupport::class, 'campaing_support_id')->orderBy('name', 'asc');
     }
 
     public function supervisor()
     {
-        return $this->belongsTo(VaccinationWorker::class, 'supervisor_id');
+        return $this->belongsTo(VaccinationWorker::class, 'supervisor_id')->orderBy('name', 'asc');
     }
 
     public function vaccinators()
@@ -26,7 +26,7 @@ class CampaingPoint extends Model
             'vaccinator_point',
             'campaing_point_id',
             'vaccinator_id'
-        );
+        )->orderBy('name', 'asc');
     }
 
     public function annotators()
@@ -36,7 +36,7 @@ class CampaingPoint extends Model
             'annotator_point',
             'campaing_point_id',
             'annotator_id'
-        );
+        )->orderBy('name', 'asc');
     }
 
     public function saads()

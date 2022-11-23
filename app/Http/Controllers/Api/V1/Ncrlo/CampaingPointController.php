@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1\Ncrlo;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\CampaingPoint;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class CampaingPointController extends Controller
 {
@@ -113,5 +114,25 @@ class CampaingPointController extends Controller
         $point->vaccinators()->sync([]);
 
         $point->delete();
+    }
+
+    public function frequency(Request $request, $id)
+    {
+        $today = date("d-m-Y");
+        $point = CampaingPoint::with([
+            'point',
+            'supervisor',
+            'vaccinators',
+            'annotators',
+        ])->findOrFail($id);
+
+        return PDF::loadView(
+            'ncrlo.frequency_point_list',
+            [
+                'point' => $point,
+                'today' => $today,
+            ]
+        )->setPaper('a4', 'landscape')->download("Frequência Locação de Pessoal {$today}.pdf");
+        //return view('receipt');
     }
 }

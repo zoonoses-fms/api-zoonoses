@@ -35,7 +35,7 @@ class CampaingSupport extends Model
 
     public function coordinator()
     {
-        return $this->belongsTo(VaccinationWorker::class, 'coordinator_id');
+        return $this->belongsTo(VaccinationWorker::class, 'coordinator_id')->orderBy('name', 'asc');
     }
 
     public function supervisors()
@@ -45,7 +45,7 @@ class CampaingSupport extends Model
             'supervisor_support',
             'campaing_support_id',
             'supervisor_id'
-        );
+        )->orderBy('name', 'asc');
     }
 
     public function drivers()
@@ -55,7 +55,7 @@ class CampaingSupport extends Model
             'driver_support',
             'campaing_support_id',
             'driver_id'
-        );
+        )->orderBy('name', 'asc');
     }
 
     public function assistants()
@@ -65,7 +65,7 @@ class CampaingSupport extends Model
             'assistant_support',
             'campaing_support_id',
             'assistant_id'
-        );
+        )->orderBy('name', 'asc');
     }
 
     public function vaccinators()
@@ -75,7 +75,7 @@ class CampaingSupport extends Model
             'vaccinator_support',
             'campaing_support_id',
             'vaccinator_id'
-        );
+        )->orderBy('name', 'asc');
     }
 
     public function saads()
@@ -100,7 +100,7 @@ class CampaingSupport extends Model
             'rural_supervisor_support',
             'campaing_support_id',
             'rural_supervisor_id'
-        );
+        )->orderBy('name', 'asc');
     }
 
     public function ruralAssistants()
@@ -110,6 +110,6 @@ class CampaingSupport extends Model
             'rural_assistant_support',
             'campaing_support_id',
             'rural_assistant_id'
-        );
+        )->orderBy('name', 'asc');
     }
 }
