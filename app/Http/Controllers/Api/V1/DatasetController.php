@@ -131,8 +131,6 @@ class DatasetController extends Controller
 
                     $object = new $class();
 
-                    return $object->toJson();
-
                     $object->loadFile($request, $path, $source, $system, $initial, $extension, $user);
                     return $this->success(
                         [
