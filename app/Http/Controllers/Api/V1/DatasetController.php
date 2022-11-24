@@ -112,26 +112,26 @@ class DatasetController extends Controller
                 $extension = strtolower($file->getClientOriginalExtension());
                 $nameFile = "{$name}.{$extension}";
                 $path = $file->storeAs("{$source}_{$system}_{$initial}", $nameFile);
-
-                if ($extension == 'dbc') {
-                    $blast = env('PATH_BLAST', '../tools/blast-dbf/blast-dbf');
-                    $storage = env('PATH_BLAST_STORAGE', '../storage/app/');
-                    $newPath = str_replace(".dbc", ".dbf", $path);
-                    echo exec("{$blast} {$storage}{$path} {$storage}/{$newPath}");
-                    Storage::delete($path);
-                    $extension = 'dbf';
-                    $path = $newPath;
-                }
-
-                if (!$path) {
-                    return $this->error('Insufficient Storage', 507);
-                }
-
-                $class = DataSet::getClass($source, $system, $initial);
-
-                $object = new $class();
-
                 try {
+                    if ($extension == 'dbc') {
+                        $blast = env('PATH_BLAST', '../tools/blast-dbf/blast-dbf');
+                        $storage = env('PATH_BLAST_STORAGE', '../storage/app/');
+                        $newPath = str_replace(".dbc", ".dbf", $path);
+                        echo exec("{$blast} {$storage}{$path} {$storage}/{$newPath}");
+                        Storage::delete($path);
+                        $extension = 'dbf';
+                        $path = $newPath;
+                    }
+
+                    if (!$path) {
+                        return $this->error('Insufficient Storage', 507);
+                    }
+
+                    $class = DataSet::getClass($source, $system, $initial);
+
+                    $object = new $class();
+
+
                     $object->loadFile($request, $path, $source, $system, $initial, $extension, $user);
                     return $this->success(
                         [
