@@ -1257,7 +1257,6 @@ class Dataset extends Model
         $currentYear = null;
 
         $db = dbase_open(storage_path('app/' . $path), 0);
-        return $db;
         if ($db) {
             $num_rows = dbase_numrecords($db);
             $tablesDataSets = [];
@@ -1338,10 +1337,8 @@ class Dataset extends Model
                 }
                 dbase_close($db);
                 // DB::commit();
-            } catch (Throwable $e) {
-                dbase_close($db);
+            } catch (Exception $e) {
                 throw $e;
-                return false;
             }
         }
         return true;

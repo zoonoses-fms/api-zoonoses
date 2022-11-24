@@ -131,11 +131,11 @@ class DatasetController extends Controller
 
                     $object = new $class();
 
-                    $msn = $object->loadFile($request, $path, $source, $system, $initial, $extension, $user);
+                    $object->loadFile($request, $path, $source, $system, $initial, $extension, $user);
                     return $this->success(
                         [
                             'status' => 'Success',
-                            'message' => json_decode($msn),
+                            'message' => 'Create',
                             'data' => 'Load data',
                             'code' => 201,
                         ],
@@ -144,7 +144,7 @@ class DatasetController extends Controller
                 } catch (Exception $e) {
                     // dd($th);
                     // return $th;
-                    return $this->error($e->getMessage(), 500);
+                    return $this->error($e->getMessage(), 500, $e);
                 }
             }
         }
