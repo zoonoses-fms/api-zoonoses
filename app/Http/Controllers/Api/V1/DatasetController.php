@@ -143,9 +143,10 @@ class DatasetController extends Controller
                         201
                     );
                 } catch (Throwable $th) {
-                    dd($th);
-                    return $th;
-                    //return $this->error($th->getMessage(), 500);
+                    // dd($th);
+                    // return $th;
+                    // return $this->error($th->getMessage(), 500);
+                    return $this->success($th->getMessage(), 500);
                 }
             }
         }
