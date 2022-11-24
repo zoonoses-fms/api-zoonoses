@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use PhpParser\Node\Stmt\TryCatch;
-use Throwable;
+use Exception;
 
 class DatasetController extends Controller
 {
@@ -141,7 +141,7 @@ class DatasetController extends Controller
                         ],
                         201
                     );
-                } catch (Throwable $th) {
+                } catch (Exception $th) {
                     // dd($th);
                     // return $th;
                     return $this->success(json_encode($th), 200);
@@ -246,7 +246,7 @@ class DatasetController extends Controller
                     'code' => 200,
                 ]
             );
-        } catch (\Throwable $th) {
+        } catch (Exception $th) {
             return $this->error($th->getMessage(), 500);
         }
     }
