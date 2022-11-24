@@ -127,9 +127,9 @@ class DatasetController extends Controller
                         return $this->error('Insufficient Storage', 507);
                     }
 
-                    return $path;
-
                     $class = DataSet::getClass($source, $system, $initial);
+
+                    return $class;
 
                     $object = new $class();
 
