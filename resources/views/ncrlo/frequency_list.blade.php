@@ -119,7 +119,7 @@
                 <strong>Núcleo de Controle da Raiva, Leishmaniose e Outras Zoonoses - NCRLOZ</strong><br />
             </div>
             <div class="center" style="text-align:center">
-                <h2>Frequência</h2>
+                <span>Frequência</span>
             </div>
         </div>
 
@@ -368,13 +368,14 @@
                         <strong>Núcleo de Controle da Raiva, Leishmaniose e Outras Zoonoses - NCRLOZ</strong><br />
                     </div>
                     <div class="center" style="text-align:center">
-                        <h2>Frequência</h2>
+                        <span>Frequência</span>
                     </div>
                 </div>
 
                 <div class="content">
                     <div>
-                        <strong> Posto: {{ $point->point->name }}  - Área: {{ $point->area }} - Ordem: {{ $point->order }}</strong>
+                        <strong> Posto: {{ $point->point->name }} - Área: {{ $point->area }} - Ordem:
+                            {{ $point->order }}</strong>
                     </div>
 
                     @isset($point->supervisor->name)
@@ -452,6 +453,66 @@
                             @endforeach
                         </table>
                     @endif
+                    <div>
+                        <strong>Colaboradores: </strong>
+                    </div>
+                    <table class="table-vacination">
+                        <thead>
+                            <th class="border">Mat.</th>
+                            <th class="border">Nome</th>
+                            <th class="border">Fone</th>
+                            <th class="border">FMS</th>
+                            <th class="border">ACE</th>
+                            <th class="border">ACS</th>
+                            <th class="border">Assinatura</th>
+                        </thead>
+                        <tr>
+                            <td class="border line-mat"></td>
+                            <td class="border line-name"></td>
+                            <td class="border"></td>
+                            <td class="border line-origin"></td>
+                            <td class="border line-origin"></td>
+                            <td class="border line-origin"></td>
+                            <td class="border line-vaccinator"></td>
+                        </tr>
+                        <tr>
+                            <td class="border line-mat"></td>
+                            <td class="border line-name"></td>
+                            <td class="border"></td>
+                            <td class="border line-origin"></td>
+                            <td class="border line-origin"></td>
+                            <td class="border line-origin"></td>
+                            <td class="border line-vaccinator"></td>
+                        </tr>
+                        <tr>
+                            <td class="border line-mat"></td>
+                            <td class="border line-name"></td>
+                            <td class="border"></td>
+                            <td class="border line-origin"></td>
+                            <td class="border line-origin"></td>
+                            <td class="border line-origin"></td>
+                            <td class="border line-vaccinator"></td>
+                        </tr>
+                        <tr>
+                            <td class="border line-mat"></td>
+                            <td class="border line-name"></td>
+                            <td class="border"></td>
+                            <td class="border line-origin"></td>
+                            <td class="border line-origin"></td>
+                            <td class="border line-origin"></td>
+                            <td class="border line-vaccinator"></td>
+                        </tr>
+                        <tr>
+                            <td class="border line-mat"></td>
+                            <td class="border line-name"></td>
+                            <td class="border"></td>
+                            <td class="border line-origin"></td>
+                            <td class="border line-origin"></td>
+                            <td class="border line-origin"></td>
+                            <td class="border line-vaccinator"></td>
+                        </tr>
+
+                    </table>
 
                 </div>
                 <div class="footer">

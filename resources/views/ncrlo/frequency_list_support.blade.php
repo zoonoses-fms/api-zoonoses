@@ -119,7 +119,7 @@
                 <strong>Núcleo de Controle da Raiva, Leishmaniose e Outras Zoonoses - NCRLOZ</strong><br />
             </div>
             <div class="center" style="text-align:center">
-                <h3>Frequência</h3>
+                <span>Frequência</span>
             </div>
         </div>
 
@@ -294,7 +294,7 @@
                 <strong>Núcleo de Controle da Raiva, Leishmaniose e Outras Zoonoses - NCRLOZ</strong><br />
             </div>
             <div class="center" style="text-align:center">
-                <h2>Frequência</h2>
+                <span>Frequência</span>
             </div>
         </div>
 
@@ -469,7 +469,7 @@
                 <strong>Núcleo de Controle da Raiva, Leishmaniose e Outras Zoonoses - NCRLOZ</strong><br />
             </div>
             <div class="center" style="text-align:center">
-                <h2>Frequência</h2>
+                <span>Frequência</span>
             </div>
         </div>
 
@@ -604,7 +604,7 @@
                 <strong>Núcleo de Controle da Raiva, Leishmaniose e Outras Zoonoses - NCRLOZ</strong><br />
             </div>
             <div class="center" style="text-align:center">
-                <h2>Frequência</h2>
+                <span>Frequência</span>
             </div>
         </div>
 
@@ -728,7 +728,7 @@
                 <strong>Núcleo de Controle da Raiva, Leishmaniose e Outras Zoonoses - NCRLOZ</strong><br />
             </div>
             <div class="center" style="text-align:center">
-                <h2>Frequência</h2>
+                <span>Frequência</span>
             </div>
         </div>
 
@@ -852,7 +852,7 @@
                 <strong>Núcleo de Controle da Raiva, Leishmaniose e Outras Zoonoses - NCRLOZ</strong><br />
             </div>
             <div class="center" style="text-align:center">
-                <h2>Frequência</h2>
+                <span>Frequência</span>
             </div>
         </div>
 
@@ -976,7 +976,7 @@
                 <strong>Núcleo de Controle da Raiva, Leishmaniose e Outras Zoonoses - NCRLOZ</strong><br />
             </div>
             <div class="center" style="text-align:center">
-                <h2>Frequência</h2>
+                <span>Frequência</span>
             </div>
         </div>
 
