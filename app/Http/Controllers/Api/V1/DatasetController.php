@@ -141,10 +141,10 @@ class DatasetController extends Controller
                         ],
                         201
                     );
-                } catch (Exception $th) {
+                } catch (Exception $e) {
                     // dd($th);
                     // return $th;
-                    return $this->success(json_encode($th), 200);
+                    return $this->error($e->getMessage(), 500);
                 }
             }
         }
