@@ -1257,6 +1257,7 @@ class Dataset extends Model
         $currentYear = null;
 
         $db = dbase_open(storage_path('app/' . $path), 0);
+
         if ($db) {
             $num_rows = dbase_numrecords($db);
             $tablesDataSets = [];
