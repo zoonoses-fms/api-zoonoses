@@ -131,11 +131,11 @@ class DatasetController extends Controller
 
                     $object = new $class();
 
-                    $object->loadFile($request, $path, $source, $system, $initial, $extension, $user);
+                    $msn = $object->loadFile($request, $path, $source, $system, $initial, $extension, $user);
                     return $this->success(
                         [
                             'status' => 'Success',
-                            'message' => 'Created',
+                            'message' => json_decode($msn),
                             'data' => 'Load data',
                             'code' => 201,
                         ],

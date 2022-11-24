@@ -1254,11 +1254,10 @@ class Dataset extends Model
     //carregar dados
     public function loadFileDbf($path, $source, $system, $initial, $user)
     {
-        return $path;
         $currentYear = null;
 
         $db = dbase_open(storage_path('app/' . $path), 0);
-
+        return $db;
         if ($db) {
             $num_rows = dbase_numrecords($db);
             $tablesDataSets = [];
