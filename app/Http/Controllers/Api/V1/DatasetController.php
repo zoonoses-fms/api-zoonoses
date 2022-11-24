@@ -129,10 +129,9 @@ class DatasetController extends Controller
 
                     $class = DataSet::getClass($source, $system, $initial);
 
-                    return $class;
-
                     $object = new $class();
 
+                    return $object;
 
                     $object->loadFile($request, $path, $source, $system, $initial, $extension, $user);
                     return $this->success(
