@@ -374,7 +374,7 @@
 
                 <div class="content">
                     <div>
-                        <strong> Posto de Vacina: {{ $point->point->name }} </strong>
+                        <strong> Posto: {{ $point->point->name }}  - Área: {{ $point->area }} - Ordem: {{ $point->order }}</strong>
                     </div>
 
                     @isset($point->supervisor->name)
@@ -424,9 +424,9 @@
                         </table>
                     @endif
 
-                    @if (count($point->vaccinators) > 0)
+                    @if (count($point->annotators) > 0)
                         <div>
-                            <strong>Vacinadores: </strong>
+                            <strong>Anotadores: </strong>
                         </div>
 
                         <table class="table-vacination">

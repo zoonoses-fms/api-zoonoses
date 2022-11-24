@@ -141,6 +141,9 @@ class CampaingSupportController extends Controller
             'ruralSupervisors',
             'ruralAssistants',
             'saads',
+            'points' => function ($q) {
+                $q->orderBy('area')->orderBy('order');
+            },
             'points.point',
             'points.supervisor',
             'points.vaccinators',
