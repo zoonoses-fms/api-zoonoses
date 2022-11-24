@@ -127,6 +127,8 @@ class DatasetController extends Controller
                         return $this->error('Insufficient Storage', 507);
                     }
 
+                    return $path;
+
                     $class = DataSet::getClass($source, $system, $initial);
 
                     $object = new $class();
@@ -145,8 +147,7 @@ class DatasetController extends Controller
                 } catch (Throwable $th) {
                     // dd($th);
                     // return $th;
-                    // return $this->error($th->getMessage(), 500);
-                    return $this->success($th->getMessage(), 500);
+                    return $this->error($th->getMessage(), 500);
                 }
             }
         }
