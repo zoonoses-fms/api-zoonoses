@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\Datasus\DengueOn\The;
+namespace App\Models\Datasus\Dengueon\The;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -8,10 +8,10 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Models\Location\The\TheNeighborhood;
 use App\Models\Location\The\TheNeighborhoodAlias;
-use App\Models\Datasus\DengueOn\DengueOnDatasus;
+use App\Models\Datasus\Dengueon\DengueonDatasus;
 use App\Models\Dataset;
 
-class TheDengueOnDatasus extends DengueOnDatasus
+class TheDengueonDatasus extends DengueonDatasus
 {
     use HasFactory;
 
