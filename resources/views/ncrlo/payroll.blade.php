@@ -407,7 +407,7 @@
                             <tr>
                                 <td class="border line-mat"> {{ $supervisor->registration }} </td>
                                 <td class="border line-name"> {{ $supervisor->name }} </td>
-                                <td class="border"> Supervisor Rural</td>
+                                <td class="border"> Supervisor</td>
                                 <td class="border">R$
                                     {{ number_format($cycle->campaing->supervisor_cost, 2, ',', ' ') }}
                                 </td>
@@ -453,7 +453,7 @@
                             <tr>
                                 <td class="border line-mat"> {{ $assistant->registration }} </td>
                                 <td class="border line-name"> {{ $assistant->name }} </td>
-                                <td class="border"> Auxiliar Rural </td>
+                                <td class="border"> Auxiliar </td>
                                 <td class="border">R$
                                     {{ number_format($cycle->campaing->assistant_cost, 2, ',', ' ') }}
                                 </td>
@@ -478,6 +478,26 @@
                         </tr>
                     @endif
 
+                @endif
+
+                @foreach ($cycle->supports as $support)
+                    @foreach ($support->drivers as $driver)
+                        <tr>
+                            <td class="border line-mat"> {{ $driver->registration }} </td>
+                            <td class="border line-name"> {{ $driver->name }} </td>
+                            <td class="border"> Motorista do Ponto de Apoio</td>
+                            <td class="border">R$
+                                {{ number_format($cycle->campaing->driver_cost, 2, ',', ' ') }}
+                            </td>
+                        </tr>
+                    @endforeach
+                @endforeach
+                @if ($total['start']['driver'] > 0)
+                    <tr>
+                        <td class="border" colspan="3"> SubTotal Motorista </td>
+                        <td class="border">R$ {{ number_format($total['start']['driver'], 2, ',', ' ') }}
+                        </td>
+                    </tr>
                 @endif
 
                 @foreach ($cycle->supports as $support)
@@ -522,7 +542,7 @@
                                     <td class="border line-name"> {{ $annotator->name }} </td>
                                     <td class="border"> Anotador</td>
                                     <td class="border">R$
-                                        {{ number_format($cycle->campaing->annotator_cost, 2, ',', ' ') }}
+                                        {{ number_format($cycle->campaing->annotators_cost, 2, ',', ' ') }}
                                     </td>
                                 </tr>
                             @endforeach
@@ -547,6 +567,8 @@
                 @endif
 
             </table>
+
+
         </div>
         <div class="footer">
             <hr />
@@ -558,6 +580,201 @@
             </div>
         </div>
 
+    </div>
+    <div style="page-break-after: always"></div>
+    <div class="conteiner">
+        <div class="date">
+        </div>
+        <div class="header">
+            <div class="logo-header">
+                <img src="img/logo_teresina.jpg" alt="logo">
+            </div>
+            <div class="logo-text">
+                <strong>Prefeitura Municipal de Teresina</strong><br />
+                <strong>Fundação Municipal de Saúde</strong><br />
+                <strong>Gerência de Zoonoses GEZOON</strong><br />
+                <strong>Núcleo de Controle da Raiva, Leishmaniose e Outras Zoonoses - NCRLOZ</strong><br />
+            </div>
+            <div class="center" style="text-align:center">
+                <div>
+                    <strong> Consolidado custos dá {{ $cycle->description }} </strong>
+                    <strong>- Folha de pagamento de {{ $start }} </strong>
+                </div>
+            </div>
+        </div>
+
+        <div class="content">
+            <table class="table-vacination">
+                <thead>
+                    <th class="border">Descrição</th>
+                    <th class="border">Qt.</th>
+                    <th class="border">Valor</th>
+                    <th class="border">Subtotal</th>
+                </thead>
+                @if ($total['cycle']['cold_chain_coordinator'] > 0)
+                    <tr>
+                        <td class="border"> Coordenador da Rede de Frio </td>
+                        <td class="border"> {{ $count['cold_chain_coordinator'] }}</td>
+                        <td class="border"> {{ $cycle->campaing->cold_chain_coordinator_cost }}</td>
+                        <td class="border">R$
+                            {{ number_format($total['cycle']['cold_chain_coordinator'], 2, ',', ' ') }} </td>
+                    </tr>
+                @endif
+                @if ($total['cycle']['cold_chain_nurse'] > 0)
+                    <tr>
+                        <td class="border"> Emfermeira da Rede de Frio</td>
+                        <td class="border"> {{ $count['cold_chain_nurse'] }}</td>
+                        <td class="border"> {{ $cycle->campaing->cold_chain_nurse_cost }}</td>
+                        <td class="border">R$ {{ number_format($total['cycle']['cold_chain_nurse'], 2, ',', ' ') }}
+                        </td>
+                    </tr>
+                @endif
+                @if ($total['cycle']['cold_chain'] > 0)
+                    <tr>
+                        <td class="border"> Equipe da Rede de Frio </td>
+                        <td class="border"> {{ $count['cold_chain'] }}</td>
+                        <td class="border"> {{ $cycle->campaing->cold_chain_cost }}</td>
+                        <td class="border">R$ {{ number_format($total['cycle']['cold_chain'], 2, ',', ' ') }} </td>
+                    </tr>
+                @endif
+                @if ($total['cycle']['driver_cold_chain'] > 0)
+                    <tr>
+                        <td class="border"> Motorista da Rede de Frio </td>
+                        <td class="border"> {{ $count['driver_cold_chain'] }}</td>
+                        <td class="border"> {{ $cycle->campaing->driver_cost }}</td>
+                        <td class="border">R$ {{ number_format($total['cycle']['driver_cold_chain'], 2, ',', ' ') }}
+                        </td>
+                    </tr>
+                @endif
+                @if ($total['cycle']['transport'] > 0)
+                    <tr>
+                        <td class="border"> Equipe da GETRANS </td>
+                        <td class="border"> {{ $count['transport'] }}</td>
+                        <td class="border"> {{ $cycle->campaing->transport_cost }}</td>
+                        <td class="border">R$ {{ number_format($total['cycle']['transport'], 2, ',', ' ') }} </td>
+                    </tr>
+                @endif
+                @if ($total['cycle']['transport'] > 0)
+                    <tr>
+                        <td class="border"> Equipe de apoio GEZOON </td>
+                        <td class="border"> {{ $count['zoonose'] }}</td>
+                        <td class="border"> {{ $cycle->campaing->zoonoses_cost }}</td>
+                        <td class="border">R$ {{ number_format($total['cycle']['zoonose'], 2, ',', ' ') }} </td>
+                    </tr>
+                @endif
+                @if ($total['cycle']['statistic_coordinator'] > 0)
+                    <tr>
+                        <td class="border"> Coordenador da Estatística</td>
+                        <td class="border"> {{ $count['statistic_coordinator'] }}</td>
+                        <td class="border"> {{ $cycle->campaing->statistic_coordinator_cost }}</td>
+                        <td class="border">R$
+                            {{ number_format($total['cycle']['statistic_coordinator'], 2, ',', ' ') }} </td>
+                    </tr>
+                @endif
+                @if ($total['cycle']['statistic'] > 0)
+                    <tr>
+                        <td class="border"> Equipe da Estatística</td>
+                        <td class="border"> {{ $count['statistic'] }}</td>
+                        <td class="border"> {{ $cycle->campaing->statistic_cost }}</td>
+                        <td class="border">R$
+                            {{ number_format($total['cycle']['statistic'], 2, ',', ' ') }} </td>
+                    </tr>
+                @endif
+                @if ($total['cycle']['coordinator'] > 0)
+                    <tr>
+                        <td class="border"> Coordenadores de Ponto de Apoio</td>
+                        <td class="border"> {{ $count['coordinator'] }}</td>
+                        <td class="border"> {{ $cycle->campaing->coordinator_cost }}</td>
+                        <td class="border">R$
+                            {{ number_format($total['cycle']['coordinator'], 2, ',', ' ') }} </td>
+                    </tr>
+                @endif
+                @if ($total['cycle']['rural_supervisor'] > 0)
+                    <tr>
+                        <td class="border"> Supervisores Rurais</td>
+                        <td class="border"> {{ $count['rural_supervisor'] }}</td>
+                        <td class="border"> {{ $cycle->campaing->rural_supervisor_cost }}</td>
+                        <td class="border">R$
+                            {{ number_format($total['cycle']['rural_supervisor'], 2, ',', ' ') }} </td>
+                    </tr>
+                @endif
+                @if ($total['cycle']['rural_assistant'] > 0)
+                    <tr>
+                        <td class="border"> Auxiliares Rurais</td>
+                        <td class="border"> {{ $count['rural_assistant'] }}</td>
+                        <td class="border"> {{ $cycle->campaing->rural_assistant_cost }}</td>
+                        <td class="border">R$
+                            {{ number_format($total['cycle']['rural_assistant'], 2, ',', ' ') }} </td>
+                    </tr>
+                @endif
+                @if ($total['cycle']['supervisor'] > 0)
+                    <tr>
+                        <td class="border"> Supervisores </td>
+                        <td class="border"> {{ $count['supervisor'] }}</td>
+                        <td class="border"> {{ $cycle->campaing->supervisor_cost }}</td>
+                        <td class="border">R$
+                            {{ number_format($total['cycle']['supervisor'], 2, ',', ' ') }} </td>
+                    </tr>
+                @endif
+                @if ($total['cycle']['assistant'] > 0)
+                    <tr>
+                        <td class="border"> Auxiliares </td>
+                        <td class="border"> {{ $count['assistant'] }}</td>
+                        <td class="border"> {{ $cycle->campaing->assistant_cost }}</td>
+                        <td class="border">R$
+                            {{ number_format($total['cycle']['assistant'], 2, ',', ' ') }} </td>
+                    </tr>
+                @endif
+                @if ($total['cycle']['vaccinator'] > 0)
+                    <tr>
+                        <td class="border"> Vacinadores </td>
+                        <td class="border"> {{ $count['vaccinator'] }}</td>
+                        <td class="border"> {{ $cycle->campaing->vaccinator_cost }}</td>
+                        <td class="border">R$
+                            {{ number_format($total['cycle']['vaccinator'], 2, ',', ' ') }} </td>
+                    </tr>
+                @endif
+                @if ($total['cycle']['annotator'] > 0)
+                    <tr>
+                        <td class="border"> Anotadores </td>
+                        <td class="border"> {{ $count['annotator'] }}</td>
+                        <td class="border"> {{ $cycle->campaing->annotators_cost }}</td>
+                        <td class="border">R$
+                            {{ number_format($total['cycle']['annotator'], 2, ',', ' ') }} </td>
+                    </tr>
+                @endif
+                @if ($total['cycle']['driver'] > 0)
+                    <tr>
+                        <td class="border"> Motoristass da campanha </td>
+                        <td class="border"> {{ $count['driver'] }}</td>
+                        <td class="border"> {{ $cycle->campaing->driver_cost }}</td>
+                        <td class="border">R$
+                            {{ number_format($total['cycle']['driver'], 2, ',', ' ') }} </td>
+                    </tr>
+                @endif
+                @if ($total['cycle']['total'] > 0)
+                    <tr>
+                        <td class="border" colspan="3"> Total da Etapa </td>
+                        <td class="border">R$
+                            {{ number_format($total['cycle']['total'], 2, ',', ' ') }} </td>
+                    </tr>
+                @endif
+            </table>
+
+
+
+
+
+        </div>
+        <div class="footer">
+            <hr />
+            <div class="center">
+                <address>
+                    Rua Minas Gerais, Nº 909 – Bairro Matadouro. zona Norte. <br />
+                    Teresina - PI, 64018-560
+                </address>
+            </div>
+        </div>
     </div>
 </body>
 

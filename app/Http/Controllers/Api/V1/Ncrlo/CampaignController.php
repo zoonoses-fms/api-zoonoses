@@ -52,7 +52,7 @@ class CampaignController extends Controller
             'supervisor_cost' => $request->supervisor_cost,
             'assistant_cost' => $request->assistant_cost,
             'vaccinator_cost' => $request->vaccinator_cost,
-            'annotator_cost' => $request->annotator_cost,
+            'annotators_cost' => $request->annotators_cost,
 
             'rural_supervisor_cost' => $request->rural_supervisor_cost,
             'rural_assistant_cost' => $request->rural_assistant_cost,
