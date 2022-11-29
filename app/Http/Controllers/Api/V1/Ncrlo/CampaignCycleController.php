@@ -7,6 +7,8 @@ use App\Models\CampaignCycle;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Barryvdh\DomPDF\Facade\Pdf;
+use App\Exports\CampaignCyclePayrollExport;
+use Maatwebsite\Excel\Facades\Excel;
 use DateTime;
 use DateInterval;
 use stdClass;
@@ -974,5 +976,13 @@ class CampaignCycleController extends Controller
         ])->findOrFail($id);
 
         return $cycle;
+    }
+
+    public function payrollCsv(Request $request, $id)
+    {
+        // return Excel::download(new CampaignCyclePayrollExport($id), 'payroll.csv', Excel::CSV);
+        return (new CampaignCyclePayrollExport($id))->download('payroll.csv', \Maatwebsite\Excel\Excel::CSV, [
+            'Content-Type' => 'text/csv',
+        ]);
     }
 }

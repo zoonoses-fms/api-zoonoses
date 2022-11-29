@@ -415,6 +415,7 @@
                         @endforeach
                     @endif
                 @endforeach
+
                 @if ($cycle->supports[0]->is_rural)
                     @if ($total['start']['rural_supervisor'] > 0)
                         <tr>
@@ -461,6 +462,7 @@
                         @endforeach
                     @endif
                 @endforeach
+
                 @if ($cycle->supports[0]->is_rural)
                     @if ($total['start']['rural_assistant'] > 0)
                         <tr>
