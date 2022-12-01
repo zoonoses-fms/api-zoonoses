@@ -56,7 +56,9 @@ class CampaignCycleController extends Controller
             'campaing_id' => $request->campaing_id,
             'statistic_coordinator_id' => $request->statistic_coordinator_id,
             'cold_chain_coordinator_id' => $request->cold_chain_coordinator_id,
-            'cold_chain_nurse_id' => $request->cold_chain_nurse_id
+            'cold_chain_nurse_id' => $request->cold_chain_nurse_id,
+            'partial_value' => $request->partial_value,
+            'percentage_value' => $request->percentage_value
         ]);
         $cycle->statistics()->sync($request->statistics);
 
@@ -153,6 +155,8 @@ class CampaignCycleController extends Controller
         $cycle->statistic_coordinator_id = $request->statistic_coordinator_id;
         $cycle->cold_chain_coordinator_id = $request->cold_chain_coordinator_id;
         $cycle->cold_chain_nurse_id = $request->cold_chain_nurse_id;
+        $cycle->partial_value = $request->partial_value;
+        $cycle->percentage_value = $request->percentage_value;
         $cycle->statistics()->sync($request->statistics);
 
         $cycle->beforeTransports()->sync($request->before_transports);
