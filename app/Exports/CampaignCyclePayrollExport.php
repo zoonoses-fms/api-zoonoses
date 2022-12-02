@@ -71,64 +71,151 @@ class CampaignCyclePayrollExport implements FromCollection, Responsable
         $listPayroll = [];
 
         if ($cycle->coldChainCoordinator) {
-            $listPayroll[] = [
-                $before,
-                $cycle->coldChainCoordinator->registration,
-                $cycle->coldChainCoordinator->name,
-                'Coordenador da Rede de Frio',
-                $cycle->campaing->cold_chain_coordinator_cost
-            ];
+            if ($cycle->partial_value && $cycle->campaing->cold_chain_coordinator_cost > 0) {
+                $partial_cold_chain_coordinator_cost =
+                    ($cycle->campaing->cold_chain_coordinator_cost / 100) * $cycle->percentage_value;
+
+                $listPayroll[] = [
+                    $before,
+                    $cycle->coldChainCoordinator->registration,
+                    $cycle->coldChainCoordinator->name,
+                    'Coordenador da Rede de Frio',
+                    $partial_cold_chain_coordinator_cost
+                ];
+            } else {
+                $listPayroll[] = [
+                    $before,
+                    $cycle->coldChainCoordinator->registration,
+                    $cycle->coldChainCoordinator->name,
+                    'Coordenador da Rede de Frio',
+                    $cycle->campaing->cold_chain_coordinator_cost
+                ];
+            }
         }
 
         if ($cycle->coldChainNurse) {
-            $listPayroll[] = [
-                $before,
-                $cycle->coldChainNurse->registration,
-                $cycle->coldChainNurse->name,
-                'Enfermeira da Rede de Frio',
-                $cycle->campaing->cold_chain_nurse_cost
-            ];
+            if ($cycle->partial_value && $cycle->campaing->cold_chain_nurse_cost > 0) {
+                $partial_cold_chain_nurse_cost =
+                    ($cycle->campaing->cold_chain_nurse_cost / 100) * $cycle->percentage_value;
+
+                $listPayroll[] = [
+                    $before,
+                    $cycle->coldChainNurse->registration,
+                    $cycle->coldChainNurse->name,
+                    'Enfermeira da Rede de Frio',
+                    $partial_cold_chain_nurse_cost
+                ];
+            } else {
+                $listPayroll[] = [
+                    $before,
+                    $cycle->coldChainNurse->registration,
+                    $cycle->coldChainNurse->name,
+                    'Enfermeira da Rede de Frio',
+                    $cycle->campaing->cold_chain_nurse_cost
+                ];
+            }
         }
 
-        foreach ($cycle->beforeColdChains as $beforeColdChain) {
-            $listPayroll[] = [
-                $before,
-                $beforeColdChain->registration,
-                $beforeColdChain->name,
-                'Equipe da Rede de Frio',
-                $cycle->campaing->cold_chain_cost
-            ];
+        if ($cycle->partial_value && $cycle->campaing->cold_chain_cost > 0) {
+            $partial_cold_chain_cost =
+                ($cycle->campaing->cold_chain_cost / 100) * $cycle->percentage_value;
+
+            foreach ($cycle->beforeColdChains as $beforeColdChain) {
+                $listPayroll[] = [
+                    $before,
+                    $beforeColdChain->registration,
+                    $beforeColdChain->name,
+                    'Equipe da Rede de Frio',
+                    $partial_cold_chain_cost
+                ];
+            }
+        } else {
+            foreach ($cycle->beforeColdChains as $beforeColdChain) {
+                $listPayroll[] = [
+                    $before,
+                    $beforeColdChain->registration,
+                    $beforeColdChain->name,
+                    'Equipe da Rede de Frio',
+                    $cycle->campaing->cold_chain_cost
+                ];
+            }
         }
 
-        foreach ($cycle->beforeDriverColdChains as $beforeDriverColdChain) {
-            $listPayroll[] = [
-                $before,
-                $beforeDriverColdChain->registration,
-                $beforeDriverColdChain->name,
-                'Motorista da Rede de Frio',
-                $cycle->campaing->driver_cost
-            ];
+        if ($cycle->partial_value && $cycle->campaing->driver_cost > 0) {
+            $partial_driver_cost =
+                ($cycle->campaing->driver_cost / 100) * $cycle->percentage_value;
+
+            foreach ($cycle->beforeDriverColdChains as $beforeDriverColdChain) {
+                $listPayroll[] = [
+                    $before,
+                    $beforeDriverColdChain->registration,
+                    $beforeDriverColdChain->name,
+                    'Motorista',
+                    $partial_driver_cost
+                ];
+            }
+        } else {
+            foreach ($cycle->beforeDriverColdChains as $beforeDriverColdChain) {
+                $listPayroll[] = [
+                    $before,
+                    $beforeDriverColdChain->registration,
+                    $beforeDriverColdChain->name,
+                    'Motorista',
+                    $cycle->campaing->driver_cost
+                ];
+            }
         }
 
-        foreach ($cycle->beforeTransports as $beforeTransport) {
-            $listPayroll[] = [
-                $before,
-                $beforeTransport->registration,
-                $beforeTransport->name,
-                'Apoio da GETRANS',
-                $cycle->campaing->transport_cost
-            ];
+        if ($cycle->partial_value && $cycle->campaing->transport_cost > 0) {
+            $partial_transport_cost =
+                ($cycle->campaing->transport_cost / 100) * $cycle->percentage_value;
+
+            foreach ($cycle->beforeTransports as $beforeTransport) {
+                $listPayroll[] = [
+                    $before,
+                    $beforeTransport->registration,
+                    $beforeTransport->name,
+                    'Apoio da GETRANS',
+                    $partial_transport_cost
+                ];
+            }
+        } else {
+            foreach ($cycle->beforeTransports as $beforeTransport) {
+                $listPayroll[] = [
+                    $before,
+                    $beforeTransport->registration,
+                    $beforeTransport->name,
+                    'Apoio da GETRANS',
+                    $cycle->campaing->transport_cost
+                ];
+            }
         }
 
-        foreach ($cycle->beforeZoonoses as $beforeZoonose) {
-            $listPayroll[] = [
-                $before,
-                $beforeZoonose->registration,
-                $beforeZoonose->name,
-                'Apoio da GEZOON',
-                $cycle->campaing->zoonoses_cost
-            ];
+        if ($cycle->partial_value && $cycle->campaing->zoonoses_cost > 0) {
+            $partial_zoonoses_cost =
+                ($cycle->campaing->zoonoses_cost / 100) * $cycle->percentage_value;
+
+            foreach ($cycle->beforeZoonoses as $beforeZoonose) {
+                $listPayroll[] = [
+                    $before,
+                    $beforeZoonose->registration,
+                    $beforeZoonose->name,
+                    'Apoio da GEZOON',
+                    $partial_zoonoses_cost
+                ];
+            }
+        } else {
+            foreach ($cycle->beforeZoonoses as $beforeZoonose) {
+                $listPayroll[] = [
+                    $before,
+                    $beforeZoonose->registration,
+                    $beforeZoonose->name,
+                    'Apoio da GEZOON',
+                    $cycle->campaing->zoonoses_cost
+                ];
+            }
         }
+
 
         // start day
 

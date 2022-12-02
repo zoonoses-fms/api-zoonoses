@@ -141,8 +141,15 @@
                         <td class="border line-mat"> {{ $cycle->coldChainCoordinator->registration }} </td>
                         <td class="border line-name"> {{ $cycle->coldChainCoordinator->name }} </td>
                         <td class="border"> Coordenador da Rede de Frio</td>
-                        <td class="border"> R$
-                            {{ number_format($cycle->campaing->cold_chain_coordinator_cost, 2, ',', ' ') }}</td>
+                        @if ($cycle->partial_value && $cycle->campaing->cold_chain_coordinator_cost > 0)
+                            <td class="border"> R$
+                                {{ number_format(($cycle->campaing->cold_chain_coordinator_cost / 100) * $cycle->percentage_value, 2, ',', ' ') }}
+                            </td>
+                        @else
+                            <td class="border"> R$
+                                {{ number_format($cycle->campaing->cold_chain_coordinator_cost, 2, ',', ' ') }}
+                            </td>
+                        @endif
                     </tr>
                 @endif
                 @if ($cycle->coldChainNurse)
@@ -150,8 +157,16 @@
                         <td class="border line-mat"> {{ $cycle->coldChainNurse->registration }} </td>
                         <td class="border line-name"> {{ $cycle->coldChainNurse->name }} </td>
                         <td class="border"> Enfermeira da Rede de Frio</td>
-                        <td class="border">R$ {{ number_format($cycle->campaing->cold_chain_nurse_cost, 2, ',', ' ') }}
-                        </td>
+                        @if ($cycle->partial_value && $cycle->campaing->cold_chain_nurse_cost > 0)
+                            <td class="border"> R$
+                                {{ number_format(($cycle->campaing->cold_chain_nurse_cost / 100) * $cycle->percentage_value, 2, ',', ' ') }}
+                            </td>
+                        @else
+                            <td class="border">R$
+                                {{ number_format($cycle->campaing->cold_chain_nurse_cost, 2, ',', ' ') }}
+                            </td>
+                        @endif
+
                     </tr>
                 @endif
 
@@ -163,7 +178,16 @@
                         <td class="border line-mat"> {{ $beforeColdChain->registration }} </td>
                         <td class="border line-name"> {{ $beforeColdChain->name }} </td>
                         <td class="border"> Equipe da Rede de Frio </td>
-                        <td class="border">R$ {{ number_format($cycle->campaing->cold_chain_cost, 2, ',', ' ') }} </td>
+                        @if ($cycle->partial_value && $cycle->campaing->cold_chain_cost > 0)
+                            <td class="border"> R$
+                                {{ number_format(($cycle->campaing->cold_chain_cost / 100) * $cycle->percentage_value, 2, ',', ' ') }}
+                            </td>
+                        @else
+                            <td class="border">R$
+                                {{ number_format($cycle->campaing->cold_chain_cost, 2, ',', ' ') }}
+                            </td>
+                        @endif
+
                     </tr>
                 @endforeach
 
@@ -178,14 +202,22 @@
                     <tr>
                         <td class="border line-mat"> {{ $beforeDriverColdChain->registration }} </td>
                         <td class="border line-name"> {{ $beforeDriverColdChain->name }} </td>
-                        <td class="border"> Motorista da Rede de Frio </td>
-                        <td class="border">R$ {{ number_format($cycle->campaing->driver_cost, 2, ',', ' ') }} </td>
+                        <td class="border"> Motorista </td>
+                        @if ($cycle->partial_value && $cycle->campaing->driver_cost > 0)
+                            <td class="border">R$
+                                {{ number_format(($cycle->campaing->driver_cost / 100) * $cycle->percentage_value, 2, ',', ' ') }}
+                            </td>
+                        @else
+                            <td class="border">R$
+                                {{ number_format($cycle->campaing->driver_cost, 2, ',', ' ') }}
+                            </td>
+                        @endif
                     </tr>
                 @endforeach
 
                 @if ($total['before']['driver_cold_chain'] > 0)
                     <tr>
-                        <td class="border" colspan="3"> SubTotal motorista da Rede de Frio</td>
+                        <td class="border" colspan="3"> SubTotal motorista </td>
                         <td class="border">R$ {{ number_format($total['before']['driver_cold_chain'], 2, ',', ' ') }}
                         </td>
                     </tr>
@@ -196,7 +228,16 @@
                         <td class="border line-mat"> {{ $beforeTransport->registration }} </td>
                         <td class="border line-name"> {{ $beforeTransport->name }} </td>
                         <td class="border"> Apoio da GETRANS </td>
-                        <td class="border">R$ {{ number_format($cycle->campaing->transport_cost, 2, ',', ' ') }} </td>
+                        @if ($cycle->partial_value && $cycle->campaing->transport_cost > 0)
+                            <td class="border">R$
+                                {{ number_format(($cycle->campaing->transport_cost / 100) * $cycle->percentage_value, 2, ',', ' ') }}
+                            </td>
+                        @else
+                            <td class="border">R$
+                                {{ number_format($cycle->campaing->transport_cost, 2, ',', ' ') }}
+                            </td>
+                        @endif
+
                     </tr>
                 @endforeach
 
@@ -212,7 +253,15 @@
                         <td class="border line-mat"> {{ $beforeZoonose->registration }} </td>
                         <td class="border line-name"> {{ $beforeZoonose->name }} </td>
                         <td class="border"> Apoio da GEZOON </td>
-                        <td class="border">R$ {{ number_format($cycle->campaing->zoonoses_cost, 2, ',', ' ') }} </td>
+                        @if ($cycle->partial_value && $cycle->campaing->zoonoses_cost > 0)
+                            <td class="border">R$
+                                {{ number_format(($cycle->campaing->zoonoses_cost / 100) * $cycle->percentage_value, 2, ',', ' ') }}
+                            </td>
+                        @else
+                            <td class="border">R$
+                                {{ number_format($cycle->campaing->zoonoses_cost, 2, ',', ' ') }}
+                            </td>
+                        @endif
                     </tr>
                 @endforeach
 
@@ -307,7 +356,8 @@
                         <td class="border line-mat"> {{ $startColdChain->registration }} </td>
                         <td class="border line-name"> {{ $startColdChain->name }} </td>
                         <td class="border"> Equipe da Rede de Frio </td>
-                        <td class="border">R$ {{ number_format($cycle->campaing->cold_chain_cost, 2, ',', ' ') }} </td>
+                        <td class="border">R$ {{ number_format($cycle->campaing->cold_chain_cost, 2, ',', ' ') }}
+                        </td>
                     </tr>
                 @endforeach
 
@@ -329,7 +379,7 @@
 
                 @if ($total['start']['driver_cold_chain'] > 0)
                     <tr>
-                        <td class="border" colspan="3"> SubTotal motorista da Rede de Frio</td>
+                        <td class="border" colspan="3"> SubTotal motorista </td>
                         <td class="border">R$ {{ number_format($total['start']['driver_cold_chain'], 2, ',', ' ') }}
                         </td>
                     </tr>
@@ -641,7 +691,7 @@
                 @endif
                 @if ($total['cycle']['driver_cold_chain'] > 0)
                     <tr>
-                        <td class="border"> Motorista da Rede de Frio </td>
+                        <td class="border"> Motorista </td>
                         <td class="border"> {{ $count['driver_cold_chain'] }}</td>
                         <td class="border"> {{ $cycle->campaing->driver_cost }}</td>
                         <td class="border">R$ {{ number_format($total['cycle']['driver_cold_chain'], 2, ',', ' ') }}
