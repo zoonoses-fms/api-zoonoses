@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use \stdClass;
 
 class CampaignCycle extends Model
 {
@@ -424,5 +425,106 @@ class CampaignCycle extends Model
         $total['cycle']['driver'] = $total['start']['driver'];
 
         return ['total' => $total, 'count' => $counts];
+    }
+
+    public static function buildItem($item)
+    {
+        $item->male_dog_under_4m = 0;
+        $item->female_dog_under_4m = 0;
+
+        $item->male_dog_major_4m_under_1y = 0;
+        $item->female_dog_major_4m_under_1y = 0;
+
+        $item->male_dog_major_1y_under_2y = 0;
+        $item->female_dog_major_1y_under_2y = 0;
+
+        $item->male_dog_major_2y_under_4y = 0;
+        $item->female_dog_major_2y_under_4y = 0;
+
+        $item->male_dog_major_4y = 0;
+        $item->female_dog_major_4y = 0;
+
+        $item->male_dogs = 0;
+        $item->female_dogs = 0;
+
+        $item->total_of_dogs = 0;
+
+        $item->male_cat = 0;
+        $item->female_cat = 0;
+
+        $item->total_of_cats = 0;
+        $item->total = 0;
+        $item->goal = 0;
+    }
+
+    public static function incrementItem($item, $increment) {
+        $item->male_dog_under_4m += $increment->male_dog_under_4m;
+        $item->female_dog_under_4m += $increment->female_dog_under_4m;
+
+        $item->male_dog_major_4m_under_1y += $increment->male_dog_major_4m_under_1y;
+        $item->female_dog_major_4m_under_1y += $increment->female_dog_major_4m_under_1y;
+
+        $item->male_dog_major_1y_under_2y += $increment->male_dog_major_1y_under_2y;
+        $item->female_dog_major_1y_under_2y += $increment->female_dog_major_1y_under_2y;
+
+        $item->male_dog_major_2y_under_4y += $increment->male_dog_major_2y_under_4y;
+        $item->female_dog_major_2y_under_4y += $increment->female_dog_major_2y_under_4y;
+
+        $item->male_dog_major_4y += $increment->male_dog_major_4y;
+        $item->female_dog_major_4y += $increment->female_dog_major_4y;
+
+        $item->male_dogs += $increment->male_dogs;
+        $item->female_dogs += $increment->female_dogs;
+
+        $item->total_of_dogs += $increment->total_of_dogs;
+
+        $item->male_cat += $increment->male_cat;
+        $item->female_cat += $increment->female_cat;
+
+        $item->total_of_cats += $increment->total_of_cats;
+        $item->total += $increment->total;
+        $item->goal += $increment->goal;
+    }
+
+    public function loadReport()
+    {
+        $arraySaad = [];
+
+        CampaignCycle::buildItem($this);
+
+        foreach ($this->supports as $support) {
+            CampaignCycle::buildItem($support);
+
+            $saad_id = null;
+
+            foreach ($arraySaad as $saad) {
+                if ($support->saads[0]->id == $saad->id) {
+                    $saad_id = $saad->id;
+                    break;
+                }
+            }
+
+            if ($saad_id == null) {
+                $saad = new stdClass();
+                $saad->id = $support->saads[0]->id;
+                $saad->name = $support->saads[0]->name;
+                $saad_id = $support->saads[0]->id;
+
+                $arraySaad[$saad_id] = $saad;
+
+                CampaignCycle::buildItem($arraySaad[$saad_id]);
+            }
+
+            foreach ($support->points as $point) {
+
+                CampaignCycle::incrementItem($support, $point);
+            }
+
+            CampaignCycle::incrementItem($arraySaad[$saad_id], $support);
+
+            CampaignCycle::incrementItem($this, $support);
+
+        }
+        $this->saads = $arraySaad;
     }
 }

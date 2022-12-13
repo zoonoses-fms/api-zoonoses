@@ -7,6 +7,7 @@ use App\Models\Campaign;
 use Illuminate\Contracts\Auth\SupportsBasicAuth;
 use Illuminate\Http\Request;
 use Psy\Sudo;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class CampaignController extends Controller
 {
@@ -188,5 +189,42 @@ class CampaignController extends Controller
             $cycle->delete();
         }
         $campaign->delete();
+    }
+
+    public function report(Request $request, $id)
+    {
+        $campaign = Campaign::findOrFail($id);
+
+        Campaign::buildItem($campaign);
+        foreach ($campaign->cycles as $cycle) {
+            $cycle->loadReport();
+            Campaign::incrementItem($campaign, $cycle);
+        }
+
+        return $campaign;
+    }
+
+    public function reportPdf(Request $request, $id)
+    {
+        $today = date("d-m-Y");
+        $arraySaad = [];
+        $campaign = Campaign::findOrFail($id);
+
+        Campaign::buildItem($campaign);
+        foreach ($campaign->cycles as $cycle) {
+            $cycle->loadReport();
+            Campaign::incrementItem($campaign, $cycle);
+        }
+
+        return PDF::loadView(
+            'ncrlo.campaign_report',
+            [
+                'campaign' => $campaign,
+                'today' => $today,
+            ]
+        )->setPaper('a4', 'landscape')->download("Relatório de Vacinação {$today}.pdf");
+
+
+        //return view('receipt');
     }
 }

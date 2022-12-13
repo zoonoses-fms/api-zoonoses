@@ -108,8 +108,7 @@ class AuthenticatedController extends Controller
             }
         }
 
-        return $user;
-
+        return $this->success($user);
         /*if (!Gate::authorize('is-admin', $user)) {
         return response()->json(['error' => 'Not authorized.'], 403);
         } */

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\Datasus\DengueOn;
+namespace App\Models\Datasus\Dengueon;
 
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use App\Models\Dataset;
 
-class DengueOnDatasus extends Dataset
+class DengueonDatasus extends Dataset
 {
     use HasFactory;
 

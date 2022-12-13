@@ -8,7 +8,7 @@ use App\Models\Location\City;
 use App\Models\Location\The\TheSaad;
 use App\Models\Location\The\TheSaadGeography;
 
-class saadSeeder extends Seeder
+class SaadSeeder extends Seeder
 {
     public function nameCase($string, $delimiters = array(" ", "-", ".", "'", "O'", "Mc"), $exceptions = array("de", "da", "dos", "das", "do", "I", "II", "III", "IV", "V", "VI"))
     {
