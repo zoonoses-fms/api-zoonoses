@@ -17,8 +17,9 @@ Route::get('campaign/cycle/frequency/{id}', [CampaignCycleController::class, 'fr
 Route::get('campaign/cycle/report/pdf/{id}', [CampaignCycleController::class, 'reportPdf']);
 Route::get('campaign/cycle/public/map/{id}', [CampaignCycleController::class, 'publicMap']);
 
-Route::apiResource('campaign/cycle', CampaignController::class)
+Route::apiResource('campaign/cycle', CampaignCycleController::class)
     ->middleware('auth:sanctum');
+
 Route::get('campaign/support/frequency/{id}', [CampaingSupportController::class, 'frequency']);
 Route::apiResource('campaign/support', CampaingSupportController::class)
     ->middleware('auth:sanctum');

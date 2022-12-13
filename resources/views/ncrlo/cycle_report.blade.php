@@ -138,14 +138,21 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td class="border"> {{ $cycle->male_dogs }} </td>
-                        <td class="border"> {{ $cycle->female_dogs }} </td>
-                        <td class="border"> {{ $cycle->total_of_dogs }} </td>
-                        <td class="border"> {{ $cycle->male_cat }} </td>
-                        <td class="border"> {{ $cycle->female_cat }} </td>
-                        <td class="border"> {{ $cycle->total_of_cats }} </td>
-                        <td class="border"> {{ $cycle->total }} </td>
-                        <td class="border"> {{ $cycle->goal }} </td>
+                        <td class="border"> {{ number_format($cycle->male_dogs, 0, ',', '.') }} </td>
+
+                        <td class="border"> {{ number_format($cycle->female_dogs, 0, ',', '.') }} </td>
+
+                        <td class="border"> {{ number_format($cycle->total_of_dogs, 0, ',', '.') }} </td>
+
+                        <td class="border"> {{ number_format($cycle->male_cat, 0, ',', '.') }} </td>
+
+                        <td class="border"> {{ number_format($cycle->female_cat, 0, ',', '.') }} </td>
+
+                        <td class="border"> {{ number_format($cycle->total_of_cats, 0, ',', '.') }} </td>
+
+                        <td class="border"> {{ number_format($cycle->total, 0, ',', '.') }} </td>
+
+                        <td class="border"> {{ number_format($cycle->goal, 0, ',', '.') }} </td>
                         @if ($cycle->total > 0 && $cycle->goal > 0)
                             <td class="border">
                                 {{ number_format($cycle->total / ($cycle->goal / 100), 2, ',', ' ') }}%
@@ -177,21 +184,25 @@
                         @foreach ($cycle->saads as $saad)
                             <tr>
                                 <td class="border"> {{ $saad->name }} </td>
-                                <td class="border"> {{ $saad->male_dogs }} </td>
-                                <td class="border"> {{ $saad->female_dogs }} </td>
-                                <td class="border"> {{ $saad->total_of_dogs }} </td>
-                                <td class="border"> {{ $saad->male_cat }} </td>
-                                <td class="border"> {{ $saad->female_cat }} </td>
-                                <td class="border"> {{ $saad->total_of_cats }} </td>
-                                <td class="border"> {{ $saad->total }} </td>
-                                <td class="border"> {{ $saad->goal }} </td>
-                                @if ($saad->total > 0 && $saad->goal > 0)
-                                    <td class="border">
-                                        {{ number_format($saad->total / ($saad->goal / 100), 2, ',', ' ') }}%
-                                    </td>
-                                @else
-                                    <td class="border"> 0% </td>
-                                @endif
+
+                                <td class="border"> {{ number_format($saad->male_dogs, 0, ',', '.') }} </td>
+
+                                <td class="border"> {{ number_format($saad->female_dogs, 0, ',', '.') }} </td>
+
+                                <td class="border"> {{ number_format($saad->total_of_dogs, 0, ',', '.') }} </td>
+
+                                <td class="border"> {{ number_format($saad->male_cat, 0, ',', '.') }} </td>
+
+                                <td class="border"> {{ number_format($saad->female_cat, 0, ',', '.') }} </td>
+
+                                <td class="border"> {{ number_format($saad->total_of_cats, 0, ',', '.') }} </td>
+
+                                <td class="border"> {{ number_format($saad->total, 0, ',', '.') }} </td>
+
+                                <td class="border"> {{ number_format($saad->goal, 0, ',', '.') }} </td>
+                                <td class="border">
+                                    {{ number_format($saad->total / ($saad->goal / 100), 2, ',', ' ') }}%
+                                </td>
                             </tr>
                         @endforeach
                     </tbody>
@@ -219,14 +230,21 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td class="border"> {{ $support->male_dogs }} </td>
-                                <td class="border"> {{ $support->female_dogs }} </td>
-                                <td class="border"> {{ $support->total_of_dogs }} </td>
-                                <td class="border"> {{ $support->male_cat }} </td>
-                                <td class="border"> {{ $support->female_cat }} </td>
-                                <td class="border"> {{ $support->total_of_cats }} </td>
-                                <td class="border"> {{ $support->total }} </td>
-                                <td class="border"> {{ $support->goal }} </td>
+                                <td class="border"> {{ number_format($support->male_dogs, 0, ',', '.') }} </td>
+
+                                <td class="border"> {{ number_format($support->female_dogs, 0, ',', '.') }} </td>
+
+                                <td class="border"> {{ number_format($support->total_of_dogs, 0, ',', '.') }} </td>
+
+                                <td class="border"> {{ number_format($support->male_cat, 0, ',', '.') }} </td>
+
+                                <td class="border"> {{ number_format($support->female_cat, 0, ',', '.') }} </td>
+
+                                <td class="border"> {{ number_format($support->total_of_cats, 0, ',', '.') }} </td>
+
+                                <td class="border"> {{ number_format($support->total, 0, ',', '.') }} </td>
+
+                                <td class="border"> {{ number_format($support->goal, 0, ',', '.') }} </td>
                                 @if ($support->total > 0 && $support->goal > 0)
                                     <td class="border">
                                         {{ number_format($support->total / ($support->goal / 100), 2, ',', ' ') }}%
@@ -255,14 +273,22 @@
                             @foreach ($support->points as $point)
                                 <tr>
                                     <td class="border"> {{ $point->point->name }} </td>
-                                    <td class="border"> {{ $point->male_dogs }} </td>
-                                    <td class="border"> {{ $point->female_dogs }} </td>
-                                    <td class="border"> {{ $point->total_of_dogs }} </td>
-                                    <td class="border"> {{ $point->male_cat }} </td>
-                                    <td class="border"> {{ $point->female_cat }} </td>
-                                    <td class="border"> {{ $point->total_of_cats }} </td>
-                                    <td class="border"> {{ $point->total }} </td>
-                                    <td class="border"> {{ $point->goal }} </td>
+
+                                    <td class="border"> {{ number_format($point->male_dogs, 0, ',', '.') }} </td>
+
+                                    <td class="border"> {{ number_format($point->female_dogs, 0, ',', '.') }} </td>
+
+                                    <td class="border"> {{ number_format($point->total_of_dogs, 0, ',', '.') }} </td>
+
+                                    <td class="border"> {{ number_format($point->male_cat, 0, ',', '.') }} </td>
+
+                                    <td class="border"> {{ number_format($point->female_cat, 0, ',', '.') }} </td>
+
+                                    <td class="border"> {{ number_format($point->total_of_cats, 0, ',', '.') }} </td>
+
+                                    <td class="border"> {{ number_format($point->total, 0, ',', '.') }} </td>
+
+                                    <td class="border"> {{ number_format($point->goal, 0, ',', '.') }} </td>
                                 </tr>
                             @endforeach
                         </tbody>
