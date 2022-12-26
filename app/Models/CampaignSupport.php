@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Location\The\TheSaad;
 
-class CampaingSupport extends Model
+class CampaignSupport extends Model
 {
     use HasFactory;
 
@@ -33,6 +33,16 @@ class CampaingSupport extends Model
         return $this->belongsTo(VaccinationSupport::class, 'vaccination_support_id');
     }
 
+    public function loadProfiles($scope = 'support')
+    {
+        $cycle = $this->cycle;
+        $campaign = $cycle->campaign;
+        $this->profiles =  $campaign->profiles($scope)->where('is_rural', $this->is_rural)->orderBy('created_at', 'desc')->get();
+        foreach ($this->profiles as $profile) {
+            $profile->loadWorkers($campaign->id, $cycle->id, $this->id);
+        }
+    }
+
     public function coordinator()
     {
         return $this->belongsTo(VaccinationWorker::class, 'coordinator_id')->orderBy('name', 'asc');
@@ -43,7 +53,7 @@ class CampaingSupport extends Model
         return $this->belongsToMany(
             VaccinationWorker::class,
             'supervisor_support',
-            'campaing_support_id',
+            'campaign_support_id',
             'supervisor_id'
         )->orderBy('name', 'asc');
     }
@@ -53,7 +63,7 @@ class CampaingSupport extends Model
         return $this->belongsToMany(
             VaccinationWorker::class,
             'driver_support',
-            'campaing_support_id',
+            'campaign_support_id',
             'driver_id'
         )->orderBy('name', 'asc');
     }
@@ -63,7 +73,7 @@ class CampaingSupport extends Model
         return $this->belongsToMany(
             VaccinationWorker::class,
             'assistant_support',
-            'campaing_support_id',
+            'campaign_support_id',
             'assistant_id'
         )->orderBy('name', 'asc');
     }
@@ -73,7 +83,7 @@ class CampaingSupport extends Model
         return $this->belongsToMany(
             VaccinationWorker::class,
             'vaccinator_support',
-            'campaing_support_id',
+            'campaign_support_id',
             'vaccinator_id'
         )->orderBy('name', 'asc');
     }
@@ -83,14 +93,14 @@ class CampaingSupport extends Model
         return $this->belongsToMany(
             TheSaad::class,
             'saad_support',
-            'campaing_support_id',
+            'campaign_support_id',
             'saad_id'
         );
     }
 
     public function points()
     {
-        return $this->hasMany(CampaingPoint::class, 'campaing_support_id');
+        return $this->hasMany(CampaignPoint::class, 'campaign_support_id');
     }
 
     public function ruralSupervisors()
@@ -98,7 +108,7 @@ class CampaingSupport extends Model
         return $this->belongsToMany(
             VaccinationWorker::class,
             'rural_supervisor_support',
-            'campaing_support_id',
+            'campaign_support_id',
             'rural_supervisor_id'
         )->orderBy('name', 'asc');
     }
@@ -108,7 +118,7 @@ class CampaingSupport extends Model
         return $this->belongsToMany(
             VaccinationWorker::class,
             'rural_assistant_support',
-            'campaing_support_id',
+            'campaign_support_id',
             'rural_assistant_id'
         )->orderBy('name', 'asc');
     }

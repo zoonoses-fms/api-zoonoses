@@ -30,7 +30,7 @@ class CampaignCyclePayrollExport implements FromCollection, Responsable
     {
         $today = new DateTime();
         $cycle = CampaignCycle::with([
-            'campaing',
+            'campaign',
             'coldChainCoordinator',
             'coldChainNurse',
             'beforeColdChains',
@@ -71,9 +71,9 @@ class CampaignCyclePayrollExport implements FromCollection, Responsable
         $listPayroll = [];
 
         if ($cycle->coldChainCoordinator) {
-            if ($cycle->partial_value && $cycle->campaing->cold_chain_coordinator_cost > 0) {
+            if ($cycle->partial_value && $cycle->campaign->cold_chain_coordinator_cost > 0) {
                 $partial_cold_chain_coordinator_cost =
-                    ($cycle->campaing->cold_chain_coordinator_cost / 100) * $cycle->percentage_value;
+                    ($cycle->campaign->cold_chain_coordinator_cost / 100) * $cycle->percentage_value;
 
                 $listPayroll[] = [
                     $before,
@@ -88,15 +88,15 @@ class CampaignCyclePayrollExport implements FromCollection, Responsable
                     $cycle->coldChainCoordinator->registration,
                     $cycle->coldChainCoordinator->name,
                     'Coordenador da Rede de Frio',
-                    $cycle->campaing->cold_chain_coordinator_cost
+                    $cycle->campaign->cold_chain_coordinator_cost
                 ];
             }
         }
 
         if ($cycle->coldChainNurse) {
-            if ($cycle->partial_value && $cycle->campaing->cold_chain_nurse_cost > 0) {
+            if ($cycle->partial_value && $cycle->campaign->cold_chain_nurse_cost > 0) {
                 $partial_cold_chain_nurse_cost =
-                    ($cycle->campaing->cold_chain_nurse_cost / 100) * $cycle->percentage_value;
+                    ($cycle->campaign->cold_chain_nurse_cost / 100) * $cycle->percentage_value;
 
                 $listPayroll[] = [
                     $before,
@@ -111,14 +111,14 @@ class CampaignCyclePayrollExport implements FromCollection, Responsable
                     $cycle->coldChainNurse->registration,
                     $cycle->coldChainNurse->name,
                     'Enfermeira da Rede de Frio',
-                    $cycle->campaing->cold_chain_nurse_cost
+                    $cycle->campaign->cold_chain_nurse_cost
                 ];
             }
         }
 
-        if ($cycle->partial_value && $cycle->campaing->cold_chain_cost > 0) {
+        if ($cycle->partial_value && $cycle->campaign->cold_chain_cost > 0) {
             $partial_cold_chain_cost =
-                ($cycle->campaing->cold_chain_cost / 100) * $cycle->percentage_value;
+                ($cycle->campaign->cold_chain_cost / 100) * $cycle->percentage_value;
 
             foreach ($cycle->beforeColdChains as $beforeColdChain) {
                 $listPayroll[] = [
@@ -136,14 +136,14 @@ class CampaignCyclePayrollExport implements FromCollection, Responsable
                     $beforeColdChain->registration,
                     $beforeColdChain->name,
                     'Equipe da Rede de Frio',
-                    $cycle->campaing->cold_chain_cost
+                    $cycle->campaign->cold_chain_cost
                 ];
             }
         }
 
-        if ($cycle->partial_value && $cycle->campaing->driver_cost > 0) {
+        if ($cycle->partial_value && $cycle->campaign->driver_cost > 0) {
             $partial_driver_cost =
-                ($cycle->campaing->driver_cost / 100) * $cycle->percentage_value;
+                ($cycle->campaign->driver_cost / 100) * $cycle->percentage_value;
 
             foreach ($cycle->beforeDriverColdChains as $beforeDriverColdChain) {
                 $listPayroll[] = [
@@ -161,14 +161,14 @@ class CampaignCyclePayrollExport implements FromCollection, Responsable
                     $beforeDriverColdChain->registration,
                     $beforeDriverColdChain->name,
                     'Motorista',
-                    $cycle->campaing->driver_cost
+                    $cycle->campaign->driver_cost
                 ];
             }
         }
 
-        if ($cycle->partial_value && $cycle->campaing->transport_cost > 0) {
+        if ($cycle->partial_value && $cycle->campaign->transport_cost > 0) {
             $partial_transport_cost =
-                ($cycle->campaing->transport_cost / 100) * $cycle->percentage_value;
+                ($cycle->campaign->transport_cost / 100) * $cycle->percentage_value;
 
             foreach ($cycle->beforeTransports as $beforeTransport) {
                 $listPayroll[] = [
@@ -186,14 +186,14 @@ class CampaignCyclePayrollExport implements FromCollection, Responsable
                     $beforeTransport->registration,
                     $beforeTransport->name,
                     'Apoio da GETRANS',
-                    $cycle->campaing->transport_cost
+                    $cycle->campaign->transport_cost
                 ];
             }
         }
 
-        if ($cycle->partial_value && $cycle->campaing->zoonoses_cost > 0) {
+        if ($cycle->partial_value && $cycle->campaign->zoonoses_cost > 0) {
             $partial_zoonoses_cost =
-                ($cycle->campaing->zoonoses_cost / 100) * $cycle->percentage_value;
+                ($cycle->campaign->zoonoses_cost / 100) * $cycle->percentage_value;
 
             foreach ($cycle->beforeZoonoses as $beforeZoonose) {
                 $listPayroll[] = [
@@ -211,7 +211,7 @@ class CampaignCyclePayrollExport implements FromCollection, Responsable
                     $beforeZoonose->registration,
                     $beforeZoonose->name,
                     'Apoio da GEZOON',
-                    $cycle->campaing->zoonoses_cost
+                    $cycle->campaign->zoonoses_cost
                 ];
             }
         }
@@ -225,7 +225,7 @@ class CampaignCyclePayrollExport implements FromCollection, Responsable
                 $cycle->coldChainCoordinator->registration,
                 $cycle->coldChainCoordinator->name,
                 'Coordenador da Rede de Frio',
-                $cycle->campaing->cold_chain_coordinator_cost
+                $cycle->campaign->cold_chain_coordinator_cost
             ];
         }
 
@@ -235,7 +235,7 @@ class CampaignCyclePayrollExport implements FromCollection, Responsable
                 $cycle->coldChainNurse->registration,
                 $cycle->coldChainNurse->name,
                 'Enfermeira da Rede de Frio',
-                $cycle->campaing->cold_chain_nurse_cost
+                $cycle->campaign->cold_chain_nurse_cost
             ];
         }
 
@@ -246,7 +246,7 @@ class CampaignCyclePayrollExport implements FromCollection, Responsable
                 $startColdChain->registration,
                 $startColdChain->name,
                 'Equipe da Rede de Frio',
-                $cycle->campaing->cold_chain_cost
+                $cycle->campaign->cold_chain_cost
             ];
         }
 
@@ -256,7 +256,7 @@ class CampaignCyclePayrollExport implements FromCollection, Responsable
                 $startDriverColdChain->registration,
                 $startDriverColdChain->name,
                 'Motorista da Rede de Frio',
-                $cycle->campaing->driver_cost
+                $cycle->campaign->driver_cost
             ];
         }
 
@@ -266,7 +266,7 @@ class CampaignCyclePayrollExport implements FromCollection, Responsable
                 $startTransport->registration,
                 $startTransport->name,
                 'Apoio da GETRANS',
-                $cycle->campaing->transport_cost
+                $cycle->campaign->transport_cost
             ];
         }
 
@@ -276,7 +276,7 @@ class CampaignCyclePayrollExport implements FromCollection, Responsable
                 $startZoonose->registration,
                 $startZoonose->name,
                 'Apoio da GEZOON',
-                $cycle->campaing->zoonoses_cost
+                $cycle->campaign->zoonoses_cost
             ];
         }
 
@@ -288,7 +288,7 @@ class CampaignCyclePayrollExport implements FromCollection, Responsable
                         $support->coordinator->registration,
                         $support->coordinator->name,
                         'Coordenador',
-                        $cycle->campaing->coordinator_cost
+                        $cycle->campaign->coordinator_cost
                     ];
                 }
             }
@@ -302,7 +302,7 @@ class CampaignCyclePayrollExport implements FromCollection, Responsable
                         $ruralSupervisor->registration,
                         $ruralSupervisor->name,
                         'Supervisor Rural',
-                        $cycle->campaing->rural_supervisor_cost
+                        $cycle->campaign->rural_supervisor_cost
                     ];
                 }
             } else {
@@ -312,7 +312,7 @@ class CampaignCyclePayrollExport implements FromCollection, Responsable
                         $supervisor->registration,
                         $supervisor->name,
                         'Supervisor',
-                        $cycle->campaing->supervisor_cost
+                        $cycle->campaign->supervisor_cost
                     ];
                 }
             }
@@ -326,7 +326,7 @@ class CampaignCyclePayrollExport implements FromCollection, Responsable
                         $ruralAssistant->registration,
                         $ruralAssistant->name,
                         'Auxiliar Rural',
-                        $cycle->campaing->rural_assistant_cost
+                        $cycle->campaign->rural_assistant_cost
                     ];
                 }
             } else {
@@ -336,7 +336,7 @@ class CampaignCyclePayrollExport implements FromCollection, Responsable
                         $assistant->registration,
                         $assistant->name,
                         'Auxiliar',
-                        $cycle->campaing->assistant_cost
+                        $cycle->campaign->assistant_cost
                     ];
                 }
             }
@@ -349,7 +349,7 @@ class CampaignCyclePayrollExport implements FromCollection, Responsable
                     $driver->registration,
                     $driver->name,
                     'Motorista do Ponto de Apoio',
-                    $cycle->campaing->driver_cost
+                    $cycle->campaign->driver_cost
                 ];
             }
         }
@@ -362,7 +362,7 @@ class CampaignCyclePayrollExport implements FromCollection, Responsable
                     $vaccinator->registration,
                     $vaccinator->name,
                     'Vacinador',
-                    $cycle->campaing->vaccinator_cost
+                    $cycle->campaign->vaccinator_cost
                 ];
             }
 
@@ -373,7 +373,7 @@ class CampaignCyclePayrollExport implements FromCollection, Responsable
                         $vaccinator->registration,
                         $vaccinator->name,
                         'Vacinador',
-                        $cycle->campaing->vaccinator_cost
+                        $cycle->campaign->vaccinator_cost
                     ];
                 }
             }
@@ -388,7 +388,7 @@ class CampaignCyclePayrollExport implements FromCollection, Responsable
                             $annotator->registration,
                             $annotator->name,
                             'Anotador',
-                            $cycle->campaing->annotators_cost
+                            $cycle->campaign->annotators_cost
                         ];
                     }
                 }

@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\Api\V1\Ncrlo;
 
 use App\Http\Controllers\Controller;
-use App\Models\CampaingSupport;
+use App\Models\CampaignSupport;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 
-class CampaingSupportController extends Controller
+class CampaignSupportController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,8 +16,9 @@ class CampaingSupportController extends Controller
      */
     public function index(Request $request)
     {
-        if ($request->has('campaing_support_id')) {
-            $support = CampaingSupport::find($request->campaing_support_id);
+        if ($request->has('campaign_support_id')) {
+
+            $support = CampaignSupport::find($request->campaign_support_id);
             $cycle = $support->cycle;
             $supports = $cycle->supports()->with('support')->get();
             return $supports;
@@ -32,7 +33,7 @@ class CampaingSupportController extends Controller
      */
     public function store(Request $request)
     {
-        $support = new CampaingSupport();
+        $support = new CampaignSupport();
         $support->campaign_cycle_id = $request->campaign_cycle_id;
         $support->vaccination_support_id = $request->id;
         $support->save();
@@ -46,7 +47,7 @@ class CampaingSupportController extends Controller
      */
     public function show($id)
     {
-        $support = CampaingSupport::with(
+        $support = CampaignSupport::with(
             [
                 'cycle',
                 'support',
@@ -65,6 +66,12 @@ class CampaingSupportController extends Controller
             ]
         )->findOrFail($id);
 
+        $support->loadProfiles();
+
+        foreach ($support->points as $point) {
+            $point->loadProfiles();
+        }
+
         return $support;
     }
 
@@ -77,21 +84,26 @@ class CampaingSupportController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $support = CampaingSupport::findOrFail($id);
+        $support = CampaignSupport::findOrFail($id);
         $support->order = $request->order;
         $support->goal = $request->goal;
         $support->mileage = $request->mileage;
         $support->coordinator_id = $request->coordinator_id;
-        $support->supervisors()->sync($request->supervisors);
-        $support->drivers()->sync($request->drivers);
-        $support->assistants()->sync($request->assistants);
-        $support->vaccinators()->sync($request->vaccinators);
-        $support->saads()->sync($request->saads);
-        $support->is_rural = $request->is_rural;
-        $support->ruralSupervisors()->sync($request->rural_supervisors);
-        $support->ruralAssistants()->sync($request->rural_assistants);
 
         $support->save();
+
+        $cycle = $support->cycle;
+        $campaign = $cycle->campaign;
+        foreach ($request->profiles as $profile) {
+            $p =  $campaign->profiles('support')
+                ->where('is_rural', $support->is_rural)
+                ->orderBy('created_at', 'desc')
+                ->find($profile['id']);
+
+            $p->updateWorker($profile, $campaign->id, $cycle->id, $support->id);
+        }
+
+        $support->loadProfiles();
     }
 
     /**
@@ -102,7 +114,7 @@ class CampaingSupportController extends Controller
      */
     public function destroy($id)
     {
-        $support = CampaingSupport::with([
+        $support = CampaignSupport::with([
             'cycle',
             'support',
             'coordinator',
@@ -129,7 +141,7 @@ class CampaingSupportController extends Controller
     public function frequency(Request $request, $id)
     {
         $today = date("d-m-Y");
-        $support = CampaingSupport::with([
+        $support = CampaignSupport::with([
             'coordinator',
             'support.neighborhoodAlias.neighborhood',
             'supervisors',

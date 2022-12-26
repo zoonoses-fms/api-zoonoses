@@ -2,11 +2,13 @@
 
 use App\Http\Controllers\Api\V1\Ncrlo\CampaignController;
 use App\Http\Controllers\Api\V1\Ncrlo\CampaignCycleController;
-use App\Http\Controllers\Api\V1\Ncrlo\CampaingSupportController;
-use App\Http\Controllers\Api\V1\Ncrlo\CampaingPointController;
+use App\Http\Controllers\Api\V1\Ncrlo\CampaignSupportController;
+use App\Http\Controllers\Api\V1\Ncrlo\CampaignPointController;
 use App\Http\Controllers\Api\V1\Ncrlo\VaccinationSupportController;
 use App\Http\Controllers\Api\V1\Ncrlo\VaccinationPointController;
 use App\Http\Controllers\Api\V1\Ncrlo\VaccinationWorkerController;
+use App\Http\Controllers\Api\V1\Ncrlo\ProfileWorkerController;
+use App\Http\Controllers\Api\V1\Ncrlo\CampaignProfileWorkerController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('campaign/cycle/payroll/csv/{id}', [CampaignCycleController::class, 'payrollCsv']);
@@ -20,11 +22,11 @@ Route::get('campaign/cycle/public/map/{id}', [CampaignCycleController::class, 'p
 Route::apiResource('campaign/cycle', CampaignCycleController::class)
     ->middleware('auth:sanctum');
 
-Route::get('campaign/support/frequency/{id}', [CampaingSupportController::class, 'frequency']);
-Route::apiResource('campaign/support', CampaingSupportController::class)
+Route::get('campaign/support/frequency/{id}', [CampaignSupportController::class, 'frequency']);
+Route::apiResource('campaign/support', CampaignSupportController::class)
     ->middleware('auth:sanctum');
-Route::get('campaign/point/frequency/{id}', [CampaingPointController::class, 'frequency']);
-Route::apiResource('campaign/point', CampaingPointController::class)
+Route::get('campaign/point/frequency/{id}', [CampaignPointController::class, 'frequency']);
+Route::apiResource('campaign/point', CampaignPointController::class)
     ->middleware('auth:sanctum');
 
 Route::get('campaign/report/{id}', [CampaignController::class, 'report']);
@@ -42,3 +44,4 @@ Route::get('vaccination/worker/search/locations', [VaccinationWorkerController::
 Route::post('vaccination/worker/login', [VaccinationWorkerController::class, 'login']);
 Route::apiResource('vaccination/worker', VaccinationWorkerController::class)
 ->middleware('auth:sanctum');
+Route::apiResource('vaccination/profile/workers', ProfileWorkerController::class);

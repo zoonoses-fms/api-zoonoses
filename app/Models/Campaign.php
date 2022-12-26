@@ -37,6 +37,39 @@ class Campaign extends Model
         return $this->hasMany(CampaignCycle::class, 'campaign_id')->orderBy('number', 'asc');
     }
 
+    public function profilesAll()
+    {
+        return $this->belongsToMany(
+            ProfileWorker::class,
+            'campaign_profile_workers',
+            'campaign_id',
+            'profile_workers_id'
+        );
+    }
+
+    public function profiles($scope = 'campaign')
+    {
+        return $this->belongsToMany(
+            ProfileWorker::class,
+            'campaign_profile_workers',
+            'campaign_id',
+            'profile_workers_id'
+        )->where(
+            'scope',
+            $scope
+        );
+    }
+
+    public function workers()
+    {
+        return $this->belongsToMany(
+            VaccinationWorker::class,
+            'campaign_worker',
+            'campaign_id',
+            'vaccination_worker_id'
+        );
+    }
+
     public static function buildItem($item)
     {
         $item->male_dog_under_4m = 0;
@@ -67,7 +100,8 @@ class Campaign extends Model
         $item->goal = 0;
     }
 
-    public static function incrementItem($item, $increment) {
+    public static function incrementItem($item, $increment)
+    {
         $item->male_dog_under_4m += $increment->male_dog_under_4m;
         $item->female_dog_under_4m += $increment->female_dog_under_4m;
 

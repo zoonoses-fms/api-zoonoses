@@ -30,14 +30,24 @@ class CampaignCycle extends Model
         'end'
     ];
 
-    public function campaing()
+    public function campaign()
     {
         return $this->belongsTo(Campaign::class, 'campaign_id');
     }
 
     public function supports()
     {
-        return $this->hasMany(CampaingSupport::class, 'campaign_cycle_id')->orderBy('order', 'asc');
+        return $this->hasMany(CampaignSupport::class, 'campaign_cycle_id')->orderBy('order', 'asc');
+    }
+
+    public function loadProfiles($scope = 'cycle')
+    {
+        $campaign = $this->campaign;
+        $this->profiles =  $campaign->profiles($scope)->orderBy('created_at', 'desc')->get();
+        $id = $this->id;
+        foreach ($this->profiles as $profile) {
+            $profile->loadWorkers($campaign->id, $this->id);
+        }
     }
 
     public function statisticCoordinator()
@@ -157,75 +167,75 @@ class CampaignCycle extends Model
 
 
         if (!is_null($this->coldChainCoordinator)) {
-            if ($this->partial_value && $this->campaing->cold_chain_coordinator_cost > 0) {
+            if ($this->partial_value && $this->campaign->cold_chain_coordinator_cost > 0) {
                 $partial_cold_chain_coordinator_cost =
-                    ($this->campaing->cold_chain_coordinator_cost / 100) * $this->percentage_value;
+                    ($this->campaign->cold_chain_coordinator_cost / 100) * $this->percentage_value;
 
                 $before['cold_chain_coordinator'] += $partial_cold_chain_coordinator_cost;
             } else {
-                $before['cold_chain_coordinator'] += $this->campaing->cold_chain_coordinator_cost;
+                $before['cold_chain_coordinator'] += $this->campaign->cold_chain_coordinator_cost;
             }
             $before['total'] += $before['cold_chain_coordinator'];
             $counts['cold_chain_coordinator'] += 1;
         }
 
         if (!is_null($this->coldChainNurse)) {
-            if ($this->partial_value && $this->campaing->cold_chain_nurse_cost > 0) {
+            if ($this->partial_value && $this->campaign->cold_chain_nurse_cost > 0) {
                 $partial_cold_chain_nurse_cost =
-                    ($this->campaing->cold_chain_nurse_cost / 100) * $this->percentage_value;
+                    ($this->campaign->cold_chain_nurse_cost / 100) * $this->percentage_value;
 
                 $before['cold_chain_nurse'] += $partial_cold_chain_nurse_cost;
             } else {
-                $before['cold_chain_nurse'] += $this->campaing->cold_chain_nurse_cost;
+                $before['cold_chain_nurse'] += $this->campaign->cold_chain_nurse_cost;
             }
 
             $before['total'] += $before['cold_chain_nurse'];
             $counts['cold_chain_nurse'] += 1;
         }
 
-        if ($this->partial_value && $this->campaing->cold_chain_cost > 0) {
+        if ($this->partial_value && $this->campaign->cold_chain_cost > 0) {
             $partial_cold_chain_cost =
-                ($this->campaing->cold_chain_cost / 100) * $this->percentage_value;
+                ($this->campaign->cold_chain_cost / 100) * $this->percentage_value;
 
             $before['cold_chain'] += ($partial_cold_chain_cost * count($this->beforeColdChains));
         } else {
-            $before['cold_chain'] += ($this->campaing->cold_chain_cost * count($this->beforeColdChains));
+            $before['cold_chain'] += ($this->campaign->cold_chain_cost * count($this->beforeColdChains));
         }
 
         $before['total' ] += $before['cold_chain'];
         $counts['cold_chain'] += count($this->beforeColdChains);
 
-        if ($this->partial_value && $this->campaing->driver_cost > 0) {
+        if ($this->partial_value && $this->campaign->driver_cost > 0) {
             $partial_driver_cost =
-                ($this->campaing->driver_cost / 100) * $this->percentage_value;
+                ($this->campaign->driver_cost / 100) * $this->percentage_value;
 
             $before['driver_cold_chain'] += ($partial_driver_cost * count($this->beforeDriverColdChains));
         } else {
-            $before['driver_cold_chain'] += ($this->campaing->driver_cost * count($this->beforeDriverColdChains));
+            $before['driver_cold_chain'] += ($this->campaign->driver_cost * count($this->beforeDriverColdChains));
         }
 
         $before['total'] += $before['driver_cold_chain'];
         $counts['driver_cold_chain'] += count($this->beforeDriverColdChains);
 
-        if ($this->partial_value && $this->campaing->transport_cost > 0) {
+        if ($this->partial_value && $this->campaign->transport_cost > 0) {
             $partial_transport_cost =
-                ($this->campaing->transport_cost / 100) * $this->percentage_value;
+                ($this->campaign->transport_cost / 100) * $this->percentage_value;
 
             $before['transport'] += ($partial_transport_cost * count($this->beforeTransports));
         } else {
-            $before['transport'] += ($this->campaing->transport_cost * count($this->beforeTransports));
+            $before['transport'] += ($this->campaign->transport_cost * count($this->beforeTransports));
         }
 
         $before['total'] += $before['transport'];
         $counts['transport'] += count($this->beforeTransports);
 
-        if ($this->partial_value && $this->campaing->zoonoses_cost > 0) {
+        if ($this->partial_value && $this->campaign->zoonoses_cost > 0) {
             $partial_zoonoses_cost =
-                ($this->campaing->zoonoses_cost / 100) * $this->percentage_value;
+                ($this->campaign->zoonoses_cost / 100) * $this->percentage_value;
 
             $before['zoonose'] += ($partial_zoonoses_cost * count($this->beforeZoonoses));
         } else {
-            $before['zoonose'] += ($this->campaing->zoonoses_cost * count($this->beforeZoonoses));
+            $before['zoonose'] += ($this->campaign->zoonoses_cost * count($this->beforeZoonoses));
         }
 
         $before['total'] += $before['zoonose'];
@@ -254,38 +264,38 @@ class CampaignCycle extends Model
         $start['driver'] = 0;
 
         if (!is_null($this->coldChainCoordinator)) {
-            $start['cold_chain_coordinator'] += $this->campaing->cold_chain_coordinator_cost;
+            $start['cold_chain_coordinator'] += $this->campaign->cold_chain_coordinator_cost;
             $start['total'] += $start['cold_chain_coordinator'];
             $counts['cold_chain_coordinator'] += 1;
         }
 
         if (!is_null($this->coldChainNurse)) {
-            $start['cold_chain_nurse'] += $this->campaing->cold_chain_nurse_cost;
+            $start['cold_chain_nurse'] += $this->campaign->cold_chain_nurse_cost;
             $start['total'] += $start['cold_chain_nurse'];
             $counts['cold_chain_nurse'] += 1;
         }
 
-        $start['cold_chain'] += ($this->campaing->cold_chain_cost * count($this->startColdChains));
+        $start['cold_chain'] += ($this->campaign->cold_chain_cost * count($this->startColdChains));
         $start['total'] += $start['cold_chain'];
         $counts['cold_chain'] += count($this->startColdChains);
 
-        $start['driver_cold_chain'] += ($this->campaing->driver_cost * count($this->startDriverColdChains));
+        $start['driver_cold_chain'] += ($this->campaign->driver_cost * count($this->startDriverColdChains));
         $start['total'] += $start['driver_cold_chain'];
         $counts['driver_cold_chain'] += count($this->startDriverColdChains);
 
-        $start['transport'] += ($this->campaing->transport_cost * count($this->startTransports));
+        $start['transport'] += ($this->campaign->transport_cost * count($this->startTransports));
         $start['total'] += $start['transport'];
         $counts['transport'] += count($this->startTransports);
 
-        $start['zoonose'] += ($this->campaing->zoonoses_cost * count($this->startZoonoses));
+        $start['zoonose'] += ($this->campaign->zoonoses_cost * count($this->startZoonoses));
         $start['total'] += $start['zoonose'];
         $counts['zoonose'] += count($this->startZoonoses);
 
-        $start['statistic_coordinator'] += $this->campaing->statistic_coordinator_cost;
+        $start['statistic_coordinator'] += $this->campaign->statistic_coordinator_cost;
         $start['total'] += $start['statistic_coordinator'];
         $counts['statistic_coordinator'] += 1;
 
-        $start['statistic'] += ($this->campaing->statisic_cost * count($this->statistics));
+        $start['statistic'] += ($this->campaign->statisic_cost * count($this->statistics));
         $start['total'] += $start['statistic'];
         $counts['statistic'] += count($this->statistics);
 
@@ -293,12 +303,12 @@ class CampaignCycle extends Model
         $registrationRuralAssistants = [];
 
         foreach ($this->supports as $support) {
-            $start['vaccinator'] += ($this->campaing->vaccinator_cost * count($support->vaccinators));
+            $start['vaccinator'] += ($this->campaign->vaccinator_cost * count($support->vaccinators));
 
             if ($support->is_rural) {
                 for ($i = 0; $i < count($support->ruralSupervisors); $i++) {
                     if (!in_array($support->ruralSupervisors[$i]->registration, $registrationRuralSupervisors)) {
-                        $start['rural_supervisor'] += $this->campaing->rural_supervisor_cost;
+                        $start['rural_supervisor'] += $this->campaign->rural_supervisor_cost;
                         $registrationRuralSupervisors[] = $support->ruralSupervisors[$i]->registration;
                         $counts['rural_supervisor'] += 1;
                     } else {
@@ -308,7 +318,7 @@ class CampaignCycle extends Model
 
                 for ($i = 0; $i < count($support->ruralAssistants); $i++) {
                     if (!in_array($support->ruralAssistants[$i]->registration, $registrationRuralAssistants)) {
-                        $start['rural_assistant'] += $this->campaing->rural_assistant_cost;
+                        $start['rural_assistant'] += $this->campaign->rural_assistant_cost;
                         $registrationRuralAssistants[] = $support->ruralAssistants[$i]->registration;
                         $counts['rural_assistant'] += 1;
                     } else {
@@ -317,14 +327,14 @@ class CampaignCycle extends Model
                 }
             } else {
                 if (!is_null($support->coordinator)) {
-                    $start['coordinator'] += $this->campaing->coordinator_cost;
+                    $start['coordinator'] += $this->campaign->coordinator_cost;
                     $counts['coordinator'] += 1;
                 }
 
-                $start['supervisor'] += ($this->campaing->supervisor_cost * count($support->supervisors));
-                $start['assistant'] += ($this->campaing->assistant_cost * count($support->assistants));
-                $start['driver'] += ($this->campaing->driver_cost * count($support->drivers));
-                $start['vaccinator'] += ($this->campaing->vaccinator_cost * count($support->vaccinators));
+                $start['supervisor'] += ($this->campaign->supervisor_cost * count($support->supervisors));
+                $start['assistant'] += ($this->campaign->assistant_cost * count($support->assistants));
+                $start['driver'] += ($this->campaign->driver_cost * count($support->drivers));
+                $start['vaccinator'] += ($this->campaign->vaccinator_cost * count($support->vaccinators));
 
                 $counts['supervisor'] += count($support->supervisors);
                 $counts['assistant'] += count($support->assistants);
@@ -334,8 +344,8 @@ class CampaignCycle extends Model
 
 
             foreach ($support->points as $point) {
-                $start['vaccinator'] += ($this->campaing->vaccinator_cost * count($point->vaccinators));
-                $start['annotator'] += ($this->campaing->annotators_cost * count($point->annotators));
+                $start['vaccinator'] += ($this->campaign->vaccinator_cost * count($point->vaccinators));
+                $start['annotator'] += ($this->campaign->annotators_cost * count($point->annotators));
 
                 $counts['vaccinator'] += count($point->vaccinators);
                 $counts['annotator'] += count($point->annotators);

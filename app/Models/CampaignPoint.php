@@ -5,13 +5,24 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class CampaingPoint extends Model
+class CampaignPoint extends Model
 {
     use HasFactory;
 
     public function support()
     {
-        return $this->belongsTo(CampaingSupport::class, 'campaing_support_id')->orderBy('name', 'asc');
+        return $this->belongsTo(CampaignSupport::class, 'campaign_support_id');
+    }
+
+    public function loadProfiles($scope = 'point')
+    {
+        $support = $this->support;
+        $cycle = $support->cycle;
+        $campaign = $cycle->campaign;
+        $this->profiles =  $campaign->profiles($scope)->orderBy('created_at', 'desc')->get();
+        foreach ($this->profiles as $profile) {
+            $profile->loadWorkers($campaign->id, $cycle->id, $support->id, $this->id);
+        }
     }
 
     public function supervisor()
@@ -24,7 +35,7 @@ class CampaingPoint extends Model
         return $this->belongsToMany(
             VaccinationWorker::class,
             'vaccinator_point',
-            'campaing_point_id',
+            'campaign_point_id',
             'vaccinator_id'
         )->orderBy('name', 'asc');
     }
@@ -34,7 +45,7 @@ class CampaingPoint extends Model
         return $this->belongsToMany(
             VaccinationWorker::class,
             'annotator_point',
-            'campaing_point_id',
+            'campaign_point_id',
             'annotator_id'
         )->orderBy('name', 'asc');
     }
@@ -44,7 +55,7 @@ class CampaingPoint extends Model
         return $this->belongsToMany(
             TheSaad::class,
             'saad_point',
-            'campaing_point_id',
+            'campaign_point_id',
             'saad_id'
         );
     }

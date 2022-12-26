@@ -141,13 +141,13 @@
                         <td class="border line-mat"> {{ $cycle->coldChainCoordinator->registration }} </td>
                         <td class="border line-name"> {{ $cycle->coldChainCoordinator->name }} </td>
                         <td class="border"> Coordenador da Rede de Frio</td>
-                        @if ($cycle->partial_value && $cycle->campaing->cold_chain_coordinator_cost > 0)
+                        @if ($cycle->partial_value && $cycle->campaign->cold_chain_coordinator_cost > 0)
                             <td class="border"> R$
-                                {{ number_format(($cycle->campaing->cold_chain_coordinator_cost / 100) * $cycle->percentage_value, 2, ',', ' ') }}
+                                {{ number_format(($cycle->campaign->cold_chain_coordinator_cost / 100) * $cycle->percentage_value, 2, ',', ' ') }}
                             </td>
                         @else
                             <td class="border"> R$
-                                {{ number_format($cycle->campaing->cold_chain_coordinator_cost, 2, ',', ' ') }}
+                                {{ number_format($cycle->campaign->cold_chain_coordinator_cost, 2, ',', ' ') }}
                             </td>
                         @endif
                     </tr>
@@ -157,13 +157,13 @@
                         <td class="border line-mat"> {{ $cycle->coldChainNurse->registration }} </td>
                         <td class="border line-name"> {{ $cycle->coldChainNurse->name }} </td>
                         <td class="border"> Enfermeira da Rede de Frio</td>
-                        @if ($cycle->partial_value && $cycle->campaing->cold_chain_nurse_cost > 0)
+                        @if ($cycle->partial_value && $cycle->campaign->cold_chain_nurse_cost > 0)
                             <td class="border"> R$
-                                {{ number_format(($cycle->campaing->cold_chain_nurse_cost / 100) * $cycle->percentage_value, 2, ',', ' ') }}
+                                {{ number_format(($cycle->campaign->cold_chain_nurse_cost / 100) * $cycle->percentage_value, 2, ',', ' ') }}
                             </td>
                         @else
                             <td class="border">R$
-                                {{ number_format($cycle->campaing->cold_chain_nurse_cost, 2, ',', ' ') }}
+                                {{ number_format($cycle->campaign->cold_chain_nurse_cost, 2, ',', ' ') }}
                             </td>
                         @endif
 
@@ -178,13 +178,13 @@
                         <td class="border line-mat"> {{ $beforeColdChain->registration }} </td>
                         <td class="border line-name"> {{ $beforeColdChain->name }} </td>
                         <td class="border"> Equipe da Rede de Frio </td>
-                        @if ($cycle->partial_value && $cycle->campaing->cold_chain_cost > 0)
+                        @if ($cycle->partial_value && $cycle->campaign->cold_chain_cost > 0)
                             <td class="border"> R$
-                                {{ number_format(($cycle->campaing->cold_chain_cost / 100) * $cycle->percentage_value, 2, ',', ' ') }}
+                                {{ number_format(($cycle->campaign->cold_chain_cost / 100) * $cycle->percentage_value, 2, ',', ' ') }}
                             </td>
                         @else
                             <td class="border">R$
-                                {{ number_format($cycle->campaing->cold_chain_cost, 2, ',', ' ') }}
+                                {{ number_format($cycle->campaign->cold_chain_cost, 2, ',', ' ') }}
                             </td>
                         @endif
 
@@ -203,13 +203,13 @@
                         <td class="border line-mat"> {{ $beforeDriverColdChain->registration }} </td>
                         <td class="border line-name"> {{ $beforeDriverColdChain->name }} </td>
                         <td class="border"> Motorista </td>
-                        @if ($cycle->partial_value && $cycle->campaing->driver_cost > 0)
+                        @if ($cycle->partial_value && $cycle->campaign->driver_cost > 0)
                             <td class="border">R$
-                                {{ number_format(($cycle->campaing->driver_cost / 100) * $cycle->percentage_value, 2, ',', ' ') }}
+                                {{ number_format(($cycle->campaign->driver_cost / 100) * $cycle->percentage_value, 2, ',', ' ') }}
                             </td>
                         @else
                             <td class="border">R$
-                                {{ number_format($cycle->campaing->driver_cost, 2, ',', ' ') }}
+                                {{ number_format($cycle->campaign->driver_cost, 2, ',', ' ') }}
                             </td>
                         @endif
                     </tr>
@@ -228,13 +228,13 @@
                         <td class="border line-mat"> {{ $beforeTransport->registration }} </td>
                         <td class="border line-name"> {{ $beforeTransport->name }} </td>
                         <td class="border"> Apoio da GETRANS </td>
-                        @if ($cycle->partial_value && $cycle->campaing->transport_cost > 0)
+                        @if ($cycle->partial_value && $cycle->campaign->transport_cost > 0)
                             <td class="border">R$
-                                {{ number_format(($cycle->campaing->transport_cost / 100) * $cycle->percentage_value, 2, ',', ' ') }}
+                                {{ number_format(($cycle->campaign->transport_cost / 100) * $cycle->percentage_value, 2, ',', ' ') }}
                             </td>
                         @else
                             <td class="border">R$
-                                {{ number_format($cycle->campaing->transport_cost, 2, ',', ' ') }}
+                                {{ number_format($cycle->campaign->transport_cost, 2, ',', ' ') }}
                             </td>
                         @endif
 
@@ -253,13 +253,13 @@
                         <td class="border line-mat"> {{ $beforeZoonose->registration }} </td>
                         <td class="border line-name"> {{ $beforeZoonose->name }} </td>
                         <td class="border"> Apoio da GEZOON </td>
-                        @if ($cycle->partial_value && $cycle->campaing->zoonoses_cost > 0)
+                        @if ($cycle->partial_value && $cycle->campaign->zoonoses_cost > 0)
                             <td class="border">R$
-                                {{ number_format(($cycle->campaing->zoonoses_cost / 100) * $cycle->percentage_value, 2, ',', ' ') }}
+                                {{ number_format(($cycle->campaign->zoonoses_cost / 100) * $cycle->percentage_value, 2, ',', ' ') }}
                             </td>
                         @else
                             <td class="border">R$
-                                {{ number_format($cycle->campaing->zoonoses_cost, 2, ',', ' ') }}
+                                {{ number_format($cycle->campaign->zoonoses_cost, 2, ',', ' ') }}
                             </td>
                         @endif
                     </tr>
@@ -333,7 +333,7 @@
                         <td class="border line-name"> {{ $cycle->coldChainCoordinator->name }} </td>
                         <td class="border"> Coordenador da Rede de Frio</td>
                         <td class="border">
-                            R$ {{ number_format($cycle->campaing->cold_chain_coordinator_cost, 2, ',', ' ') }}
+                            R$ {{ number_format($cycle->campaign->cold_chain_coordinator_cost, 2, ',', ' ') }}
                         </td>
                     </tr>
                 @endif
@@ -343,7 +343,7 @@
                         <td class="border line-name"> {{ $cycle->coldChainNurse->name }} </td>
                         <td class="border"> Enfermeira da Rede de Frio</td>
                         <td class="border">
-                            R$ {{ number_format($cycle->campaing->cold_chain_nurse_cost, 2, ',', ' ') }}
+                            R$ {{ number_format($cycle->campaign->cold_chain_nurse_cost, 2, ',', ' ') }}
                         </td>
                     </tr>
                 @endif
@@ -356,7 +356,7 @@
                         <td class="border line-mat"> {{ $startColdChain->registration }} </td>
                         <td class="border line-name"> {{ $startColdChain->name }} </td>
                         <td class="border"> Equipe da Rede de Frio </td>
-                        <td class="border">R$ {{ number_format($cycle->campaing->cold_chain_cost, 2, ',', ' ') }}
+                        <td class="border">R$ {{ number_format($cycle->campaign->cold_chain_cost, 2, ',', ' ') }}
                         </td>
                     </tr>
                 @endforeach
@@ -373,7 +373,7 @@
                         <td class="border line-mat"> {{ $startDriverColdChain->registration }} </td>
                         <td class="border line-name"> {{ $startDriverColdChain->name }} </td>
                         <td class="border"> Motorista da Rede de Frio </td>
-                        <td class="border">R$ {{ number_format($cycle->campaing->driver_cost, 2, ',', ' ') }} </td>
+                        <td class="border">R$ {{ number_format($cycle->campaign->driver_cost, 2, ',', ' ') }} </td>
                     </tr>
                 @endforeach
 
@@ -390,7 +390,7 @@
                         <td class="border line-mat"> {{ $startTransport->registration }} </td>
                         <td class="border line-name"> {{ $startTransport->name }} </td>
                         <td class="border"> Apoio da GETRANS </td>
-                        <td class="border">R$ {{ number_format($cycle->campaing->transport_cost, 2, ',', ' ') }} </td>
+                        <td class="border">R$ {{ number_format($cycle->campaign->transport_cost, 2, ',', ' ') }} </td>
                     </tr>
                 @endforeach
 
@@ -406,7 +406,7 @@
                         <td class="border line-mat"> {{ $startZoonose->registration }} </td>
                         <td class="border line-name"> {{ $startZoonose->name }} </td>
                         <td class="border"> Apoio da GEZOON </td>
-                        <td class="border">R$ {{ number_format($cycle->campaing->zoonoses_cost, 2, ',', ' ') }} </td>
+                        <td class="border">R$ {{ number_format($cycle->campaign->zoonoses_cost, 2, ',', ' ') }} </td>
                     </tr>
                 @endforeach
 
@@ -425,7 +425,7 @@
                                 <td class="border line-name"> {{ $support->coordinator->name }} </td>
                                 <td class="border"> Coordenador</td>
                                 <td class="border">R$
-                                    {{ number_format($cycle->campaing->coordinator_cost, 2, ',', ' ') }}
+                                    {{ number_format($cycle->campaign->coordinator_cost, 2, ',', ' ') }}
                                 </td>
                             </tr>
                         @endif
@@ -448,7 +448,7 @@
                                 <td class="border line-name"> {{ $ruralSupervisor->name }} </td>
                                 <td class="border"> Supervisor Rural</td>
                                 <td class="border">R$
-                                    {{ number_format($cycle->campaing->rural_supervisor_cost, 2, ',', ' ') }}
+                                    {{ number_format($cycle->campaign->rural_supervisor_cost, 2, ',', ' ') }}
                                 </td>
                             </tr>
                         @endforeach
@@ -459,7 +459,7 @@
                                 <td class="border line-name"> {{ $supervisor->name }} </td>
                                 <td class="border"> Supervisor</td>
                                 <td class="border">R$
-                                    {{ number_format($cycle->campaing->supervisor_cost, 2, ',', ' ') }}
+                                    {{ number_format($cycle->campaign->supervisor_cost, 2, ',', ' ') }}
                                 </td>
                             </tr>
                         @endforeach
@@ -495,7 +495,7 @@
                                 <td class="border line-name"> {{ $ruralAssistant->name }} </td>
                                 <td class="border"> Auxiliar Rural </td>
                                 <td class="border">R$
-                                    {{ number_format($cycle->campaing->rural_assistant_cost, 2, ',', ' ') }}
+                                    {{ number_format($cycle->campaign->rural_assistant_cost, 2, ',', ' ') }}
                                 </td>
                             </tr>
                         @endforeach
@@ -506,7 +506,7 @@
                                 <td class="border line-name"> {{ $assistant->name }} </td>
                                 <td class="border"> Auxiliar </td>
                                 <td class="border">R$
-                                    {{ number_format($cycle->campaing->assistant_cost, 2, ',', ' ') }}
+                                    {{ number_format($cycle->campaign->assistant_cost, 2, ',', ' ') }}
                                 </td>
                             </tr>
                         @endforeach
@@ -539,7 +539,7 @@
                             <td class="border line-name"> {{ $driver->name }} </td>
                             <td class="border"> Motorista do Ponto de Apoio</td>
                             <td class="border">R$
-                                {{ number_format($cycle->campaing->driver_cost, 2, ',', ' ') }}
+                                {{ number_format($cycle->campaign->driver_cost, 2, ',', ' ') }}
                             </td>
                         </tr>
                     @endforeach
@@ -559,7 +559,7 @@
                             <td class="border line-name"> {{ $vaccinator->name }} </td>
                             <td class="border"> Vacinador</td>
                             <td class="border">R$
-                                {{ number_format($cycle->campaing->vaccinator_cost, 2, ',', ' ') }}
+                                {{ number_format($cycle->campaign->vaccinator_cost, 2, ',', ' ') }}
                             </td>
                         </tr>
                     @endforeach
@@ -570,7 +570,7 @@
                                 <td class="border line-name"> {{ $vaccinator->name }} </td>
                                 <td class="border"> Vacinador</td>
                                 <td class="border">R$
-                                    {{ number_format($cycle->campaing->vaccinator_cost, 2, ',', ' ') }}
+                                    {{ number_format($cycle->campaign->vaccinator_cost, 2, ',', ' ') }}
                                 </td>
                             </tr>
                         @endforeach
@@ -594,7 +594,7 @@
                                     <td class="border line-name"> {{ $annotator->name }} </td>
                                     <td class="border"> Anotador</td>
                                     <td class="border">R$
-                                        {{ number_format($cycle->campaing->annotators_cost, 2, ',', ' ') }}
+                                        {{ number_format($cycle->campaign->annotators_cost, 2, ',', ' ') }}
                                     </td>
                                 </tr>
                             @endforeach
@@ -667,7 +667,7 @@
                     <tr>
                         <td class="border"> Coordenador da Rede de Frio </td>
                         <td class="border"> {{ $count['cold_chain_coordinator'] }}</td>
-                        <td class="border"> {{ $cycle->campaing->cold_chain_coordinator_cost }}</td>
+                        <td class="border"> {{ $cycle->campaign->cold_chain_coordinator_cost }}</td>
                         <td class="border">R$
                             {{ number_format($total['cycle']['cold_chain_coordinator'], 2, ',', ' ') }} </td>
                     </tr>
@@ -676,7 +676,7 @@
                     <tr>
                         <td class="border"> Emfermeira da Rede de Frio</td>
                         <td class="border"> {{ $count['cold_chain_nurse'] }}</td>
-                        <td class="border"> {{ $cycle->campaing->cold_chain_nurse_cost }}</td>
+                        <td class="border"> {{ $cycle->campaign->cold_chain_nurse_cost }}</td>
                         <td class="border">R$ {{ number_format($total['cycle']['cold_chain_nurse'], 2, ',', ' ') }}
                         </td>
                     </tr>
@@ -685,7 +685,7 @@
                     <tr>
                         <td class="border"> Equipe da Rede de Frio </td>
                         <td class="border"> {{ $count['cold_chain'] }}</td>
-                        <td class="border"> {{ $cycle->campaing->cold_chain_cost }}</td>
+                        <td class="border"> {{ $cycle->campaign->cold_chain_cost }}</td>
                         <td class="border">R$ {{ number_format($total['cycle']['cold_chain'], 2, ',', ' ') }} </td>
                     </tr>
                 @endif
@@ -693,7 +693,7 @@
                     <tr>
                         <td class="border"> Motorista </td>
                         <td class="border"> {{ $count['driver_cold_chain'] }}</td>
-                        <td class="border"> {{ $cycle->campaing->driver_cost }}</td>
+                        <td class="border"> {{ $cycle->campaign->driver_cost }}</td>
                         <td class="border">R$ {{ number_format($total['cycle']['driver_cold_chain'], 2, ',', ' ') }}
                         </td>
                     </tr>
@@ -702,7 +702,7 @@
                     <tr>
                         <td class="border"> Equipe da GETRANS </td>
                         <td class="border"> {{ $count['transport'] }}</td>
-                        <td class="border"> {{ $cycle->campaing->transport_cost }}</td>
+                        <td class="border"> {{ $cycle->campaign->transport_cost }}</td>
                         <td class="border">R$ {{ number_format($total['cycle']['transport'], 2, ',', ' ') }} </td>
                     </tr>
                 @endif
@@ -710,7 +710,7 @@
                     <tr>
                         <td class="border"> Equipe de apoio GEZOON </td>
                         <td class="border"> {{ $count['zoonose'] }}</td>
-                        <td class="border"> {{ $cycle->campaing->zoonoses_cost }}</td>
+                        <td class="border"> {{ $cycle->campaign->zoonoses_cost }}</td>
                         <td class="border">R$ {{ number_format($total['cycle']['zoonose'], 2, ',', ' ') }} </td>
                     </tr>
                 @endif
@@ -718,7 +718,7 @@
                     <tr>
                         <td class="border"> Coordenador da Estatística</td>
                         <td class="border"> {{ $count['statistic_coordinator'] }}</td>
-                        <td class="border"> {{ $cycle->campaing->statistic_coordinator_cost }}</td>
+                        <td class="border"> {{ $cycle->campaign->statistic_coordinator_cost }}</td>
                         <td class="border">R$
                             {{ number_format($total['cycle']['statistic_coordinator'], 2, ',', ' ') }} </td>
                     </tr>
@@ -727,7 +727,7 @@
                     <tr>
                         <td class="border"> Equipe da Estatística</td>
                         <td class="border"> {{ $count['statistic'] }}</td>
-                        <td class="border"> {{ $cycle->campaing->statistic_cost }}</td>
+                        <td class="border"> {{ $cycle->campaign->statistic_cost }}</td>
                         <td class="border">R$
                             {{ number_format($total['cycle']['statistic'], 2, ',', ' ') }} </td>
                     </tr>
@@ -736,7 +736,7 @@
                     <tr>
                         <td class="border"> Coordenadores de Ponto de Apoio</td>
                         <td class="border"> {{ $count['coordinator'] }}</td>
-                        <td class="border"> {{ $cycle->campaing->coordinator_cost }}</td>
+                        <td class="border"> {{ $cycle->campaign->coordinator_cost }}</td>
                         <td class="border">R$
                             {{ number_format($total['cycle']['coordinator'], 2, ',', ' ') }} </td>
                     </tr>
@@ -745,7 +745,7 @@
                     <tr>
                         <td class="border"> Supervisores Rurais</td>
                         <td class="border"> {{ $count['rural_supervisor'] }}</td>
-                        <td class="border"> {{ $cycle->campaing->rural_supervisor_cost }}</td>
+                        <td class="border"> {{ $cycle->campaign->rural_supervisor_cost }}</td>
                         <td class="border">R$
                             {{ number_format($total['cycle']['rural_supervisor'], 2, ',', ' ') }} </td>
                     </tr>
@@ -754,7 +754,7 @@
                     <tr>
                         <td class="border"> Auxiliares Rurais</td>
                         <td class="border"> {{ $count['rural_assistant'] }}</td>
-                        <td class="border"> {{ $cycle->campaing->rural_assistant_cost }}</td>
+                        <td class="border"> {{ $cycle->campaign->rural_assistant_cost }}</td>
                         <td class="border">R$
                             {{ number_format($total['cycle']['rural_assistant'], 2, ',', ' ') }} </td>
                     </tr>
@@ -763,7 +763,7 @@
                     <tr>
                         <td class="border"> Supervisores </td>
                         <td class="border"> {{ $count['supervisor'] }}</td>
-                        <td class="border"> {{ $cycle->campaing->supervisor_cost }}</td>
+                        <td class="border"> {{ $cycle->campaign->supervisor_cost }}</td>
                         <td class="border">R$
                             {{ number_format($total['cycle']['supervisor'], 2, ',', ' ') }} </td>
                     </tr>
@@ -772,7 +772,7 @@
                     <tr>
                         <td class="border"> Auxiliares </td>
                         <td class="border"> {{ $count['assistant'] }}</td>
-                        <td class="border"> {{ $cycle->campaing->assistant_cost }}</td>
+                        <td class="border"> {{ $cycle->campaign->assistant_cost }}</td>
                         <td class="border">R$
                             {{ number_format($total['cycle']['assistant'], 2, ',', ' ') }} </td>
                     </tr>
@@ -781,7 +781,7 @@
                     <tr>
                         <td class="border"> Vacinadores </td>
                         <td class="border"> {{ $count['vaccinator'] }}</td>
-                        <td class="border"> {{ $cycle->campaing->vaccinator_cost }}</td>
+                        <td class="border"> {{ $cycle->campaign->vaccinator_cost }}</td>
                         <td class="border">R$
                             {{ number_format($total['cycle']['vaccinator'], 2, ',', ' ') }} </td>
                     </tr>
@@ -790,7 +790,7 @@
                     <tr>
                         <td class="border"> Anotadores </td>
                         <td class="border"> {{ $count['annotator'] }}</td>
-                        <td class="border"> {{ $cycle->campaing->annotators_cost }}</td>
+                        <td class="border"> {{ $cycle->campaign->annotators_cost }}</td>
                         <td class="border">R$
                             {{ number_format($total['cycle']['annotator'], 2, ',', ' ') }} </td>
                     </tr>
@@ -799,7 +799,7 @@
                     <tr>
                         <td class="border"> Motoristass da campanha </td>
                         <td class="border"> {{ $count['driver'] }}</td>
-                        <td class="border"> {{ $cycle->campaing->driver_cost }}</td>
+                        <td class="border"> {{ $cycle->campaign->driver_cost }}</td>
                         <td class="border">R$
                             {{ number_format($total['cycle']['driver'], 2, ',', ' ') }} </td>
                     </tr>

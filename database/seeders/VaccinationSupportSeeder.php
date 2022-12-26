@@ -7,8 +7,8 @@ use Illuminate\Database\Seeder;
 use App\Models\VaccinationSupport;
 use App\Models\VaccinationPoint;
 use App\Models\Campaign;
-use App\Models\CampaingPoint;
-use App\Models\CampaingSupport;
+use App\Models\CampaignPoint;
+use App\Models\CampaignSupport;
 use App\Models\Location\The\TheNeighborhood;
 use App\Models\Location\The\TheNeighborhoodAlias;
 use stdClass;
@@ -79,7 +79,7 @@ class VaccinationSupportSeeder extends Seeder
 
                     $vaccinationSupport->save();
 
-                    $campaignSupport = new CampaingSupport();
+                    $campaignSupport = new CampaignSupport();
                     $campaignSupport->campaign_id = $campaign->id;
                     $campaignSupport->vaccination_support_id = $vaccinationSupport->id;
                     $campaignSupport->save();
@@ -104,8 +104,8 @@ class VaccinationSupportSeeder extends Seeder
 
                 $vaccinationPoint->save();
 
-                $campaignPoint = new CampaingPoint();
-                $campaignPoint->campaing_support_id = $campaignSupport->id;
+                $campaignPoint = new CampaignPoint();
+                $campaignPoint->campaign_support_id = $campaignSupport->id;
                 $campaignPoint->vaccination_point_id = $vaccinationPoint->id;
                 $campaignPoint->save();
             }

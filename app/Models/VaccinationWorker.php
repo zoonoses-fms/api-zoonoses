@@ -31,33 +31,43 @@ class VaccinationWorker extends Model
         'registration'
     ];
 
+    public function profiles()
+    {
+        return $this->belongsToMany(
+            ProfileWorker::class,
+            'campaign_worker',
+            'vaccination_worker_id',
+            'profile_worker_id'
+        );
+    }
+
     public function coordinations()
     {
-        return $this->hasMany(CampaingSupport::class, 'vaccination_worker_id');
+        return $this->hasMany(CampaignSupport::class, 'vaccination_worker_id');
     }
 
     public function supervisions()
     {
-        return $this->hasMany(CampaingPoint::class, 'vaccination_worker_id');
+        return $this->hasMany(CampaignPoint::class, 'vaccination_worker_id');
     }
 
     public function supports()
     {
         return $this->belongsToMany(
-            CampaingSupport::class,
-            'vaccination_worker_campaing_support',
+            CampaignSupport::class,
+            'vaccination_worker_campaign_support',
             'vaccination_worker_id',
-            'campaing_support_id'
+            'campaign_support_id'
         );
     }
 
     public function points()
     {
         return $this->belongsToMany(
-            CampaingPoint::class,
-            'vaccination_worker_campaing_point',
+            CampaignPoint::class,
+            'vaccination_worker_campaign_point',
             'vaccination_worker_id',
-            'campaing_point_id',
+            'campaign_point_id',
         );
     }
 

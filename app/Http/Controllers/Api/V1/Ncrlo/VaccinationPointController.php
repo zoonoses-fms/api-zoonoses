@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api\V1\Ncrlo;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use App\Models\VaccinationPoint;
-use App\Models\CampaingSupport;
+use App\Models\CampaignSupport;
 use Illuminate\Http\Request;
 use App\Models\Location\The\TheNeighborhoodAlias;
 
@@ -19,11 +19,11 @@ class VaccinationPointController extends Controller
     public function index(Request $request)
     {
         if ($request->has('support_id')) {
-            $campaingSupport = CampaingSupport::with('cycle.supports.points.point')
+            $campaignSupport = CampaignSupport::with('cycle.supports.points.point')
                 ->findOrFail($request->get('support_id'));
             $listPoints = [];
 
-            foreach ($campaingSupport->cycle->supports as $supportPoint) {
+            foreach ($campaignSupport->cycle->supports as $supportPoint) {
                 foreach ($supportPoint->points as $vaccinationPoint) {
                     $listPoints[] = $vaccinationPoint->point->id;
                 }

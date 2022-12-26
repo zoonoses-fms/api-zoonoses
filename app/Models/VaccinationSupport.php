@@ -11,9 +11,9 @@ class VaccinationSupport extends Model
 {
     use HasFactory, SoftDeletes;
 
-    public function campaingSupports()
+    public function campaignSupports()
     {
-        return $this->hasMany(CampaingSupport::class, 'campaing_support_id');
+        return $this->hasMany(CampaignSupport::class, 'campaign_support_id');
     }
 
     public function neighborhoodAlias()

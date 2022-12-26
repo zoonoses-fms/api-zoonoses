@@ -4,10 +4,10 @@ namespace App\Http\Controllers\Api\V1\Ncrlo;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\CampaingPoint;
+use App\Models\CampaignPoint;
 use Barryvdh\DomPDF\Facade\Pdf;
 
-class CampaingPointController extends Controller
+class CampaignPointController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -27,8 +27,8 @@ class CampaingPointController extends Controller
      */
     public function store(Request $request)
     {
-        $point = new CampaingPoint();
-        $point->campaing_support_id = $request->campaing_support_id;
+        $point = new CampaignPoint();
+        $point->campaign_support_id = $request->campaign_support_id;
         $point->vaccination_point_id = $request->id;
         $point->save();
     }
@@ -41,7 +41,7 @@ class CampaingPointController extends Controller
      */
     public function show($id)
     {
-        $point = CampaingPoint::with(
+        $point = CampaignPoint::with(
             [
                 'supervisor',
                 'point',
@@ -62,7 +62,7 @@ class CampaingPointController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $point = CampaingPoint::findOrFail($id);
+        $point = CampaignPoint::findOrFail($id);
         $point->order = $request->order;
         $point->area = $request->area;
         $point->goal = $request->goal;
@@ -91,9 +91,21 @@ class CampaingPointController extends Controller
         $point->bottle_lost = $request->bottle_lost;
 
         $point->supervisor_id = $request->supervisor_id;
-        $point->vaccinators()->sync($request->vaccinators);
-        $point->annotators()->sync($request->annotators);
         $point->save();
+
+        $support = $point->support;
+        $cycle = $support->cycle;
+        $campaign = $cycle->campaign;
+        foreach ($request->profiles as $profile) {
+            $p =  $campaign->profiles('point')
+                ->orderBy('created_at', 'desc')
+                ->find($profile['id']);
+
+            $p->updateWorker($profile, $campaign->id, $cycle->id, $support->id, $point->id);
+        }
+
+        $point->loadProfiles();
+
         return $point;
     }
 
@@ -105,7 +117,7 @@ class CampaingPointController extends Controller
      */
     public function destroy($id)
     {
-        $point = CampaingPoint::with(
+        $point = CampaignPoint::with(
             [
                 'vaccinators'
             ]
@@ -119,7 +131,7 @@ class CampaingPointController extends Controller
     public function frequency(Request $request, $id)
     {
         $today = date("d-m-Y");
-        $point = CampaingPoint::with([
+        $point = CampaignPoint::with([
             'point',
             'supervisor',
             'vaccinators',

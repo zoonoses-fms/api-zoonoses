@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1\Ncrlo;
 
 use App\Http\Controllers\Controller;
 use App\Models\Campaign;
+use App\Models\CampaignProfileWorker;
 use Illuminate\Contracts\Auth\SupportsBasicAuth;
 use Illuminate\Http\Request;
 use Psy\Sudo;
@@ -24,7 +25,20 @@ class CampaignController extends Controller
             $perPage = 5;
         }
 
-        $campaigns = Campaign::orderBy('year', 'desc')->paginate($perPage);
+        $campaigns = Campaign::with([
+            'profiles' => function ($query) {
+                $query->orderBy('created_at', 'desc');
+            },
+            'profilesAll' => function ($query) {
+                $query->withPivot('id', 'cost')->orderBy('created_at', 'asc');
+            },
+        ])->orderBy('year', 'desc')->paginate($perPage);
+
+        foreach ($campaigns as $campaign) {
+            foreach ($campaign->profiles as $profile) {
+                $profile->loadWorkers([$campaign->id]);
+            }
+        }
 
         return $campaigns;
     }
@@ -112,7 +126,6 @@ class CampaignController extends Controller
             }
         }
         $campaign = Campaign::with([
-            'cycles',
             'cycles.statistics',
             'cycles.beforeTransports',
             'cycles.startTransports',
@@ -123,6 +136,10 @@ class CampaignController extends Controller
             'cycles.beforeZoonoses',
             'cycles.startZoonoses'
         ])->findOrFail($id);
+
+        foreach ($campaign->cycles as $cycle) {
+            $cycle->loadProfiles();
+        }
 
         return $campaign;
     }
@@ -164,7 +181,29 @@ class CampaignController extends Controller
         $campaign->zoonoses_cost = $request->zoonoses_cost;
         $campaign->transport_cost = $request->transport_cost;
 
+        $profiles = [];
+        foreach ($request->profiles_all as $profile) {
+            $profiles[$profile['id']] = [
+                'cost' => $profile['pivot']['cost'],
+                'updated_at' => now()
+            ];
+        }
+        $campaign->profilesAll()->sync($profiles);
+
+        foreach ($request->profiles as $profile) {
+
+            $p = $campaign->profiles->find($profile['id']);
+
+            $p->updateWorker($profile, $campaign->id);
+        }
+
         $campaign->save();
+
+        $campaign->load('profiles');
+
+        foreach ($campaign->profiles as $profile) {
+            $profile->loadWorkers($campaign->id);
+        }
 
         return $campaign;
     }

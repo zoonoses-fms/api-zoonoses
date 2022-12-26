@@ -45,7 +45,7 @@ class CampaignCycleController extends Controller
             'number' => 'required',
             'description' => 'required',
             'start' => 'required',
-            'campaing_id' => 'required'
+            'campaign_id' => 'required'
         ]);
 
         $cycle = CampaignCycle::create([
@@ -53,7 +53,7 @@ class CampaignCycleController extends Controller
             'description' => $request->description,
             'start' => $request->start,
             'end' => $request->end,
-            'campaing_id' => $request->campaing_id,
+            'campaign_id' => $request->campaign_id,
             'statistic_coordinator_id' => $request->statistic_coordinator_id,
             'cold_chain_coordinator_id' => $request->cold_chain_coordinator_id,
             'cold_chain_nurse_id' => $request->cold_chain_nurse_id,
@@ -135,6 +135,10 @@ class CampaignCycleController extends Controller
             'supports.saads'
         ])->findOrFail($id);
 
+        foreach ($cycle->supports as $support) {
+            $support->loadProfiles();
+        }
+
         return $cycle;
     }
 
@@ -157,21 +161,20 @@ class CampaignCycleController extends Controller
         $cycle->cold_chain_nurse_id = $request->cold_chain_nurse_id;
         $cycle->partial_value = $request->partial_value;
         $cycle->percentage_value = $request->percentage_value;
-        $cycle->statistics()->sync($request->statistics);
-
-        $cycle->beforeTransports()->sync($request->before_transports);
-        $cycle->startTransports()->sync($request->start_transports);
-
-        $cycle->beforeColdChains()->sync($request->before_cold_chains);
-        $cycle->startColdChains()->sync($request->start_cold_chains);
-
-        $cycle->beforeDriverColdChains()->sync($request->before_driver_cold_chains);
-        $cycle->startDriverColdChains()->sync($request->start_driver_cold_chains);
-
-        $cycle->beforeZoonoses()->sync($request->before_zoonoses);
-        $cycle->startZoonoses()->sync($request->start_zoonoses);
 
         $cycle->save();
+
+        $campaign = $cycle->campaign;
+        foreach ($request->profiles as $profile) {
+            $p =  $campaign->profiles('cycle')
+                ->orderBy('created_at', 'desc')
+                ->find($profile['id']);
+
+            $p->updateWorker($profile, $campaign->id, $cycle->id);
+        }
+
+        $cycle->loadProfiles();
+
 
         return $cycle;
     }
@@ -320,7 +323,7 @@ class CampaignCycleController extends Controller
     {
         $today = new DateTime();
         $cycle = CampaignCycle::with([
-            'campaing',
+            'campaign',
             'coldChainCoordinator',
             'coldChainNurse',
             'beforeColdChains',
