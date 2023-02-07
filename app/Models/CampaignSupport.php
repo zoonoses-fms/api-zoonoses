@@ -33,14 +33,97 @@ class CampaignSupport extends Model
         return $this->belongsTo(VaccinationSupport::class, 'vaccination_support_id');
     }
 
+    public function profiles($scope = 'support')
+    {
+        $campaign = Campaign::find($this->cycle->campaign_id);
+        return $campaign->profiles($scope);
+    }
+
     public function loadProfiles($scope = 'support')
     {
-        $cycle = $this->cycle;
-        $campaign = $cycle->campaign;
+        $cycle = CampaignCycle::select('id', 'campaign_id')->find($this->campaign_cycle_id);
+        $campaign = Campaign::select('id')->find($cycle->campaign_id);
         $this->profiles =  $campaign->profiles($scope)->where('is_rural', $this->is_rural)->orderBy('created_at', 'desc')->get();
         foreach ($this->profiles as $profile) {
             $profile->loadWorkers($campaign->id, $cycle->id, $this->id);
         }
+    }
+
+    public function loadListWorkers($dates)
+    {
+        if (!isset($this->profiles)) {
+            $this->loadProfiles($dates);
+        }
+
+        $list = [];
+        foreach ($this->profiles as $profile) {
+            $cost = [];
+            $cost_total = 0;
+            $listWorkers = [];
+
+            for ($i=0; $i <= $profile->is_pre_campaign; $i++) {
+                $cost[$i] = count($profile->workers[$i]) * (float)$profile->pivot->cost;
+
+                if ($i > 0 && $this->partial_value) {
+                    if ($cost[$i] > 0) {
+                        $cost[$i] = (($cost[$i] / 100) * $this->percentage_value);
+                    }
+                }
+                $cost_total += $cost[$i];
+
+                foreach ($profile->workers[$i] as $key => $worker) {
+                    if ($i > 0) {
+                        $keyWorker = array_search($worker->registration, array_column($listWorkers, 'registration'));
+                        if ($keyWorker === false) {
+                            $arrayDays = [];
+
+                            for ($indexDay = 0; $indexDay < $i; $indexDay++) {
+                                $arrayDays[$indexDay] = 0.0;
+                            }
+                            $arrayDays[] = (float)$profile->pivot->cost;
+
+                            $listWorkers[] = [
+                                'registration' => $worker->registration,
+                                'name' => $worker->name,
+                                'profile' => $profile->name,
+                                'days' => $arrayDays
+                            ];
+                        } else {
+                            $listWorkers[$keyWorker]['days'][] = (float)$profile->pivot->cost;
+                        }
+                    } else {
+                        $listWorkers[] = [
+                            'registration' => $worker->registration,
+                            'name' => $worker->name,
+                            'profile' => $profile->name,
+                            'days' => [(float)$profile->pivot->cost]
+                        ];
+                    }
+                }
+            }
+
+            for ($i = 0; $i < count($dates); $i++) {
+                for ($j = 0; $j < count($listWorkers); $j++) {
+                    if (!array_key_exists($i, $listWorkers[$j]['days'])) {
+                        $listWorkers[$j]['days'][$i] = 0.0;
+                    }
+                }
+            }
+
+            for ($i = 0; $i < count($listWorkers); $i++) {
+                $total = 0;
+                foreach ($listWorkers[$i]['days'] as $day) {
+                    $total += $day;
+                }
+                $listWorkers[$i]['total'] = $total;
+            }
+
+            $profile->cost = $cost;
+            $profile->cost_total = $cost_total;
+            $profile->listWorkers = $listWorkers;
+            $list = array_merge($list, $listWorkers);
+        }
+        return $list;
     }
 
     public function coordinator()

@@ -31,6 +31,10 @@ class CampaignPointController extends Controller
         $point->campaign_support_id = $request->campaign_support_id;
         $point->vaccination_point_id = $request->id;
         $point->save();
+
+        $point->loadProfiles();
+
+        return $point;
     }
 
     /**
@@ -49,6 +53,8 @@ class CampaignPointController extends Controller
                 'annotators'
             ]
         )->findOrFail($id);
+
+        $point->loadProfiles();
 
         return $point;
     }
@@ -133,13 +139,12 @@ class CampaignPointController extends Controller
         $today = date("d-m-Y");
         $point = CampaignPoint::with([
             'point',
-            'supervisor',
-            'vaccinators',
-            'annotators',
         ])->findOrFail($id);
 
+        $point->loadProfiles();
+
         return PDF::loadView(
-            'ncrlo.frequency_point_list',
+            'ncrlo.frequency_list_point',
             [
                 'point' => $point,
                 'today' => $today,

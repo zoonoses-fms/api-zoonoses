@@ -49,7 +49,7 @@ class MigrateAlocationWorkersSeender extends Seeder
         $coordinator_of_pa_profile = ProfileWorker::where('name', 'Coordenador de PA')
         ->where('scope', 'support')->first();
 
-        $supervisors_of_pa_profile = ProfileWorker::where('name', 'Coordenador de PA')
+        $supervisors_of_pa_profile = ProfileWorker::where('name', 'Supervisor de PA')
         ->where('scope', 'support')->first();
 
         $assistants_of_pa_profile = ProfileWorker::where('name', 'Equipe de Apoio de PA')
@@ -93,7 +93,7 @@ class MigrateAlocationWorkersSeender extends Seeder
                     'campaign_cycle_id' => null,
                     'campaign_support_id' => null,
                     'campaign_point_id' => null,
-                    'is_pre_campaign' => false,
+                    'is_pre_campaign' => 0,
                     'is_single_allocation' => $coordinator_profile->is_single_allocation,
                     'created_at' => now(),
                     'updated_at' => now()
@@ -104,7 +104,7 @@ class MigrateAlocationWorkersSeender extends Seeder
                     ->wherePivotNull('campaign_cycle_id')
                     ->wherePivotNull('campaign_support_id')
                     ->wherePivotNull('campaign_point_id')
-                    ->wherePivot('is_pre_campaign', false)
+                    ->wherePivot('is_pre_campaign', 0)
                     ->sync($coordinator_workers);
             }
 
@@ -119,7 +119,7 @@ class MigrateAlocationWorkersSeender extends Seeder
                         'campaign_cycle_id' => $cycle->id,
                         'campaign_support_id' => null,
                         'campaign_point_id' => null,
-                        'is_pre_campaign' => true,
+                        'is_pre_campaign' => 1,
                         'is_single_allocation' => $cold_chain_coordinator_profile->is_single_allocation,
                         'created_at' => now(),
                         'updated_at' => now()
@@ -130,7 +130,7 @@ class MigrateAlocationWorkersSeender extends Seeder
                         ->wherePivot('campaign_cycle_id', $cycle->id)
                         ->wherePivotNull('campaign_support_id')
                         ->wherePivotNull('campaign_point_id')
-                        ->wherePivot('is_pre_campaign', true)
+                        ->wherePivot('is_pre_campaign', 1)
                         ->sync($cold_chain_coordinator_workers_pre);
                 }
 
@@ -141,7 +141,7 @@ class MigrateAlocationWorkersSeender extends Seeder
                         'campaign_cycle_id' => $cycle->id,
                         'campaign_support_id' => null,
                         'campaign_point_id' => null,
-                        'is_pre_campaign' => false,
+                        'is_pre_campaign' => 0,
                         'is_single_allocation' => $cold_chain_coordinator_profile->is_single_allocation,
                         'created_at' => now(),
                         'updated_at' => now()
@@ -152,7 +152,7 @@ class MigrateAlocationWorkersSeender extends Seeder
                         ->wherePivot('campaign_cycle_id', $cycle->id)
                         ->wherePivotNull('campaign_support_id')
                         ->wherePivotNull('campaign_point_id')
-                        ->wherePivot('is_pre_campaign', false)
+                        ->wherePivot('is_pre_campaign', 0)
                         ->sync($cold_chain_coordinator_workers);
                 }
 
@@ -166,7 +166,7 @@ class MigrateAlocationWorkersSeender extends Seeder
                         'campaign_cycle_id' => $cycle->id,
                         'campaign_support_id' => null,
                         'campaign_point_id' => null,
-                        'is_pre_campaign' => true,
+                        'is_pre_campaign' => 1,
                         'is_single_allocation' => $cold_chain_nurse_profile->is_single_allocation,
                         'created_at' => now(),
                         'updated_at' => now()
@@ -177,7 +177,7 @@ class MigrateAlocationWorkersSeender extends Seeder
                         ->wherePivot('campaign_cycle_id', $cycle->id)
                         ->wherePivotNull('campaign_support_id')
                         ->wherePivotNull('campaign_point_id')
-                        ->wherePivot('is_pre_campaign', true)
+                        ->wherePivot('is_pre_campaign', 1)
                         ->sync($cold_chain_nurse_workers_pre);
                 }
 
@@ -188,7 +188,7 @@ class MigrateAlocationWorkersSeender extends Seeder
                         'campaign_cycle_id' => $cycle->id,
                         'campaign_support_id' => null,
                         'campaign_point_id' => null,
-                        'is_pre_campaign' => false,
+                        'is_pre_campaign' => 0,
                         'is_single_allocation' => $cold_chain_nurse_profile->is_single_allocation,
                         'created_at' => now(),
                         'updated_at' => now()
@@ -199,7 +199,7 @@ class MigrateAlocationWorkersSeender extends Seeder
                         ->wherePivot('campaign_cycle_id', $cycle->id)
                         ->wherePivotNull('campaign_support_id')
                         ->wherePivotNull('campaign_point_id')
-                        ->wherePivot('is_pre_campaign', false)
+                        ->wherePivot('is_pre_campaign', 0)
                         ->sync($cold_chain_nurse_workers);
                 }
 
@@ -213,7 +213,7 @@ class MigrateAlocationWorkersSeender extends Seeder
                         'campaign_cycle_id' => $cycle->id,
                         'campaign_support_id' => null,
                         'campaign_point_id' => null,
-                        'is_pre_campaign' => true,
+                        'is_pre_campaign' => 1,
                         'is_single_allocation' => $cold_chains_profile->is_single_allocation,
                         'created_at' => now(),
                         'updated_at' => now()
@@ -225,7 +225,7 @@ class MigrateAlocationWorkersSeender extends Seeder
                         ->wherePivot('campaign_cycle_id', $cycle->id)
                         ->wherePivotNull('campaign_support_id')
                         ->wherePivotNull('campaign_point_id')
-                        ->wherePivot('is_pre_campaign', true)
+                        ->wherePivot('is_pre_campaign', 1)
                         ->sync($cold_chains_profile_workers_pre);
 
                 $cold_chains_profile_workers = [];
@@ -236,7 +236,7 @@ class MigrateAlocationWorkersSeender extends Seeder
                         'campaign_cycle_id' => $cycle->id,
                         'campaign_support_id' => null,
                         'campaign_point_id' => null,
-                        'is_pre_campaign' => false,
+                        'is_pre_campaign' => 0,
                         'is_single_allocation' => $cold_chains_profile->is_single_allocation,
                         'created_at' => now(),
                         'updated_at' => now()
@@ -248,7 +248,7 @@ class MigrateAlocationWorkersSeender extends Seeder
                         ->wherePivot('campaign_cycle_id', $cycle->id)
                         ->wherePivotNull('campaign_support_id')
                         ->wherePivotNull('campaign_point_id')
-                        ->wherePivot('is_pre_campaign', false)
+                        ->wherePivot('is_pre_campaign', 0)
                         ->sync($cold_chains_profile_workers);
 
                 //beforeZoonoses
@@ -265,7 +265,7 @@ class MigrateAlocationWorkersSeender extends Seeder
                         'campaign_cycle_id' => $cycle->id,
                         'campaign_support_id' => null,
                         'campaign_point_id' => null,
-                        'is_pre_campaign' => true,
+                        'is_pre_campaign' => 1,
                         'is_single_allocation' => $zoonoes_profile->is_single_allocation,
                         'created_at' => now(),
                         'updated_at' => now()
@@ -277,7 +277,7 @@ class MigrateAlocationWorkersSeender extends Seeder
                         ->wherePivot('campaign_cycle_id', $cycle->id)
                         ->wherePivotNull('campaign_support_id')
                         ->wherePivotNull('campaign_point_id')
-                        ->wherePivot('is_pre_campaign', true)
+                        ->wherePivot('is_pre_campaign', 1)
                         ->sync($zoonose_profile_workers_pre);
 
                 $zoonose_profile_workers = [];
@@ -288,7 +288,7 @@ class MigrateAlocationWorkersSeender extends Seeder
                         'campaign_cycle_id' => $cycle->id,
                         'campaign_support_id' => null,
                         'campaign_point_id' => null,
-                        'is_pre_campaign' => false,
+                        'is_pre_campaign' => 0,
                         'is_single_allocation' => $zoonoes_profile->is_single_allocation,
                         'created_at' => now(),
                         'updated_at' => now()
@@ -300,7 +300,7 @@ class MigrateAlocationWorkersSeender extends Seeder
                         ->wherePivot('campaign_cycle_id', $cycle->id)
                         ->wherePivotNull('campaign_support_id')
                         ->wherePivotNull('campaign_point_id')
-                        ->wherePivot('is_pre_campaign', false)
+                        ->wherePivot('is_pre_campaign', 0)
                         ->sync($zoonose_profile_workers);
 
 
@@ -317,7 +317,7 @@ class MigrateAlocationWorkersSeender extends Seeder
                         'campaign_cycle_id' => $cycle->id,
                         'campaign_support_id' => null,
                         'campaign_point_id' => null,
-                        'is_pre_campaign' => true,
+                        'is_pre_campaign' => 1,
                         'is_single_allocation' => $transports_profile->is_single_allocation,
                         'created_at' => now(),
                         'updated_at' => now()
@@ -329,7 +329,7 @@ class MigrateAlocationWorkersSeender extends Seeder
                         ->wherePivot('campaign_cycle_id', $cycle->id)
                         ->wherePivotNull('campaign_support_id')
                         ->wherePivotNull('campaign_point_id')
-                        ->wherePivot('is_pre_campaign', true)
+                        ->wherePivot('is_pre_campaign', 1)
                         ->sync($transport_profile_workers_pre);
 
                 $transport_profile_workers = [];
@@ -340,7 +340,7 @@ class MigrateAlocationWorkersSeender extends Seeder
                         'campaign_cycle_id' => $cycle->id,
                         'campaign_support_id' => null,
                         'campaign_point_id' => null,
-                        'is_pre_campaign' => false,
+                        'is_pre_campaign' => 0,
                         'is_single_allocation' => $transports_profile->is_single_allocation,
                         'created_at' => now(),
                         'updated_at' => now()
@@ -352,7 +352,7 @@ class MigrateAlocationWorkersSeender extends Seeder
                         ->wherePivot('campaign_cycle_id', $cycle->id)
                         ->wherePivotNull('campaign_support_id')
                         ->wherePivotNull('campaign_point_id')
-                        ->wherePivot('is_pre_campaign', false)
+                        ->wherePivot('is_pre_campaign', 0)
                         ->sync($transport_profile_workers);
 
 
@@ -368,7 +368,7 @@ class MigrateAlocationWorkersSeender extends Seeder
                         'campaign_cycle_id' => $cycle->id,
                         'campaign_support_id' => null,
                         'campaign_point_id' => null,
-                        'is_pre_campaign' => false,
+                        'is_pre_campaign' => 0,
                         'is_single_allocation' => $driver_cycle_profile->is_single_allocation,
                         'created_at' => now(),
                         'updated_at' => now()
@@ -380,7 +380,7 @@ class MigrateAlocationWorkersSeender extends Seeder
                         ->wherePivot('campaign_cycle_id', $cycle->id)
                         ->wherePivotNull('campaign_support_id')
                         ->wherePivotNull('campaign_point_id')
-                        ->wherePivot('is_pre_campaign', false)
+                        ->wherePivot('is_pre_campaign', 0)
                         ->sync($driver_cycle_profile_workers);
 
 
@@ -391,7 +391,7 @@ class MigrateAlocationWorkersSeender extends Seeder
                         'campaign_cycle_id' => $cycle->id,
                         'campaign_support_id' => null,
                         'campaign_point_id' => null,
-                        'is_pre_campaign' => false,
+                        'is_pre_campaign' => 0,
                         'is_single_allocation' => $statistic_coordinator_profile->is_single_allocation,
                         'created_at' => now(),
                         'updated_at' => now()
@@ -402,7 +402,7 @@ class MigrateAlocationWorkersSeender extends Seeder
                         ->wherePivot('campaign_cycle_id', $cycle->id)
                         ->wherePivotNull('campaign_support_id')
                         ->wherePivotNull('campaign_point_id')
-                        ->wherePivot('is_pre_campaign', false)
+                        ->wherePivot('is_pre_campaign', 0)
                         ->sync($statistic_coordinator_workers);
                 }
 
@@ -414,7 +414,7 @@ class MigrateAlocationWorkersSeender extends Seeder
                         'campaign_cycle_id' => $cycle->id,
                         'campaign_support_id' => null,
                         'campaign_point_id' => null,
-                        'is_pre_campaign' => false,
+                        'is_pre_campaign' => 0,
                         'is_single_allocation' => $statistic_team_profile->is_single_allocation,
                         'created_at' => now(),
                         'updated_at' => now()
@@ -426,7 +426,7 @@ class MigrateAlocationWorkersSeender extends Seeder
                         ->wherePivot('campaign_cycle_id', $cycle->id)
                         ->wherePivotNull('campaign_support_id')
                         ->wherePivotNull('campaign_point_id')
-                        ->wherePivot('is_pre_campaign', false)
+                        ->wherePivot('is_pre_campaign', 0)
                         ->sync($statistic_team_profile_workers);
 
 
@@ -444,7 +444,7 @@ class MigrateAlocationWorkersSeender extends Seeder
                             'campaign_cycle_id' => $cycle->id,
                             'campaign_support_id' => $support->id,
                             'campaign_point_id' => null,
-                            'is_pre_campaign' => false,
+                            'is_pre_campaign' => 0,
                             'is_single_allocation' => $coordinator_of_pa_profile->is_single_allocation,
                             'created_at' => now(),
                             'updated_at' => now()
@@ -455,7 +455,7 @@ class MigrateAlocationWorkersSeender extends Seeder
                             ->wherePivot('campaign_cycle_id', $cycle->id)
                             ->wherePivot('campaign_support_id', $support->id)
                             ->wherePivotNull('campaign_point_id')
-                            ->wherePivot('is_pre_campaign', false)
+                            ->wherePivot('is_pre_campaign', 0)
                             ->sync($coordinator_of_pa__workers);
                     }
 
@@ -467,7 +467,7 @@ class MigrateAlocationWorkersSeender extends Seeder
                             'campaign_cycle_id' => $cycle->id,
                             'campaign_support_id' => $support->id,
                             'campaign_point_id' => null,
-                            'is_pre_campaign' => false,
+                            'is_pre_campaign' => 0,
                             'is_single_allocation' => $supervisors_of_pa_profile->is_single_allocation,
                             'created_at' => now(),
                             'updated_at' => now()
@@ -479,7 +479,7 @@ class MigrateAlocationWorkersSeender extends Seeder
                         ->wherePivot('campaign_cycle_id', $cycle->id)
                         ->wherePivot('campaign_support_id', $support->id)
                         ->wherePivotNull('campaign_point_id')
-                        ->wherePivot('is_pre_campaign', false)
+                        ->wherePivot('is_pre_campaign', 0)
                         ->sync($supervisors_of_pa_workers);
 
 
@@ -492,7 +492,7 @@ class MigrateAlocationWorkersSeender extends Seeder
                             'campaign_cycle_id' => $cycle->id,
                             'campaign_support_id' => $support->id,
                             'campaign_point_id' => null,
-                            'is_pre_campaign' => false,
+                            'is_pre_campaign' => 0,
                             'is_single_allocation' => $assistants_of_pa_profile->is_single_allocation,
                             'created_at' => now(),
                             'updated_at' => now()
@@ -504,7 +504,7 @@ class MigrateAlocationWorkersSeender extends Seeder
                         ->wherePivot('campaign_cycle_id', $cycle->id)
                         ->wherePivot('campaign_support_id', $support->id)
                         ->wherePivotNull('campaign_point_id')
-                        ->wherePivot('is_pre_campaign', false)
+                        ->wherePivot('is_pre_campaign', 0)
                         ->sync($assistants_of_pa_workers);
 
                     //Drivers of PA
@@ -520,7 +520,7 @@ class MigrateAlocationWorkersSeender extends Seeder
                                 'campaign_cycle_id' => $cycle->id,
                                 'campaign_support_id' => $support->id,
                                 'campaign_point_id' => null,
-                                'is_pre_campaign' => false,
+                                'is_pre_campaign' => 0,
                                 'is_single_allocation' => $drivers_of_pa_profile->is_single_allocation,
                                 'created_at' => now(),
                                 'updated_at' => now()
@@ -532,7 +532,7 @@ class MigrateAlocationWorkersSeender extends Seeder
                             ->wherePivot('campaign_cycle_id', $cycle->id)
                             ->wherePivot('campaign_support_id', $support->id)
                             ->wherePivotNull('campaign_point_id')
-                            ->wherePivot('is_pre_campaign', false)
+                            ->wherePivot('is_pre_campaign', 0)
                             ->sync($drivers_of_pa_workers);
                     } else {
                         foreach ($support->drivers as $driver) {
@@ -541,7 +541,7 @@ class MigrateAlocationWorkersSeender extends Seeder
                                 'campaign_cycle_id' => $cycle->id,
                                 'campaign_support_id' => $support->id,
                                 'campaign_point_id' => null,
-                                'is_pre_campaign' => false,
+                                'is_pre_campaign' => 0,
                                 'is_single_allocation' => $drivers_of_rural_profile->is_single_allocation,
                                 'created_at' => now(),
                                 'updated_at' => now()
@@ -553,7 +553,7 @@ class MigrateAlocationWorkersSeender extends Seeder
                             ->wherePivot('campaign_cycle_id', $cycle->id)
                             ->wherePivot('campaign_support_id', $support->id)
                             ->wherePivotNull('campaign_point_id')
-                            ->wherePivot('is_pre_campaign', false)
+                            ->wherePivot('is_pre_campaign', 0)
                             ->sync($drivers_of_rural_workers);
                     }
 
@@ -571,7 +571,7 @@ class MigrateAlocationWorkersSeender extends Seeder
                                 'campaign_cycle_id' => $cycle->id,
                                 'campaign_support_id' => $support->id,
                                 'campaign_point_id' => null,
-                                'is_pre_campaign' => false,
+                                'is_pre_campaign' => 0,
                                 'is_single_allocation' => $vaccinators_of_pa_profile->is_single_allocation,
                                 'created_at' => now(),
                                 'updated_at' => now()
@@ -583,7 +583,7 @@ class MigrateAlocationWorkersSeender extends Seeder
                             ->wherePivot('campaign_cycle_id', $cycle->id)
                             ->wherePivot('campaign_support_id', $support->id)
                             ->wherePivotNull('campaign_point_id')
-                            ->wherePivot('is_pre_campaign', false)
+                            ->wherePivot('is_pre_campaign', 0)
                             ->sync($vaccinators_of_pa_workers);
                     } else {
                         foreach ($support->vaccinators as $vaccinator) {
@@ -592,7 +592,7 @@ class MigrateAlocationWorkersSeender extends Seeder
                                 'campaign_cycle_id' => $cycle->id,
                                 'campaign_support_id' => $support->id,
                                 'campaign_point_id' => null,
-                                'is_pre_campaign' => false,
+                                'is_pre_campaign' => 0,
                                 'is_single_allocation' => $vaccinators_of_rural_profile->is_single_allocation,
                                 'created_at' => now(),
                                 'updated_at' => now()
@@ -604,7 +604,7 @@ class MigrateAlocationWorkersSeender extends Seeder
                             ->wherePivot('campaign_cycle_id', $cycle->id)
                             ->wherePivot('campaign_support_id', $support->id)
                             ->wherePivotNull('campaign_point_id')
-                            ->wherePivot('is_pre_campaign', false)
+                            ->wherePivot('is_pre_campaign', 0)
                             ->sync($vaccinators_of_rural_workers);
 
 
@@ -616,7 +616,7 @@ class MigrateAlocationWorkersSeender extends Seeder
                                 'campaign_cycle_id' => $cycle->id,
                                 'campaign_support_id' => $support->id,
                                 'campaign_point_id' => null,
-                                'is_pre_campaign' => false,
+                                'is_pre_campaign' => 0,
                                 'is_single_allocation' => $supervisors_of_rural_profile->is_single_allocation,
                                 'created_at' => now(),
                                 'updated_at' => now()
@@ -628,7 +628,7 @@ class MigrateAlocationWorkersSeender extends Seeder
                             ->wherePivot('campaign_cycle_id', $cycle->id)
                             ->wherePivot('campaign_support_id', $support->id)
                             ->wherePivotNull('campaign_point_id')
-                            ->wherePivot('is_pre_campaign', false)
+                            ->wherePivot('is_pre_campaign', 0)
                             ->sync($supervisors_of_rural_workers);
 
                         // ruralAssistants
@@ -641,7 +641,7 @@ class MigrateAlocationWorkersSeender extends Seeder
                                 'campaign_cycle_id' => $cycle->id,
                                 'campaign_support_id' => $support->id,
                                 'campaign_point_id' => null,
-                                'is_pre_campaign' => false,
+                                'is_pre_campaign' => 0,
                                 'is_single_allocation' => $assistants_of_rural_profile->is_single_allocation,
                                 'created_at' => now(),
                                 'updated_at' => now()
@@ -653,7 +653,7 @@ class MigrateAlocationWorkersSeender extends Seeder
                             ->wherePivot('campaign_cycle_id', $cycle->id)
                             ->wherePivot('campaign_support_id', $support->id)
                             ->wherePivotNull('campaign_point_id')
-                            ->wherePivot('is_pre_campaign', false)
+                            ->wherePivot('is_pre_campaign', 0)
                             ->sync($assistants_of_rural_workers);
                     }
 
@@ -681,7 +681,7 @@ class MigrateAlocationWorkersSeender extends Seeder
                                     'campaign_cycle_id' => $cycle->id,
                                     'campaign_support_id' => $support->id,
                                     'campaign_point_id' => $point->id,
-                                    'is_pre_campaign' => false,
+                                    'is_pre_campaign' => 0,
                                     'is_single_allocation' => $supervisor_of_point_profile->is_single_allocation,
                                     'created_at' => now(),
                                     'updated_at' => now()
@@ -692,7 +692,7 @@ class MigrateAlocationWorkersSeender extends Seeder
                                     ->wherePivot('campaign_cycle_id', $cycle->id)
                                     ->wherePivot('campaign_support_id', $support->id)
                                     ->wherePivot('campaign_point_id', $point->id)
-                                    ->wherePivot('is_pre_campaign', false)
+                                    ->wherePivot('is_pre_campaign', 0)
                                     ->sync($supervisor_of_point_workers);
                             }
 
@@ -704,7 +704,7 @@ class MigrateAlocationWorkersSeender extends Seeder
                                     'campaign_cycle_id' => $cycle->id,
                                     'campaign_support_id' => $support->id,
                                     'campaign_point_id' => $point->id,
-                                    'is_pre_campaign' => false,
+                                    'is_pre_campaign' => 0,
                                     'is_single_allocation' => $vaccinators_of_point_profile->is_single_allocation,
                                     'created_at' => now(),
                                     'updated_at' => now()
@@ -716,7 +716,7 @@ class MigrateAlocationWorkersSeender extends Seeder
                                 ->wherePivot('campaign_cycle_id', $cycle->id)
                                 ->wherePivot('campaign_support_id', $support->id)
                                 ->wherePivot('campaign_point_id', $point->id)
-                                ->wherePivot('is_pre_campaign', false)
+                                ->wherePivot('is_pre_campaign', 0)
                                 ->sync($vaccinators_of_point_workers);
 
 
@@ -728,7 +728,7 @@ class MigrateAlocationWorkersSeender extends Seeder
                                     'campaign_cycle_id' => $cycle->id,
                                     'campaign_support_id' => $support->id,
                                     'campaign_point_id' => $point->id,
-                                    'is_pre_campaign' => false,
+                                    'is_pre_campaign' => 0,
                                     'is_single_allocation' => $annotators_of_point_profile->is_single_allocation,
                                     'created_at' => now(),
                                     'updated_at' => now()
@@ -740,7 +740,7 @@ class MigrateAlocationWorkersSeender extends Seeder
                                 ->wherePivot('campaign_cycle_id', $cycle->id)
                                 ->wherePivot('campaign_support_id', $support->id)
                                 ->wherePivot('campaign_point_id', $point->id)
-                                ->wherePivot('is_pre_campaign', false)
+                                ->wherePivot('is_pre_campaign', 0)
                                 ->sync($annotators_of_point_workers);
                         }
                     }

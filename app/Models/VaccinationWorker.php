@@ -37,7 +37,7 @@ class VaccinationWorker extends Model
             ProfileWorker::class,
             'campaign_worker',
             'vaccination_worker_id',
-            'profile_worker_id'
+            'profile_workers_id'
         );
     }
 
@@ -65,7 +65,7 @@ class VaccinationWorker extends Model
     {
         return $this->belongsToMany(
             CampaignPoint::class,
-            'vaccination_worker_campaign_point',
+            'campaign_worker',
             'vaccination_worker_id',
             'campaign_point_id',
         );

@@ -19,7 +19,7 @@ return new class extends Migration
             $table->enum('scope', ['campaign', 'cycle', 'support', 'point']);
             $table->enum('management', ['GEZOON', 'GETRANS', 'Rede de Frio']);
             $table->boolean('is_single_allocation')->default(true)->nullable();
-            $table->boolean('is_pre_campaign')->default(false)->nullable();
+            $table->integer('is_pre_campaign')->default(0)->nullable();
             $table->boolean('is_multiple')->default(false)->nullable();
             $table->boolean('is_rural')->default(false)->nullable();
             $table->boolean('is_pre_load')->default(false)->nullable();

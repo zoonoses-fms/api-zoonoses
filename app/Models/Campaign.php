@@ -57,7 +57,7 @@ class Campaign extends Model
         )->where(
             'scope',
             $scope
-        );
+        )->withPivot('cost');
     }
 
     public function workers()

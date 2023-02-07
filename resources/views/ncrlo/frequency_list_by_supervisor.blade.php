@@ -104,62 +104,56 @@
 </head>
 
 <body>
-    @for ($i = 0; $i < count($dates); $i++)
-        <div class="conteiner">
-            <div class="date">
-                <strong>{{ $today }}</strong>
+    <div class="conteiner">
+        <div class="date">
+            <strong>{{ $today }}</strong>
+        </div>
+        <div class="header">
+            <div class="logo-header">
+                <img src="img/logo_teresina.jpg" alt="logo">
             </div>
-            <div class="header">
-                <div class="logo-header">
-                    <img src="img/logo_teresina.jpg" alt="logo">
-                </div>
-                <div class="logo-text">
-                    <strong>Prefeitura Municipal de Teresina</strong><br />
-                    <strong>Fundação Municipal de Saúde</strong><br />
-                    <strong>Gerência de Zoonoses GEZOON</strong><br />
-                    <strong>Núcleo de Controle da Raiva, Leishmaniose e Outras Zoonoses - NCRLOZ</strong><br />
-                </div>
-                <div class="center" style="text-align:center">
-                    <span>Frequência - {{ $dates[$i] }}</span>
+            <div class="logo-text">
+                <strong>Prefeitura Municipal de Teresina</strong><br />
+                <strong>Fundação Municipal de Saúde</strong><br />
+                <strong>Gerência de Zoonoses GEZOON</strong><br />
+                <strong>Núcleo de Controle da Raiva, Leishmaniose e Outras Zoonoses - NCRLOZ</strong><br />
+            </div>
+            <div class="center" style="text-align:center">
+                <span>Frequência</span>
+            </div>
+
+        </div>
+
+        <div class="content">
+
+            @foreach ($supervisors as $supervisor)
+                <div>
+                    <strong> {{ $supervisor->registration }} - {{ $supervisor->name }} </strong>
                 </div>
                 <div>
-                    <strong> {{ $support->description }} </strong>
+                    <table class="table-vacination">
+                        <thead>
+                            <th class="border">Mat.</th>
+                            <th class="border">Nome</th>
+                            <th class="border">Fone</th>
+                            <th class="border">FMS</th>
+                            <th class="border">ACE</th>
+                            <th class="border">ACS</th>
+                            <th class="border">Assinatura</th>
+                        </thead>
+                        @foreach ($supervisor->workers as $worker)
+                            <tr>
+                                <td class="border line-mat"> {{ $worker->registration }} </td>
+                                <td class="border line-name"> {{ $worker->name }} </td>
+                                <td class="border"> {{ $worker->phone }} </td>
+                                <td class="border line-origin"></td>
+                                <td class="border line-origin"></td>
+                                <td class="border line-origin"></td>
+                                <td class="border line-vaccinator"></td>
+                            </tr>
+                        @endforeach
+                    </table>
                 </div>
-
-            </div>
-
-            <div class="content">
-
-
-                @foreach ($support->profiles as $profile)
-                    @if (isset($profile->workers[$i]) && count($profile->workers[$i]) > 0)
-                        <div>
-                            <strong>{{ $profile->name }} - {{ $dates[$i] }}</strong>
-                            <table class="table-vacination">
-                                <thead>
-                                    <th class="border">Mat.</th>
-                                    <th class="border">Nome</th>
-                                    <th class="border">Fone</th>
-                                    <th class="border">FMS</th>
-                                    <th class="border">ACE</th>
-                                    <th class="border">ACS</th>
-                                    <th class="border">Assinatura</th>
-                                </thead>
-                                @foreach ($profile->workers[$i] as $worker)
-                                    <tr>
-                                        <td class="border line-mat"> {{ $worker->registration }} </td>
-                                        <td class="border line-name"> {{ $worker->name }} </td>
-                                        <td class="border"> {{ $worker->phone }} </td>
-                                        <td class="border line-origin"></td>
-                                        <td class="border line-origin"></td>
-                                        <td class="border line-origin"></td>
-                                        <td class="border line-vaccinator"></td>
-                                    </tr>
-                                @endforeach
-                            </table>
-                        </div>
-                    @endif
-                @endforeach
 
 
                 <div>
@@ -223,22 +217,20 @@
 
                 </table>
 
-            </div>
-            <div class="footer">
-                <hr />
-                <div class="center">
-                    <address>
-                        Rua Minas Gerais, Nº 909 – Bairro Matadouro. zona Norte. <br />
-                        Teresina - PI, 64018-560
-                    </address>
-                </div>
-            </div>
-
         </div>
-        @if (!$i == count($dates) - 1)
-            <div style="page-break-after: always"></div>
-        @endif
-    @endfor
+        <div class="footer">
+            <hr />
+            <div class="center">
+                <address>
+                    Rua Minas Gerais, Nº 909 – Bairro Matadouro. zona Norte. <br />
+                    Teresina - PI, 64018-560
+                </address>
+            </div>
+        </div>
+
+    </div>
+    <div style="page-break-after: always"></div>
+    @endforeach
 
 </body>
 

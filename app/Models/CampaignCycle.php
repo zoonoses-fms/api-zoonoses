@@ -40,14 +40,107 @@ class CampaignCycle extends Model
         return $this->hasMany(CampaignSupport::class, 'campaign_cycle_id')->orderBy('order', 'asc');
     }
 
+    public function workers()
+    {
+        $id = $this->id;
+        return $this->belongsToMany(
+            VaccinationWorker::class,
+            'campaign_worker',
+            'campaign_cycle_id',
+            'vaccination_worker_id'
+        );
+    }
+
+    public function profiles($scope = 'cycle')
+    {
+        $campaign = Campaign::find($this->campaign_id);
+        return $campaign->profiles($scope);
+    }
+
     public function loadProfiles($scope = 'cycle')
     {
-        $campaign = $this->campaign;
-        $this->profiles =  $campaign->profiles($scope)->orderBy('created_at', 'desc')->get();
-        $id = $this->id;
+        $this->profiles =  $this->profiles()->orderBy('created_at', 'desc')->get();
         foreach ($this->profiles as $profile) {
-            $profile->loadWorkers($campaign->id, $this->id);
+            $profile->loadWorkers($this->campaign_id, $this->id);
         }
+    }
+
+    public function loadListWorkers($dates)
+    {
+        if (!isset($this->profiles)) {
+            $this->loadProfiles($dates);
+        }
+
+        $list = [];
+        foreach ($this->profiles as $profile) {
+            $cost = [];
+            $cost_total = 0;
+            $listWorkers = [];
+
+            for ($i=0; $i <= $profile->is_pre_campaign; $i++) {
+                $cost[$i] = count($profile->workers[$i]) * (float)$profile->pivot->cost;
+
+                if ($i > 0 && $this->partial_value) {
+                    if ($cost[$i] > 0) {
+                        $cost[$i] = (($cost[$i] / 100) * $this->percentage_value);
+                    }
+                }
+                $cost_total += $cost[$i];
+
+                foreach ($profile->workers[$i] as $key => $worker) {
+                    if ($i > 0) {
+                        $keyWorker = array_search($worker->registration, array_column($listWorkers, 'registration'));
+                        if ($keyWorker === false) {
+                            $arrayDays = [];
+
+                            for ($indexDay = 0; $indexDay < $i; $indexDay++) {
+                                $arrayDays[$indexDay] = 0.0;
+                            }
+                            $arrayDays[] = (float)$profile->pivot->cost;
+
+                            $listWorkers[] = [
+                                'registration' => $worker->registration,
+                                'name' => $worker->name,
+                                'profile' => $profile->name,
+                                'days' => $arrayDays
+                            ];
+                        } else {
+                            $listWorkers[$keyWorker]['days'][] = (float)$profile->pivot->cost;
+                        }
+                    } else {
+                        $listWorkers[] = [
+                            'registration' => $worker->registration,
+                            'name' => $worker->name,
+                            'profile' => $profile->name,
+                            'days' => [(float)$profile->pivot->cost]
+                        ];
+                    }
+                }
+            }
+
+            for ($i = 0; $i < count($dates); $i++) {
+                $total = 0;
+                for ($j = 0; $j < count($listWorkers); $j++) {
+                    if (!array_key_exists($i, $listWorkers[$j]['days'])) {
+                        $listWorkers[$j]['days'][$i] = 0.0;
+                    }
+                }
+            }
+
+            for ($i = 0; $i < count($listWorkers); $i++) {
+                $total = 0;
+                foreach ($listWorkers[$i]['days'] as $day) {
+                    $total += $day;
+                }
+                $listWorkers[$i]['total'] = $total;
+            }
+
+            $profile->cost = $cost;
+            $profile->cost_total = $cost_total;
+            $profile->listWorkers = $listWorkers;
+            $list = array_merge($list, $listWorkers);
+        }
+        return $list;
     }
 
     public function statisticCoordinator()
@@ -467,7 +560,8 @@ class CampaignCycle extends Model
         $item->goal = 0;
     }
 
-    public static function incrementItem($item, $increment) {
+    public static function incrementItem($item, $increment)
+    {
         $item->male_dog_under_4m += $increment->male_dog_under_4m;
         $item->female_dog_under_4m += $increment->female_dog_under_4m;
 
@@ -526,14 +620,12 @@ class CampaignCycle extends Model
             }
 
             foreach ($support->points as $point) {
-
                 CampaignCycle::incrementItem($support, $point);
             }
 
             CampaignCycle::incrementItem($arraySaad[$saad_id], $support);
 
             CampaignCycle::incrementItem($this, $support);
-
         }
         $this->saads = $arraySaad;
     }

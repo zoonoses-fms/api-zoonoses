@@ -22,15 +22,18 @@ Route::get('campaign/cycle/public/map/{id}', [CampaignCycleController::class, 'p
 Route::apiResource('campaign/cycle', CampaignCycleController::class)
     ->middleware('auth:sanctum');
 
-Route::get('campaign/support/frequency/{id}', [CampaignSupportController::class, 'frequency']);
+Route::get('campaign/support/frequency/pdf/{id}', [CampaignSupportController::class, 'frequency']);
+Route::get('campaign/support/frequency/supervisor/pdf/{id}', [CampaignSupportController::class, 'frequencyBySupervisor']);
 Route::apiResource('campaign/support', CampaignSupportController::class)
     ->middleware('auth:sanctum');
+
 Route::get('campaign/point/frequency/{id}', [CampaignPointController::class, 'frequency']);
 Route::apiResource('campaign/point', CampaignPointController::class)
     ->middleware('auth:sanctum');
 
 Route::get('campaign/report/{id}', [CampaignController::class, 'report']);
 Route::get('campaign/report/pdf/{id}', [CampaignController::class, 'reportPdf']);
+Route::get('campaign/payroll/pdf/{id}', [CampaignController::class, 'payroll']);
 
 Route::apiResource('campaign', CampaignController::class);
 

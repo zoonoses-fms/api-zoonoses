@@ -5,10 +5,13 @@ namespace App\Http\Controllers\Api\V1\Ncrlo;
 use App\Http\Controllers\Controller;
 use App\Models\Campaign;
 use App\Models\CampaignProfileWorker;
-use Illuminate\Contracts\Auth\SupportsBasicAuth;
+use App\Models\ProfileWorker;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Psy\Sudo;
 use Barryvdh\DomPDF\Facade\Pdf;
+use DateTime;
+use DateInterval;
 
 class CampaignController extends Controller
 {
@@ -62,29 +65,6 @@ class CampaignController extends Controller
             'start' => $request->start,
             'end' => $request->end,
             'goal' => $request->goal,
-
-            'coordinator_cost' => $request->coordinator_cost,
-            'supervisor_cost' => $request->supervisor_cost,
-            'assistant_cost' => $request->assistant_cost,
-            'vaccinator_cost' => $request->vaccinator_cost,
-            'annotators_cost' => $request->annotators_cost,
-
-            'rural_supervisor_cost' => $request->rural_supervisor_cost,
-            'rural_assistant_cost' => $request->rural_assistant_cost,
-
-            'vaccine_cost' => $request->vaccine_cost,
-            'mileage_cost' => $request->mileage_cost,
-            'driver_cost' => $request->driver_cost,
-            'coordinator_id' => $request->coordinator_id,
-
-            'statistic_coordinator_cost' => $request->statistic_coordinator_cost,
-            'cold_chain_coordinator_cost' => $request->cold_chain_coordinator_cost,
-            'cold_chain_nurse_cost' => $request->cold_chain_nurse_cost,
-            'statistic_cost' => $request->statistic_cost,
-            'cold_chain_cost' => $request->cold_chain_cost,
-            'zoonoses_cost' => $request->zoonoses_cost,
-            'transport_cost' => $request->transport_cost,
-
         ]);
 
         return $campaign;
@@ -159,27 +139,6 @@ class CampaignController extends Controller
         $campaign->end = $request->end;
         $campaign->goal = $request->goal;
 
-        $campaign->coordinator_cost = $request->coordinator_cost;
-        $campaign->supervisor_cost = $request->supervisor_cost;
-        $campaign->assistant_cost = $request->assistant_cost;
-        $campaign->vaccinator_cost = $request->vaccinator_cost;
-        $campaign->annotators_cost = $request->annotators_cost;
-
-        $campaign->rural_supervisor_cost = $request->rural_supervisor_cost;
-        $campaign->rural_assistant_cost = $request->rural_assistant_cost;
-
-        $campaign->vaccine_cost = $request->vaccine_cost;
-        $campaign->mileage_cost = $request->mileage_cost;
-        $campaign->driver_cost = $request->driver_cost;
-        $campaign->coordinator_id = $request->coordinator_id;
-
-        $campaign->statistic_coordinator_cost = $request->statistic_coordinator_cost;
-        $campaign->cold_chain_coordinator_cost = $request->cold_chain_coordinator_cost;
-        $campaign->cold_chain_nurse_cost = $request->cold_chain_nurse_cost;
-        $campaign->statistic_cost = $request->statistic_cost;
-        $campaign->cold_chain_cost = $request->cold_chain_cost;
-        $campaign->zoonoses_cost = $request->zoonoses_cost;
-        $campaign->transport_cost = $request->transport_cost;
 
         $profiles = [];
         foreach ($request->profiles_all as $profile) {
@@ -265,5 +224,68 @@ class CampaignController extends Controller
 
 
         //return view('receipt');
+    }
+
+    public function payroll(Request $request, $id)
+    {
+        $today = date('d-m-Y');
+        $campaign = Campaign::find($id);
+
+        $profiles = ProfileWorker::where('is_pre_load', true)->get();
+        $idsPreload = [];
+
+
+        foreach ($profiles as $profile) {
+            $idsPreload[] = $profile->id;
+        }
+
+        $total = 0;
+
+        $cycles = [];
+
+        foreach ( $campaign->cycles as $cycle) {
+
+            $listProfile = DB::table('campaign_worker')
+            ->join('profile_workers', 'campaign_worker.profile_workers_id', '=', 'profile_workers.id')
+            ->join('campaign_profile_workers', 'campaign_worker.profile_workers_id', '=', 'campaign_profile_workers.profile_workers_id')
+            ->select(
+                DB::raw('count(campaign_worker.profile_workers_id) as count'),
+                'campaign_worker.profile_workers_id as id',
+                'profile_workers.name as profile',
+                'profile_workers.management as management',
+                'campaign_profile_workers.cost as cost',
+            )
+            ->where('campaign_worker.campaign_cycle_id', $cycle->id)
+            ->where('campaign_worker.campaign_id', $campaign->id)
+            ->where('campaign_profile_workers.campaign_id', $campaign->id)
+            ->whereNotIn('campaign_worker.profile_workers_id', $idsPreload)
+            ->groupBy(
+                'campaign_worker.profile_workers_id',
+                'profile_workers.name',
+                'campaign_profile_workers.cost',
+                'profile_workers.management'
+            )
+            ->orderBy('count', 'desc')
+            ->get();
+
+            $cycle->total = 0;
+
+            foreach ($listProfile as $item) {
+                $item->total = $item->count * $item->cost;
+                $cycle->total += $item->total;
+                $total = $total + $item->total;
+            }
+
+        }
+
+
+        setlocale(LC_MONETARY, 'pt_BR');
+
+        return PDF::loadView('ncrlo.campaign_payroll', [
+            'campaign' => $campaign,
+            'today' => $today,
+            'listProfile' => $listProfile,
+            'total' => $total,
+        ])->setPaper('a4', 'landscape')->download("Folha de pagamento {$today}.pdf");
     }
 }

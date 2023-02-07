@@ -21,7 +21,7 @@ return new class extends Migration
             $table->unsignedBigInteger('campaign_point_id')->nullable();
             $table->unsignedBigInteger('profile_workers_id');
             $table->unsignedBigInteger('vaccination_worker_id');
-            $table->boolean('is_pre_campaign')->default(false)->nullable();
+            $table->integer('is_pre_campaign')->default(0)->nullable();
             $table->boolean('is_single_allocation')->default(true)->nullable();
             $table->foreign('campaign_id')->references('id')->on('campaigns');
             $table->foreign('campaign_cycle_id')->references('id')->on('campaign_cycles');

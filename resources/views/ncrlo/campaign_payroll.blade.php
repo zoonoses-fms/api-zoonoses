@@ -127,40 +127,12 @@
                 <strong>Núcleo de Controle da Raiva, Leishmaniose e Outras Zoonoses - NCRLOZ</strong><br />
             </div>
             <div class="center" style="text-align:center">
-                <h3>Folha de pagamento - {{ $cycle->description }} - {{ $cycle->start }}</h3>
+                <h3>Folha de pagamento - {{ $campaign->year }} </h3>
             </div>
         </div>
 
         <div class="content">
 
-            <table class="table-vacination">
-                <thead>
-                    <th class="border">Num.</th>
-                    <th class="border">Mat.</th>
-                    <th class="border name">Nome</th>
-                    <th class="border profile">Funçao</th>
-                    @for ($j = count($dates) - 1; $j >= 0; $j--)
-                        <th class="border value"> {{ $dates[$j] }}</th>
-                    @endfor
-                    <th class="border value">Total</th>
-                </thead>
-                @for ($i = 0; $i < count($listWorkers); $i++)
-                    <tr>
-                        <td class="border">{{ $i + 1 }}</td>
-                        <td class="border">{{ $listWorkers[$i]['registration'] }}</td>
-                        <td class="border name">{{ $listWorkers[$i]['name'] }}</td>
-                        <td class="border profile">{{ $listWorkers[$i]['profile'] }}</td>
-                        @for ($j = count($listWorkers[$i]['days']) - 1; $j >= 0; $j--)
-                            <th class="border value"> R$ {{ number_format($listWorkers[$i]['days'][$j], 2, ",", ".") }}</th>
-                        @endfor
-                        <td class="border value">R$ {{ number_format($listWorkers[$i]['total'], 2, ",", ".") }}</td>
-                    </tr>
-                @endfor
-                <tr>
-                    <td class="border" colspan="{{ 5 + count($dates) }}"></td>
-                </tr>
-            </table>
-            <p></p>
             <table class="table-vacination">
                 <thead>
                     <th class="border">Perfil</th>
@@ -175,17 +147,32 @@
                             </td>
                             <td class="border">{{ $listProfile[$i]->count }} </td>
                             <td class="border">R$ {{ $listProfile[$i]->cost }} </td>
-                            <td class="border">R$ {{ number_format($listProfile[$i]->total, 2, ",", ".") }}</td>
+                            <td class="border">R$ {{ number_format($listProfile[$i]->total, 2, ',', '.') }}</td>
                         </tr>
                     @endfor
                 </tbody>
             </table>
             <p></p>
             <table class="table-vacination">
+                <thead>
+                    <th class="border">Etapa</th>
+                    <th class="border">Valor</th>
+                </thead>
+                <tbody>
+                    @foreach ($campaign->cycles as $cycle)
+                        <tr>
+                            <td class="border">{{ $cycle->description }} </td>
+                            <td class="border">R$ {{ number_format($cycle->total, 2, ',', '.') }}</td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+            <p></p>
+            <table class="table-vacination">
                 <tbody>
                     <tr>
-                        <td class="border">Total {{ $cycle->description }} - {{ $cycle->start }}</td>
-                        <td class="border">R$ {{ number_format($total, 2, ",", ".") }}</td>
+                        <td class="border">Total {{ $campaign->year }} </td>
+                        <td class="border">R$ {{ number_format($total, 2, ',', '.') }}</td>
                     </tr>
                 </tbody>
             </table>
@@ -202,7 +189,6 @@
         </div>
 
     </div>
-    <div style="page-break-after: always"></div>
 </body>
 
 </html>

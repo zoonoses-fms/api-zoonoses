@@ -5,9 +5,11 @@ namespace App\Exports;
 use App\Models\CampaignCycle;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Excel;
+use App\Models\ProfileWorker;
 use Illuminate\Contracts\Support\Responsable;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\Exportable;
+use Illuminate\Support\Facades\DB;
 use DateTime;
 use DateInterval;
 use stdClass;
@@ -29,369 +31,67 @@ class CampaignCyclePayrollExport implements FromCollection, Responsable
     public function collection()
     {
         $today = new DateTime();
-        $cycle = CampaignCycle::with([
-            'campaign',
-            'coldChainCoordinator',
-            'coldChainNurse',
-            'beforeColdChains',
-            'startColdChains',
-            'beforeDriverColdChains',
-            'startDriverColdChains',
-            'statisticCoordinator',
-            'statistics',
-            'beforeTransports',
-            'startTransports',
-            'beforeZoonoses',
-            'startZoonoses',
-            'supports.coordinator',
-            'supports.supervisors',
-            'supports.assistants',
-            'supports.drivers',
-            'supports.vaccinators',
-            'supports.ruralSupervisors',
-            'supports.ruralAssistants',
-            'supports.points.vaccinators',
-            'supports.points.annotators',
+        $cycle = CampaignCycle::select(
+            'id',
+            'number',
+            'description',
+            'start',
+            'campaign_id'
+        )->with([
+                'supports' => function ($query) {
+                    $query->select('id', 'campaign_cycle_id', 'is_rural');
+                },
+                'supports.points' => function ($query) {
+                    $query->select('id', 'campaign_support_id');
+                }
+            ])->findOrFail($this->id);
 
-        ])->findOrFail($this->id);
+        $profiles = ProfileWorker::where('is_pre_load', true)->get();
+        $idsPreload = [];
 
-        // return $cycle;
 
-        $start = new DateTime($cycle->start);
-        $before = new DateTime($cycle->start);
-        //Subtract a day using DateInterval
-        $before->sub(new DateInterval('P1D'));
+        foreach ($profiles as $profile) {
+            $idsPreload[] = $profile->id;
+        }
 
-        //Get the date in a YYYY-MM-DD format.
-        // $before = $before->format('d/m/Y');
-        // $start = $start->format('d/m/Y');
-        // $currentDate = $today->format('d/m/Y');
-        // $today = $today->format('Y-m-d');
+        $profile = $cycle->profiles()->orderBy('is_pre_campaign', 'desc')->first();
+        $lastDate = new DateTime($cycle->start);
+        $dates[] = $lastDate->format('d/m/Y');
+
+        for ($i=1; $i <= $profile->is_pre_campaign; $i++) {
+            $lastDate->sub(new DateInterval('P1D'));
+            $dates[$i] = $lastDate->format('d/m/Y');
+        }
 
         $listPayroll = [];
 
-        if ($cycle->coldChainCoordinator) {
-            if ($cycle->partial_value && $cycle->campaign->cold_chain_coordinator_cost > 0) {
-                $partial_cold_chain_coordinator_cost =
-                    ($cycle->campaign->cold_chain_coordinator_cost / 100) * $cycle->percentage_value;
+        for ($i=count($dates); $i >= 0; $i--) {
+            $list = DB::table('campaign_worker')
+            ->join('vaccination_workers', 'campaign_worker.vaccination_worker_id', '=', 'vaccination_workers.id')
+            ->join('profile_workers', 'campaign_worker.profile_workers_id', '=', 'profile_workers.id')
+            ->join('campaign_profile_workers', 'campaign_worker.profile_workers_id', '=', 'campaign_profile_workers.profile_workers_id')
+            ->select(
+                'vaccination_workers.registration as registration',
+                'vaccination_workers.name as name',
+                'profile_workers.name as profile',
+                'profile_workers.id as profile_id',
+                'campaign_profile_workers.cost as cost',
+                'campaign_worker.is_pre_campaign'
+            )->where('campaign_worker.campaign_cycle_id', $cycle->id)
+            ->where('campaign_profile_workers.campaign_id', $cycle->campaign->id)
+            ->where('campaign_worker.is_pre_campaign', $i)
+            ->whereNotIn('campaign_worker.profile_workers_id', $idsPreload)
+            ->orderBy('vaccination_workers.name', 'asc')
+            ->get();
 
+            foreach ($list as $item) {
                 $listPayroll[] = [
-                    $before,
-                    $cycle->coldChainCoordinator->registration,
-                    $cycle->coldChainCoordinator->name,
-                    'Coordenador da Rede de Frio',
-                    $partial_cold_chain_coordinator_cost
+                    $dates[$i],
+                    $item->registration,
+                    $item->name,
+                    $item->profile,
+                    $item->cost
                 ];
-            } else {
-                $listPayroll[] = [
-                    $before,
-                    $cycle->coldChainCoordinator->registration,
-                    $cycle->coldChainCoordinator->name,
-                    'Coordenador da Rede de Frio',
-                    $cycle->campaign->cold_chain_coordinator_cost
-                ];
-            }
-        }
-
-        if ($cycle->coldChainNurse) {
-            if ($cycle->partial_value && $cycle->campaign->cold_chain_nurse_cost > 0) {
-                $partial_cold_chain_nurse_cost =
-                    ($cycle->campaign->cold_chain_nurse_cost / 100) * $cycle->percentage_value;
-
-                $listPayroll[] = [
-                    $before,
-                    $cycle->coldChainNurse->registration,
-                    $cycle->coldChainNurse->name,
-                    'Enfermeira da Rede de Frio',
-                    $partial_cold_chain_nurse_cost
-                ];
-            } else {
-                $listPayroll[] = [
-                    $before,
-                    $cycle->coldChainNurse->registration,
-                    $cycle->coldChainNurse->name,
-                    'Enfermeira da Rede de Frio',
-                    $cycle->campaign->cold_chain_nurse_cost
-                ];
-            }
-        }
-
-        if ($cycle->partial_value && $cycle->campaign->cold_chain_cost > 0) {
-            $partial_cold_chain_cost =
-                ($cycle->campaign->cold_chain_cost / 100) * $cycle->percentage_value;
-
-            foreach ($cycle->beforeColdChains as $beforeColdChain) {
-                $listPayroll[] = [
-                    $before,
-                    $beforeColdChain->registration,
-                    $beforeColdChain->name,
-                    'Equipe da Rede de Frio',
-                    $partial_cold_chain_cost
-                ];
-            }
-        } else {
-            foreach ($cycle->beforeColdChains as $beforeColdChain) {
-                $listPayroll[] = [
-                    $before,
-                    $beforeColdChain->registration,
-                    $beforeColdChain->name,
-                    'Equipe da Rede de Frio',
-                    $cycle->campaign->cold_chain_cost
-                ];
-            }
-        }
-
-        if ($cycle->partial_value && $cycle->campaign->driver_cost > 0) {
-            $partial_driver_cost =
-                ($cycle->campaign->driver_cost / 100) * $cycle->percentage_value;
-
-            foreach ($cycle->beforeDriverColdChains as $beforeDriverColdChain) {
-                $listPayroll[] = [
-                    $before,
-                    $beforeDriverColdChain->registration,
-                    $beforeDriverColdChain->name,
-                    'Motorista',
-                    $partial_driver_cost
-                ];
-            }
-        } else {
-            foreach ($cycle->beforeDriverColdChains as $beforeDriverColdChain) {
-                $listPayroll[] = [
-                    $before,
-                    $beforeDriverColdChain->registration,
-                    $beforeDriverColdChain->name,
-                    'Motorista',
-                    $cycle->campaign->driver_cost
-                ];
-            }
-        }
-
-        if ($cycle->partial_value && $cycle->campaign->transport_cost > 0) {
-            $partial_transport_cost =
-                ($cycle->campaign->transport_cost / 100) * $cycle->percentage_value;
-
-            foreach ($cycle->beforeTransports as $beforeTransport) {
-                $listPayroll[] = [
-                    $before,
-                    $beforeTransport->registration,
-                    $beforeTransport->name,
-                    'Apoio da GETRANS',
-                    $partial_transport_cost
-                ];
-            }
-        } else {
-            foreach ($cycle->beforeTransports as $beforeTransport) {
-                $listPayroll[] = [
-                    $before,
-                    $beforeTransport->registration,
-                    $beforeTransport->name,
-                    'Apoio da GETRANS',
-                    $cycle->campaign->transport_cost
-                ];
-            }
-        }
-
-        if ($cycle->partial_value && $cycle->campaign->zoonoses_cost > 0) {
-            $partial_zoonoses_cost =
-                ($cycle->campaign->zoonoses_cost / 100) * $cycle->percentage_value;
-
-            foreach ($cycle->beforeZoonoses as $beforeZoonose) {
-                $listPayroll[] = [
-                    $before,
-                    $beforeZoonose->registration,
-                    $beforeZoonose->name,
-                    'Apoio da GEZOON',
-                    $partial_zoonoses_cost
-                ];
-            }
-        } else {
-            foreach ($cycle->beforeZoonoses as $beforeZoonose) {
-                $listPayroll[] = [
-                    $before,
-                    $beforeZoonose->registration,
-                    $beforeZoonose->name,
-                    'Apoio da GEZOON',
-                    $cycle->campaign->zoonoses_cost
-                ];
-            }
-        }
-
-
-        // start day
-
-        if ($cycle->coldChainCoordinator) {
-            $listPayroll[] = [
-                $start,
-                $cycle->coldChainCoordinator->registration,
-                $cycle->coldChainCoordinator->name,
-                'Coordenador da Rede de Frio',
-                $cycle->campaign->cold_chain_coordinator_cost
-            ];
-        }
-
-        if ($cycle->coldChainNurse) {
-            $listPayroll[] = [
-                $start,
-                $cycle->coldChainNurse->registration,
-                $cycle->coldChainNurse->name,
-                'Enfermeira da Rede de Frio',
-                $cycle->campaign->cold_chain_nurse_cost
-            ];
-        }
-
-
-        foreach ($cycle->startColdChains as $startColdChain) {
-            $listPayroll[] = [
-                $start,
-                $startColdChain->registration,
-                $startColdChain->name,
-                'Equipe da Rede de Frio',
-                $cycle->campaign->cold_chain_cost
-            ];
-        }
-
-        foreach ($cycle->startDriverColdChains as $startDriverColdChain) {
-            $listPayroll[] = [
-                $start,
-                $startDriverColdChain->registration,
-                $startDriverColdChain->name,
-                'Motorista da Rede de Frio',
-                $cycle->campaign->driver_cost
-            ];
-        }
-
-        foreach ($cycle->startTransports as $startTransport) {
-            $listPayroll[] = [
-                $start,
-                $startTransport->registration,
-                $startTransport->name,
-                'Apoio da GETRANS',
-                $cycle->campaign->transport_cost
-            ];
-        }
-
-        foreach ($cycle->startZoonoses as $startZoonose) {
-            $listPayroll[] = [
-                $start,
-                $startZoonose->registration,
-                $startZoonose->name,
-                'Apoio da GEZOON',
-                $cycle->campaign->zoonoses_cost
-            ];
-        }
-
-        if (!$cycle->supports[0]->is_rural) {
-            foreach ($cycle->supports as $support) {
-                if ($support->coordinator) {
-                    $listPayroll[] = [
-                        $start,
-                        $support->coordinator->registration,
-                        $support->coordinator->name,
-                        'Coordenador',
-                        $cycle->campaign->coordinator_cost
-                    ];
-                }
-            }
-        }
-
-        foreach ($cycle->supports as $support) {
-            if ($support->is_rural) {
-                foreach ($support->ruralSupervisors as $ruralSupervisor) {
-                    $listPayroll[] = [
-                        $start,
-                        $ruralSupervisor->registration,
-                        $ruralSupervisor->name,
-                        'Supervisor Rural',
-                        $cycle->campaign->rural_supervisor_cost
-                    ];
-                }
-            } else {
-                foreach ($support->supervisors as $supervisor) {
-                    $listPayroll[] = [
-                        $start,
-                        $supervisor->registration,
-                        $supervisor->name,
-                        'Supervisor',
-                        $cycle->campaign->supervisor_cost
-                    ];
-                }
-            }
-        }
-
-        foreach ($cycle->supports as $support) {
-            if ($support->is_rural) {
-                foreach ($support->ruralAssistants as $ruralAssistant) {
-                    $listPayroll[] = [
-                        $start,
-                        $ruralAssistant->registration,
-                        $ruralAssistant->name,
-                        'Auxiliar Rural',
-                        $cycle->campaign->rural_assistant_cost
-                    ];
-                }
-            } else {
-                foreach ($support->assistants as $assistant) {
-                    $listPayroll[] = [
-                        $start,
-                        $assistant->registration,
-                        $assistant->name,
-                        'Auxiliar',
-                        $cycle->campaign->assistant_cost
-                    ];
-                }
-            }
-        }
-
-        foreach ($cycle->supports as $support) {
-            foreach ($support->drivers as $driver) {
-                $listPayroll[] = [
-                    $start,
-                    $driver->registration,
-                    $driver->name,
-                    'Motorista do Ponto de Apoio',
-                    $cycle->campaign->driver_cost
-                ];
-            }
-        }
-
-
-        foreach ($cycle->supports as $support) {
-            foreach ($support->vaccinators as $vaccinator) {
-                $listPayroll[] = [
-                    $start,
-                    $vaccinator->registration,
-                    $vaccinator->name,
-                    'Vacinador',
-                    $cycle->campaign->vaccinator_cost
-                ];
-            }
-
-            foreach ($support->points as $point) {
-                foreach ($point->vaccinators as $vaccinator) {
-                    $listPayroll[] = [
-                        $start,
-                        $vaccinator->registration,
-                        $vaccinator->name,
-                        'Vacinador',
-                        $cycle->campaign->vaccinator_cost
-                    ];
-                }
-            }
-        }
-
-        if (!$cycle->supports[0]->is_rural) {
-            foreach ($cycle->supports as $support) {
-                foreach ($support->points as $point) {
-                    foreach ($point->annotators as $annotator) {
-                        $listPayroll[] = [
-                            $start,
-                            $annotator->registration,
-                            $annotator->name,
-                            'Anotador',
-                            $cycle->campaign->annotators_cost
-                        ];
-                    }
-                }
             }
         }
 
