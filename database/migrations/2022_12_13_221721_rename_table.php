@@ -12,7 +12,7 @@ return new class extends Migration {
      */
     public function up()
     {
-/*
+
         Schema::rename('campaing_supports', 'campaign_supports');
         Schema::rename('campaing_points', 'campaign_points');
 
@@ -59,7 +59,7 @@ return new class extends Migration {
         Schema::table('rural_assistant_support', function (Blueprint $table) {
             $table->renameColumn('campaing_support_id', 'campaign_support_id');
         });
-         */
+
     }
 
     /**
