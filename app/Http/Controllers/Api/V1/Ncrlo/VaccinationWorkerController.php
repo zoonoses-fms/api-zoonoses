@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\VaccinationWorker;
 use App\Models\CampaignCycle;
 use App\Models\Plataform;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 use stdClass;
 
@@ -19,40 +20,11 @@ class VaccinationWorkerController extends Controller
      */
     public function index(Request $request)
     {
-        $listType = array(
-            'supervisors',
-            'drivers',
-            'vaccinators',
-            'assistants',
-            'annotators',
-            'statistics'
-        );
-
-        $listTypeCoordinator = array(
-            'coordinator',
-            'statistic_coordinator',
-            'cold_chain_coordinator',
-            'cold_chain_nurse'
-        );
-
-        $listTypeFree = array('free');
-
         $listTypeAll = array(
-            'all',
-            'rural_supervisors',
-            'rural_assistants',
-            'before_transports',
-            'start_transports',
-            'before_cold_chains',
-            'start_cold_chains',
-            'before_driver_cold_chains',
-            'start_driver_cold_chains',
-            'before_zoonoses',
-            'start_zoonoses'
+            'all'
         );
 
         if ($request->has('list_type')) {
-            $campaign_cycle_id = $request->campaign_cycle_id;
             if (in_array($request->list_type, $listTypeAll)) {
                 return VaccinationWorker::when(
                     $request->has('keyword'),
@@ -67,28 +39,10 @@ class VaccinationWorkerController extends Controller
                 )
                 ->orderBy('name', 'asc')
                 ->get();
-            } elseif (in_array($request->list_type, $listTypeFree)) {
-                $listNotFreeWorkers = VaccinationWorker::listNotFreeWorkers($campaign_cycle_id);
-                return VaccinationWorker::listFreeWorkers($request, $listNotFreeWorkers);
-            } elseif (in_array($request->list_type, $listTypeCoordinator)) {
-                $coordinator_id = $request->coordinator_id;
-                $listNotFreeWorkers = VaccinationWorker::listNotFreeWorkers($campaign_cycle_id);
-                $index = array_search($coordinator_id, $listNotFreeWorkers);
-                unset($listNotFreeWorkers[$index]);
-                return VaccinationWorker::listFreeWorkers($request, $listNotFreeWorkers);
-            } elseif (in_array($request->list_type, $listType)) {
-                $listNotFreeWorkers = VaccinationWorker::listNotFreeWorkers($campaign_cycle_id);
-                if ($request->has('ids')) {
-                    $ids = $request->ids;
-                    foreach ($ids as $id) {
-                        $index = array_search($id, $listNotFreeWorkers);
-                        unset($listNotFreeWorkers[$index]);
-                    }
-                }
-
-                return VaccinationWorker::listFreeWorkers($request, $listNotFreeWorkers);
             }
         }
+
+
         if ($request->has('per_page')) {
             $perPage = $request->per_page;
         } else {
@@ -201,93 +155,24 @@ class VaccinationWorkerController extends Controller
 
         $allocations = [];
 
+        /*
+        $supervisorWorker = new stdClass();
+        $supervisorWorker->name = $worker->name;
+        $supervisorWorker->occupation = 'Supervisor - PA';
+        $supervisorWorker->location = $support->support->name;
+        $allocations[] = $supervisorWorker;
+         */
         foreach ($workers as $worker) {
-            $coordinatorSupports = $cycle->supports->where('coordinator_id', $worker->id);
-            if (count($coordinatorSupports) > 0) {
-                foreach ($coordinatorSupports as $support) {
-                    $support->load('support');
-                }
-                $worker->coordinations = $coordinatorSupports;
-                $coordinatorWorker = new stdClass();
-                $coordinatorWorker->name = $worker->name;
-                $coordinatorWorker->occupation = 'Coordenador - PA';
-                $coordinatorWorker->location = $support->support->name;
-                $allocations[] = $coordinatorWorker;
-            }
-            $supports = $cycle->supports;
-
-            foreach ($supports as $support) {
-                $supervisorsSupports = $support->supervisors()->wherePivot('supervisor_id', $worker->id)->get();
-                $driversSupports = $support->drivers()->wherePivot('driver_id', $worker->id)->get();
-                $assistantsSupports = $support->assistants()->wherePivot('assistant_id', $worker->id)->get();
-                $vaccinatorsSupports = $support->vaccinators()->wherePivot('vaccinator_id', $worker->id)->get();
-
-
-                if ($supervisorsSupports->count() > 0) {
-                    $support->load('support');
-                    $worker->supervisors = $support;
-                    $supervisorWorker = new stdClass();
-                    $supervisorWorker->name = $worker->name;
-                    $supervisorWorker->occupation = 'Supervisor - PA';
-                    $supervisorWorker->location = $support->support->name;
-                    $allocations[] = $supervisorWorker;
-                }
-
-                if ($driversSupports->count() > 0) {
-                    $support->load('support');
-                    $worker->drivers = $support;
-                    $driverWorker = new stdClass();
-                    $driverWorker->name = $worker->name;
-                    $driverWorker->occupation = 'Motorista - PA';
-                    $driverWorker->location = $support->support->name;
-                    $allocations[] = $driverWorker;
-                }
-
-                if ($assistantsSupports->count() > 0) {
-                    $support->load('support');
-                    $worker->assistants = $support;
-                    $assistantWorker = new stdClass();
-                    $assistantWorker->name = $worker->name;
-                    $assistantWorker->occupation = 'Auxiliares - PA';
-                    $assistantWorker->location = $support->support->name;
-                    $allocations[] = $assistantWorker;
-                }
-
-                if ($vaccinatorsSupports->count() > 0) {
-                    $support->load('support');
-                    $worker->vaccinators = $support;
-                    $vaccinatorWorker = new stdClass();
-                    $vaccinatorWorker->name = $worker->name;
-                    $vaccinatorWorker->occupation = 'Vacinador Reserva - PA';
-                    $vaccinatorWorker->location = $support->support->name;
-                    $allocations[] = $vaccinatorWorker;
-                }
-
-                foreach ($support->points as $point) {
-                    $vaccinatorsPoints = $point->vaccinators()->wherePivot('vaccinator_id', $worker->id)->get();
-                    $annotatorsPoints = $point->annotators()->wherePivot('annotator_id', $worker->id)->get();
-
-                    if ($vaccinatorsPoints->count() > 0) {
-                        $point->load('point');
-                        $worker->vaccinators = $point;
-                        $vaccinatorWorker = new stdClass();
-                        $vaccinatorWorker->name = $worker->name;
-                        $vaccinatorWorker->occupation = 'Vacinador';
-                        $vaccinatorWorker->location = $point->point->name;
-                        $allocations[] = $vaccinatorWorker;
-                    }
-
-                    if ($annotatorsPoints->count() > 0) {
-                        $point->load('point');
-                        $worker->annotators = $point;
-                        $annotatorWorker = new stdClass();
-                        $annotatorWorker->name = $worker->name;
-                        $annotatorWorker->occupation = 'Anotador';
-                        $annotatorWorker->location = $point->point->name;
-                        $allocations[] = $annotatorWorker;
-                    }
-                }
-            }
+            $allocations = DB::table('campaign_worker')
+                ->select(
+                    'vaccination_workers.id as id',
+                    'vaccination_workers.name as name',
+                    'profile_workers.name as occupation'
+                )
+                ->join('vaccination_workers', 'campaign_worker.vaccination_worker_id', '=', 'vaccination_workers.id')
+                ->join('profile_workers', 'campaign_worker.profile_workers_id', '=', 'profile_workers.id')
+                ->where('vaccination_worker_id', $worker->id)
+                ->get();
         }
 
         return $allocations;

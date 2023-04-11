@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\Datasus\Dengueon;
+namespace App\Models\Datasus\Chikon;
 
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use App\Models\Dataset;
 
-class DengueonDatasus extends Dataset
+class ChikonDatasus extends Dataset
 {
     use HasFactory;
 
@@ -24,7 +24,7 @@ class DengueonDatasus extends Dataset
     public $col_date_dataset_format = 'Ymd';
     public $format_date = 'Ymd';
     public $prefix = 'dengon';
-    public $alias = 'Notificação de Dengue';
+    public $alias = 'Notificação de Chikungunya';
 
     protected $table = 'datasets';
 

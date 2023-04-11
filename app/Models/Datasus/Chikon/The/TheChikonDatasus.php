@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\Datasus\Dengueon\The;
+namespace App\Models\Datasus\Chikon\The;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -8,11 +8,11 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Models\Location\The\TheNeighborhood;
 use App\Models\Location\The\TheNeighborhoodAlias;
-use App\Models\Datasus\Dengueon\DengueonDatasus;
+use App\Models\Datasus\Chikon\ChikonDatasus;
 use App\Models\Dataset;
 use App\Models\Geocoder;
 
-class TheDengueonDatasus extends DengueonDatasus
+class TheChikonDatasus extends ChikonDatasus
 {
     use HasFactory;
 
@@ -23,6 +23,7 @@ class TheDengueonDatasus extends DengueonDatasus
     public $colIbgeCode = 'id_mn_resi';
     public $colNeighborhoodName = 'nm_bairro';
     public $colNeighborhoodId = 'id_bairro';
+
 
     public $address_fields = ['nm_logrado', 'nu_numero', 'nm_bairro'];
 

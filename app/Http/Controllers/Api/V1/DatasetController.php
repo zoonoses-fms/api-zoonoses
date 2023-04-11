@@ -10,7 +10,10 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use PhpParser\Node\Stmt\TryCatch;
+use App\Jobs\ProcessGeocoder;
 use Exception;
+
+use function Clue\StreamFilter\register;
 
 class DatasetController extends Controller
 {
@@ -197,12 +200,13 @@ class DatasetController extends Controller
     public function update(Request $request, $source, $system, $initial, $id)
     {
         $dataset = Dataset::findOrFail($id);
-
+/*
         $user = $request->user();
 
         if (!Gate::authorize('is-admin', $user)) {
             return response()->json(['error' => 'Not authorized.'], 403);
         }
+ */
 
         if ($request->has('color')) {
             $dataset->color = $request->get('color');
@@ -222,9 +226,9 @@ class DatasetController extends Controller
     {
         $user = $request->user();
 
-        if (!Gate::authorize('is-admin', $user)) {
-            return response()->json(['error' => 'Not authorized.'], 403);
-        }
+        /*         if (!Gate::authorize('is-admin', $user)) {
+                    return response()->json(['error' => 'Not authorized.'], 403);
+                } */
 
         try {
             $dataset = Dataset::find($id);
@@ -279,5 +283,113 @@ class DatasetController extends Controller
         $object = new $class();
 
         return $object->getRange($request, $id);
+    }
+
+    /**
+     * Display a listing of the register.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function list_register(Request $request, $id)
+    {
+        $dataset = Dataset::find($id);
+        $year = $dataset->year;
+        $initial = $dataset->initial;
+        $system = $dataset->system;
+        $source = $dataset->source;
+
+        $tableName = "{$year}_{$initial}_{$system}_{$source}";
+
+        if ($request->has('per_page')) {
+            $perPage = $request->input('per_page');
+        } else {
+            $perPage = 10;
+        }
+
+        $registers = DB::table($tableName)
+        ->select(
+            'id',
+            'nm_logrado',
+            'nu_numero',
+            'nm_bairro',
+            'updated_at'
+        )->selectRaw(
+            'ST_AsGeoJSON(geometry) AS geometry'
+        )->paginate($perPage);
+
+        return $registers;
+    }
+
+    /**
+     * Display a listing of the register.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function geocodes(Request $request, $id)
+    {
+        $dataset = Dataset::find($id);
+        $year = $dataset->year;
+        $initial = $dataset->initial;
+        $system = $dataset->system;
+        $source = $dataset->source;
+
+        $tableName = "{$year}_{$initial}_{$system}_{$source}";
+
+        $registers = DB::table($tableName)
+        ->selectRaw(
+            'count(geometry) as count, '.
+            'ST_AsGeoJSON(geometry) AS geometry'
+        )
+        ->whereNotNull('geometry')
+        ->groupBy('geometry')
+        ->orderBy('count', 'desc')
+        ->get();
+
+
+
+        return $registers;
+    }
+
+    /**
+     * Update geocode register.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function geocoder_register(Request $request, $id)
+    {
+        $dataset = Dataset::find($id);
+        $year = $dataset->year;
+        $initial = $dataset->initial;
+        $system = $dataset->system;
+        $source = $dataset->source;
+
+        $class = DataSet::getClass($source, $system, $initial);
+
+        $object = new $class();
+
+        if (isset($request->register_ids)) {
+            echo("Executing job register_ids");
+            try {
+                $object->geocoder($id, $request->register_ids);
+                //ProcessGeocoder::dispatch($id, $request->register_ids);
+                return true;
+            } catch (\Throwable $th) {
+                return $th;
+            }
+        } else {
+            echo("Executing job");
+            try {
+                return $object->geocoder($id);
+                //ProcessGeocoder::dispatch($id);
+                return true;
+            } catch (\Throwable $th) {
+                //throw $th;
+                return $th;
+            }
+        }
+
+
+
+        //return 'Job in process';
     }
 }

@@ -21,11 +21,11 @@ class Geocoder
     public static function searchGoogleByName($StringQuery)
     {
         $httpClient = new Client();
-        $provider = new GoogleMaps($httpClient, null, env('GOOGLE_MAPS_API_KEY'));
+        $provider = new GoogleMaps($httpClient, env('GOOGLE_MAPS_REGION', 'br'), env('GOOGLE_MAPS_API_KEY'));
         $geocoder = new StatefulGeocoder($provider, env('GOOGLE_MAPS_LOCALE', 'us'));
         return self::toArrayGeoJson(
             $geocoder->geocodeQuery(
-                GeocodeQuery::create($StringQuery)
+                GeocodeQuery::create($StringQuery)->withData('components', 'administrative_area:PI|country:BR')
             )->all()
         );
     }

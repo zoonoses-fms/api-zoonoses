@@ -28,24 +28,38 @@ Route::get(
     [DatasetController::class, 'getRange']
 )->name('dataset.serie-range');
 
-
+Route::get(
+    'dataset/geocodes/{id}',
+    [DatasetController::class, 'geocodes']
+)->name('dataset.geocodes');
 
 Route::middleware('auth:sanctum')->group(
     function () {
-        Route::post(
-            'dataset/{source}/{system}/{initial}',
-            [DatasetController::class, 'store']
-        )->name('dataset.store');
 
+        Route::get(
+            'dataset/register/{id}',
+            [DatasetController::class, 'list_register']
+        )->name('dataset.register_update');
+
+        Route::put(
+            'dataset/register/{id}',
+            [DatasetController::class, 'geocoder_register']
+        )->name('dataset.register_update');
+/*
         Route::patch(
             'dataset/{source}/{system}/{initial}/{id}',
             [DatasetController::class, 'update']
         )->name('dataset.partial_update');
-
+ */
         Route::put(
             'dataset/{source}/{system}/{initial}/{id}',
             [DatasetController::class, 'update']
         )->name('dataset.update');
+
+        Route::post(
+            'dataset/{source}/{system}/{initial}',
+            [DatasetController::class, 'store']
+        )->name('dataset.store');
 
         Route::delete(
             'dataset/{source}/{system}/{initial}/{id}',

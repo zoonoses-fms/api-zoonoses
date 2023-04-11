@@ -25,6 +25,7 @@ class Dataset extends Model
     public $format_date = '';
     public $prefix = '';
     public $alias = '';
+    public $address_fields = [];
 
     protected $fillable = [
         'year',
@@ -1016,8 +1017,7 @@ class Dataset extends Model
                         }
                     }
 
-                    $table->double('lat')->nullable();
-                    $table->double('lng')->nullable();
+                    $table->geometry('geometry', 'GEOMETRY', '3857')->nullable();
 
                     $table->timestamps();
                     if (count($keyColumns) > 0) {
@@ -1357,7 +1357,7 @@ class Dataset extends Model
         if (strcmp($extension, 'dbf') == 0) {
             return $this->loadFileDbf($path, $source, $system, $initial, $user);
         } else {
-            throw new Exception("Unsupported file ${$extension}");
+            throw new Exception("Unsupported file $extension");
             return false;
         }
     }
@@ -1823,5 +1823,53 @@ class Dataset extends Model
 
 
         return $serie;
+    }
+
+    public function geocoder($id, $register_ids = null)
+    {
+        $dataset = Dataset::find($id);
+        $year = $dataset->year;
+        $initial = $dataset->initial;
+        $system = $dataset->system;
+        $source = $dataset->source;
+
+        $tableName = "{$year}_{$initial}_{$system}_{$source}";
+
+        $registers = DB::table($tableName)
+        ->when(
+            $register_ids !== null,
+            function ($query) use ($register_ids) {
+                return $query->whereIn('id', $register_ids);
+            }
+        )->get();
+
+        foreach ($registers as $register) {
+            if ($register->geometry == null) {
+                $address = '';
+                foreach ($this->address_fields as $field) {
+                    if (!empty($address) && !empty($register->$field)) {
+                    }
+                    $address .= $register->$field;
+                }
+                if (!empty($address)) {
+                    $address .= ', Teresina, PI';
+
+                    $geocoder = Geocoder::searchGoogleByName($address);
+
+                    if (count($geocoder) > 0 && $geocoder[0]->geometry != null) {
+                        $geometry = json_encode($geocoder[0]->geometry);
+
+                        //$register->geometry = DB::raw("ST_Transform(ST_SetSRID(ST_GeomFromGeoJSON('{$geometry}'), 4326), 3857)");
+
+                        DB::table($tableName)
+                        ->where('id', $register->id)
+                        ->update(['geometry' => DB::raw("ST_Transform(ST_SetSRID(ST_GeomFromGeoJSON('{$geometry}'), 4326), 3857)")]);
+                    }
+
+                    #return $geocoder;
+                }
+            }
+        }
+        return $registers;
     }
 }
