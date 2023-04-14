@@ -46,7 +46,9 @@ class DengueonDatasus extends Dataset
                 return $this->getSerieCbo($request, $id);
             } elseif ($request->has('by_location_type')) {
                 return $this->getSerieByLocationType($request, $id);
-            } else {
+            } elseif ($request->has('order_by')) {
+                return $this->getSeriePerOrder($request, $id);
+            }else {
                 return $this->getSeriePer($request, $id);
             }
         }

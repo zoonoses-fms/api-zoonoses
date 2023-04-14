@@ -1825,6 +1825,35 @@ class Dataset extends Model
         return $serie;
     }
 
+    public function getSeriePerOrder(Request $request, $id)
+    {
+        $per_page = 12;
+        if ($request->has('per_page')) {
+            $per_page = $request->get('per_page');
+        }
+
+        $per = $request->get('per');
+        $orderBy = $request->get('order_by');
+        $dataset = DataSet::find($id);
+        $operation = $request->get('operation');
+        $rating = $request->get('rating');
+        $year = $dataset->year;
+        $initial = $dataset->initial;
+        $system = $dataset->system;
+        $source = $dataset->source;
+
+        $serie = DB::table("{$year}_{$initial}_{$system}_{$source}")
+            ->select(DB::raw("{$per}, {$operation}({$rating}) as {$operation}"))
+            ->where(function ($query) use ($request, $per) {
+                return $this->createWhere($query, $request, $per);
+            })
+            ->groupBy("{$per}")
+            ->orderBy("{$operation}", $orderBy)
+            ->paginate($per_page);
+
+        return $serie;
+    }
+
     public function geocoder($id, $register_ids = null)
     {
         $dataset = Dataset::find($id);
