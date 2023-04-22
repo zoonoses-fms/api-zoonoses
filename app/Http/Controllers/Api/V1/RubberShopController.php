@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api\V1;
 
 use App\Models\RubberShop;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 class RubberShopController extends Controller
 {
@@ -14,7 +15,10 @@ class RubberShopController extends Controller
      */
     public function index()
     {
-        //
+        $list = RubberShop::select('*')->selectRaw(
+            'ST_AsGeoJSON(geometry) AS geometry'
+        )->get();
+        return $list;
     }
 
     /**

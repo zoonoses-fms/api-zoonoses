@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\V1\DatasetController;
+use App\Http\Controllers\Api\V1\RubberShopController;
 use Illuminate\Support\Facades\Route;
 
 Route::get(
@@ -45,12 +46,12 @@ Route::middleware('auth:sanctum')->group(
             'dataset/register/{id}',
             [DatasetController::class, 'geocoder_register']
         )->name('dataset.register_update');
-/*
+    /*
         Route::patch(
             'dataset/{source}/{system}/{initial}/{id}',
             [DatasetController::class, 'update']
         )->name('dataset.partial_update');
- */
+    */
         Route::put(
             'dataset/{source}/{system}/{initial}/{id}',
             [DatasetController::class, 'update']
@@ -67,3 +68,8 @@ Route::middleware('auth:sanctum')->group(
         )->name('dataset.destroy');
     }
 );
+
+Route::get(
+    'rubber-shop',
+    [RubberShopController::class, 'index']
+)->name('rubber-shop.index');
