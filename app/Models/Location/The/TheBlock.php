@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Model;
 
-
 class TheBlock extends Model
 {
     use HasFactory;
@@ -21,12 +20,13 @@ class TheBlock extends Model
         return $this->hasOne(TheBlockGeography::class);
     }
 
-    public static function getGeoJSON(Request $request) 
+    public static function getGeoJSON(Request $request)
     {
         return TheBlock::select(
             'the_blocks.id',
             'the_blocks.gid as name',
             'the_blocks.description as description',
+            'the_blocks.properties as properties',
             'the_blocks.gid'
         )
         ->selectRaw(

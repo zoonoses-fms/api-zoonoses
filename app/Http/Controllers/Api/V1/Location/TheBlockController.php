@@ -54,6 +54,7 @@ class TheBlockController extends Controller
             $block = new TheBlock();
             $block->gid = trim($feature['properties']['name']);
             $block->description = trim($feature['properties']['description']);
+            $block->properties = trim($feature['properties']['properties']);
             $block->the_neighborhood_id = $feature['properties']['feature_id'];
             $blockGeography = new TheBlockGeography();
             $geometry = json_encode($feature['geometry']);
@@ -94,6 +95,7 @@ class TheBlockController extends Controller
             $block = TheBlock::find($id);
             $block->gid = trim($feature['properties']['name']);
             $block->description = trim($feature['properties']['description']);
+            $block->properties = trim($feature['properties']['properties']);
             $block->the_neighborhood_id = $feature['properties']['feature_id'];
             $blockGeography = $block->geography;
             $geometry = json_encode($feature['geometry']);
