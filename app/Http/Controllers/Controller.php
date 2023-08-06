@@ -6,10 +6,13 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Http\JsonResponse;
 
 class Controller extends BaseController
 {
-    use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+    use AuthorizesRequests;
+    use DispatchesJobs;
+    use ValidatesRequests;
 
     /**
      * Return a success JSON response.
@@ -19,9 +22,9 @@ class Controller extends BaseController
      * @param  int|null  $code
      * @return \Illuminate\Http\JsonResponse
      */
-    protected function success($data, int $code = 200)
+    protected function success($data, int $code = 200): JsonResponse
     {
-        return response()->json($data, $code);
+        return response()->json($data, $code)->header('Content-Type', 'application/json');
     }
 
     /**
@@ -32,7 +35,7 @@ class Controller extends BaseController
      * @param  array|string|null  $data
      * @return \Illuminate\Http\JsonResponse
      */
-    protected function error(string $message = null, int $code, $data = null)
+    protected function error(string $message = null, int $code, $data = null): JsonResponse
     {
         return response()->json(
             [

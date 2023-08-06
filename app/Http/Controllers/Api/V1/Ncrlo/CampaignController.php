@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api\V1\Ncrlo;
 
 use App\Http\Controllers\Controller;
 use App\Models\Campaign;
-use App\Models\CampaignProfileWorker;
+use App\Models\CampaignWorkers;
 use App\Models\ProfileWorker;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
@@ -177,6 +177,9 @@ class CampaignController extends Controller
     {
         $campaign = Campaign::with('cycles.supports.points')->findOrFail($id);
 
+        $campaign->profilesAll()->detach();
+        $campaign->profiles()->detach();
+        $campaign->workers()->detach();
         foreach ($campaign->cycles as $cycle) {
             foreach ($cycle->supports as $support) {
                 foreach ($support->points as $point) {
@@ -243,30 +246,30 @@ class CampaignController extends Controller
 
         $cycles = [];
 
-        foreach ( $campaign->cycles as $cycle) {
+        foreach ($campaign->cycles as $cycle) {
 
             $listProfile = DB::table('campaign_worker')
-            ->join('profile_workers', 'campaign_worker.profile_workers_id', '=', 'profile_workers.id')
-            ->join('campaign_profile_workers', 'campaign_worker.profile_workers_id', '=', 'campaign_profile_workers.profile_workers_id')
-            ->select(
-                DB::raw('count(campaign_worker.profile_workers_id) as count'),
-                'campaign_worker.profile_workers_id as id',
-                'profile_workers.name as profile',
-                'profile_workers.management as management',
-                'campaign_profile_workers.cost as cost',
-            )
-            ->where('campaign_worker.campaign_cycle_id', $cycle->id)
-            ->where('campaign_worker.campaign_id', $campaign->id)
-            ->where('campaign_profile_workers.campaign_id', $campaign->id)
-            ->whereNotIn('campaign_worker.profile_workers_id', $idsPreload)
-            ->groupBy(
-                'campaign_worker.profile_workers_id',
-                'profile_workers.name',
-                'campaign_profile_workers.cost',
-                'profile_workers.management'
-            )
-            ->orderBy('count', 'desc')
-            ->get();
+                ->join('profile_workers', 'campaign_worker.profile_workers_id', '=', 'profile_workers.id')
+                ->join('campaign_profile_workers', 'campaign_worker.profile_workers_id', '=', 'campaign_profile_workers.profile_workers_id')
+                ->select(
+                    DB::raw('count(campaign_worker.profile_workers_id) as count'),
+                    'campaign_worker.profile_workers_id as id',
+                    'profile_workers.name as profile',
+                    'profile_workers.management as management',
+                    'campaign_profile_workers.cost as cost',
+                )
+                ->where('campaign_worker.campaign_cycle_id', $cycle->id)
+                ->where('campaign_worker.campaign_id', $campaign->id)
+                ->where('campaign_profile_workers.campaign_id', $campaign->id)
+                ->whereNotIn('campaign_worker.profile_workers_id', $idsPreload)
+                ->groupBy(
+                    'campaign_worker.profile_workers_id',
+                    'profile_workers.name',
+                    'campaign_profile_workers.cost',
+                    'profile_workers.management'
+                )
+                ->orderBy('count', 'desc')
+                ->get();
 
             $cycle->total = 0;
 
@@ -287,5 +290,167 @@ class CampaignController extends Controller
             'listProfile' => $listProfile,
             'total' => $total,
         ])->setPaper('a4', 'landscape')->download("Folha de pagamento {$today}.pdf");
+    }
+
+    public function object_to_array($obj)
+    {
+        if (is_object($obj)) {
+            $obj = (array) $obj;
+        }
+        if (is_array($obj)) {
+            $new = array();
+            foreach ($obj as $key => $val) {
+                $new[$key] = $this->object_to_array($val);
+            }
+        } else {
+            $new = $obj;
+        }
+        return $new;
+    }
+    public function cloneCampaign(Request $request, $id)
+    {
+        $campaign = Campaign::with([
+            'profiles' => function ($query) {
+                $query->orderBy('created_at', 'desc');
+            },
+            'profilesAll' => function ($query) {
+                $query->withPivot('id', 'cost')->orderBy('created_at', 'asc');
+            },
+        ])->find($id);
+
+
+
+        $newCampaign = Campaign::create([
+            'year' => $campaign->year + 1,
+            'start' => date('Y-m-d', strtotime($campaign->start . ' + 1 years')),
+            'end' => date('Y-m-d', strtotime($campaign->end . ' + 1 years')),
+            'goal' => $campaign->goal
+        ]);
+        $newCampaign->save();
+
+        foreach ($campaign->profilesAll as $profile) {
+            $profiles[$profile->id] = [
+                'cost' => $profile->pivot->cost,
+                'created_at' => now(),
+                'updated_at' => now()
+            ];
+        }
+
+        $campaignWorkers = CampaignWorkers::where("campaign_id", $campaign->id)
+            ->where("campaign_cycle_id", null)
+            ->where("campaign_support_id", null)
+            ->where("campaign_point_id", null)
+            ->get();
+
+
+        foreach ($campaignWorkers as $campaignWorker) {
+            $newCampaignWorker = $campaignWorker->replicate();
+            $newCampaignWorker->campaign_id = $newCampaign->id;
+            $newCampaignWorker->save();
+        }
+
+        $newCampaign->profilesAll()->sync($profiles);
+
+        /*
+        foreach ($campaign->profiles as $profile) {
+
+            $profile->loadWorkers($campaign->id);
+            $workers = [];
+            foreach ($profile->workers as $worker) {
+                $workers[] = $worker->toArray();
+            }
+            $profile->workers = $workers;
+
+            $profile->updateWorker($profile->toArray(), $newCampaign->id);
+        } */
+
+        foreach ($campaign->cycles as $cycle) {
+
+            $newCycle = $cycle->replicate();
+            $newCycle->campaign_id = $newCampaign->id;
+            $newCycle->start = date('Y-m-d', strtotime($newCycle->start. ' + 1 years'));
+            $newCycle->end = date('Y-m-d', strtotime($newCycle->end . ' + 1 years'));
+            $newCycle->save();
+
+            $campaignWorkers = CampaignWorkers::where("campaign_id", $campaign->id)
+                ->where("campaign_cycle_id", $cycle->id)
+                ->where("campaign_support_id", null)
+                ->where("campaign_point_id", null)
+                ->get();
+
+
+            foreach ($campaignWorkers as $campaignWorker) {
+                $newCampaignWorker = $campaignWorker->replicate();
+                $newCampaignWorker->campaign_id = $newCampaign->id;
+                $newCampaignWorker->campaign_cycle_id = $newCycle->id;
+                $newCampaignWorker->save();
+            }
+
+            foreach ($cycle->supports as $support) {
+                $newSupport = $support->replicate();
+                $newSupport->campaign_cycle_id = $newCycle->id;
+                $newSupport->save();
+
+
+                $campaignWorkers = CampaignWorkers::where("campaign_id", $campaign->id)
+                    ->where("campaign_cycle_id", $cycle->id)
+                    ->where("campaign_support_id", $support->id)
+                    ->where("campaign_point_id", null)
+                    ->get();
+
+
+                foreach ($campaignWorkers as $campaignWorker) {
+                    $newCampaignWorker = $campaignWorker->replicate();
+                    $newCampaignWorker->campaign_id = $newCampaign->id;
+                    $newCampaignWorker->campaign_cycle_id = $newCycle->id;
+                    $newCampaignWorker->campaign_support_id = $newSupport->id;
+                    $newCampaignWorker->save();
+                }
+
+
+                foreach ($support->points as $point) {
+                    $newPoint = $point->replicate();
+                    $newPoint->campaign_support_id = $newSupport->id;
+                    $newPoint->save();
+
+
+                    $campaignWorkers = CampaignWorkers::where("campaign_id", $campaign->id)
+                        ->where("campaign_cycle_id", $cycle->id)
+                        ->where("campaign_support_id", $support->id)
+                        ->where("campaign_point_id", $point->id)
+                        ->get();
+
+
+                    foreach ($campaignWorkers as $campaignWorker) {
+                        $newCampaignWorker = $campaignWorker->replicate();
+                        $newCampaignWorker->campaign_id = $newCampaign->id;
+                        $newCampaignWorker->campaign_cycle_id = $newCycle->id;
+                        $newCampaignWorker->campaign_support_id = $newSupport->id;
+                        $newCampaignWorker->campaign_point_id = $newPoint->id;
+                        $newCampaignWorker->save();
+                    }
+
+                }
+            }
+
+            /*
+                        $cycle->loadProfiles();
+
+                        foreach ($campaign->profiles as $profile) {
+                            $profile->loadWorkers($campaign->id, $cycle->id);
+
+                            $workers = [];
+                            foreach ($profile->workers as $worker) {
+                                $workers[] = $worker->toArray();
+                            }
+                            $profile->workers = $workers;
+
+                            $profile->updateWorker($profile->toArray(), $newCampaign->id, $newCycle->id);
+                        }
+
+             */
+        }
+
+        return $newCycle;
     }
 }

@@ -160,12 +160,15 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function checkEmail($email)
+    public function checkEmail(Request $request)
     {
-        $user = User::where('email', $email)->first();
+        $user = User::where('email', $request->email)->first();
+
         if ($user == null) {
-            return false;
+            return response()->json(false, 200);
         }
-        return true;
+        return response()->json(true, 200);
+
+
     }
 }

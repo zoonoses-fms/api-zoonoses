@@ -53,9 +53,10 @@ class TheBlockController extends Controller
 
             $block = new TheBlock();
             $block->gid = trim($feature['properties']['name']);
-            $block->description = trim($feature['properties']['description']);
-            $block->properties = trim($feature['properties']['properties']);
+            $block->description = isset($feature['properties']['description']) ? trim($feature['properties']['description']) : null;
+            $block->properties = isset($feature['properties']['properties']) ? trim($feature['properties']['properties']) : null;
             $block->the_neighborhood_id = $feature['properties']['feature_id'];
+
             $blockGeography = new TheBlockGeography();
             $geometry = json_encode($feature['geometry']);
             $blockGeography->area = DB::raw("ST_SetSRID(ST_GeomFromGeoJSON('{$geometry}'), 3857)");
@@ -94,8 +95,14 @@ class TheBlockController extends Controller
 
             $block = TheBlock::find($id);
             $block->gid = trim($feature['properties']['name']);
-            $block->description = trim($feature['properties']['description']);
-            $block->properties = trim($feature['properties']['properties']);
+            if(isset($feature['properties']['description'])) {
+                $block->description = trim($feature['properties']['description']);
+            }
+
+            if (isset($feature['properties']['properties'])) {
+                $block->properties = trim($feature['properties']['properties']);
+            }
+
             $block->the_neighborhood_id = $feature['properties']['feature_id'];
             $blockGeography = $block->geography;
             $geometry = json_encode($feature['geometry']);
