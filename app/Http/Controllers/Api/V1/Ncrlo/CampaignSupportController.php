@@ -95,6 +95,8 @@ class CampaignSupportController extends Controller
 
         $support->save();
 
+        $support->saads()->sync($request->saads);
+
         $cycle = $support->cycle;
         $campaign = $cycle->campaign;
         foreach ($request->profiles as $profile) {

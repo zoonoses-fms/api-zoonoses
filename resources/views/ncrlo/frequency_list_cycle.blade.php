@@ -139,6 +139,7 @@
                                     <strong>{{ $profile->name }} - {{ $dates[$i] }}</strong>
                                     <table class="table-vacination">
                                         <thead>
+                                            <th class="border">Conf.</th>
                                             <th class="border">Mat.</th>
                                             <th class="border">Nome</th>
                                             <th class="border">Fone</th>
@@ -149,6 +150,9 @@
                                         </thead>
                                         @foreach ($profile->workers[$i] as $worker)
                                             <tr>
+                                                <td class="border" style="width: 4%">
+                                                    {{ $worker->pivot->is_confirmation ? '( X )' : '' }}
+                                                </td>
                                                 <td class="border line-mat"> {{ $worker->registration }} </td>
                                                 <td class="border line-name"> {{ $worker->name }} </td>
                                                 <td class="border"> {{ $worker->phone }} </td>

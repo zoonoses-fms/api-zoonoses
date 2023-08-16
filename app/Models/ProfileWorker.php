@@ -32,7 +32,7 @@ class ProfileWorker extends Model
     public function campaigns()
     {
         return $this
-        ->belongsToMany(Campaign::class, 'campaign_profile_workers', 'profile_workers_id', 'campaign_id');
+            ->belongsToMany(Campaign::class, 'campaign_profile_workers', 'profile_workers_id', 'campaign_id');
     }
 
     public function workersAll()
@@ -95,14 +95,14 @@ class ProfileWorker extends Model
         $campaign_support_id = null,
         $campaign_point_id = null
     ) {
-        for ($i=0; $i <= $this->is_pre_campaign; $i++) {
+        for ($i = 0; $i <= $this->is_pre_campaign; $i++) {
             $workers[$i] = $this->queryBuilder(
                 $this->workersAll()->wherePivot('is_pre_campaign', $i),
                 $campaign_id,
                 $campaign_cycle_id,
                 $campaign_support_id,
                 $campaign_point_id
-            )->withPivot('is_pre_campaign')->get();
+            )->withPivot('id', 'is_pre_campaign', 'is_confirmation', 'is_presence')->get();
         }
         /*
         if ($this->is_pre_campaign) {
@@ -169,7 +169,7 @@ class ProfileWorker extends Model
                 'updated_at' => now()
             ], $params);
             return $arrayWorkers;
-        } elseif (is_array($workers)){
+        } elseif (is_array($workers)) {
             foreach ($workers as $worker) {
                 $arrayWorkers[$worker['id']] = array_merge([
                     'is_pre_campaign' => $is_pre_campaign,
@@ -291,7 +291,7 @@ class ProfileWorker extends Model
 
         $params['is_single_allocation'] = $profile['is_single_allocation'];
 
-        for ($i=0; $i <= $profile['is_pre_campaign'] ; $i++) {
+        for ($i = 0; $i <= $profile['is_pre_campaign']; $i++) {
             if ($profile['is_multiple']) {
                 $workers = $this->profileMultiple($profile['workers'][$i], $params, $i);
                 $this->selectSync(

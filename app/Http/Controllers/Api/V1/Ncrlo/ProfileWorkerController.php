@@ -77,7 +77,6 @@ class ProfileWorkerController extends Controller
     public function update(Request $request, $id)
     {
         $profile = ProfileWorker::findOrFail($id);
-
         $profile->name = $request->name;
         $profile->scope = $request->scope;
         $profile->management = $request->management;
@@ -87,6 +86,7 @@ class ProfileWorkerController extends Controller
         $profile->is_rural = $request->is_rural;
 
         $profile->save();
+        return $profile;
     }
 
     /**

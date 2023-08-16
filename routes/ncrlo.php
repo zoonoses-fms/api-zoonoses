@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\V1\Ncrlo\CampaignController;
 use App\Http\Controllers\Api\V1\Ncrlo\CampaignCycleController;
 use App\Http\Controllers\Api\V1\Ncrlo\CampaignSupportController;
 use App\Http\Controllers\Api\V1\Ncrlo\CampaignPointController;
+use App\Http\Controllers\Api\V1\Ncrlo\CampaignWorkerController;
 use App\Http\Controllers\Api\V1\Ncrlo\VaccinationSupportController;
 use App\Http\Controllers\Api\V1\Ncrlo\VaccinationPointController;
 use App\Http\Controllers\Api\V1\Ncrlo\VaccinationWorkerController;
@@ -34,6 +35,8 @@ Route::get('campaign/clone/{id}', [CampaignController::class, 'cloneCampaign']);
 Route::get('campaign/report/{id}', [CampaignController::class, 'report']);
 Route::get('campaign/report/pdf/{id}', [CampaignController::class, 'reportPdf']);
 Route::get('campaign/payroll/pdf/{id}', [CampaignController::class, 'payroll']);
+Route::get('campaign/worker/', [CampaignWorkerController::class, 'index']);
+Route::put('campaign/worker/{id}', [CampaignWorkerController::class, 'update']);
 
 Route::apiResource('campaign', CampaignController::class);
 

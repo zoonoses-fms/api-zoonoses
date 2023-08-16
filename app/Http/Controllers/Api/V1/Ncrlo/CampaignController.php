@@ -185,6 +185,7 @@ class CampaignController extends Controller
                 foreach ($support->points as $point) {
                     $point->delete();
                 }
+                $support->saads()->detach();
                 $support->delete();
             }
             $cycle->delete();
@@ -391,6 +392,15 @@ class CampaignController extends Controller
                 $newSupport->campaign_cycle_id = $newCycle->id;
                 $newSupport->save();
 
+                $saads = $support->saads;
+
+                $ids = [];
+
+                foreach ($saads as $saad) {
+                    $ids[] = $saad->id;
+                }
+
+                $newSupport->saads()->sync($ids);
 
                 $campaignWorkers = CampaignWorkers::where("campaign_id", $campaign->id)
                     ->where("campaign_cycle_id", $cycle->id)
