@@ -76,7 +76,8 @@ class VaccinationWorkerController extends Controller
             'name' => $request->name,
             'phone' => $request->phone,
             'cpf' => $request->cpf,
-            'registration' => $request->registration
+            'registration' => $request->registration,
+            'type' => $request->type
         ]);
         return $worker;
     }
@@ -103,10 +104,16 @@ class VaccinationWorkerController extends Controller
     public function update(Request $request, $id)
     {
         $worker = VaccinationWorker::find($id);
+        if($request->has('change_type')) {
+            $worker->type = $request->change_type;
+            $worker->save();
+            return $worker;
+        }
         $worker->name = $request->name;
         $worker->cpf = $request->cpf;
         $worker->phone = $request->phone;
         $worker->registration = $request->registration;
+        $worker->type = $request->type;
 
         $worker->save();
         return $worker;

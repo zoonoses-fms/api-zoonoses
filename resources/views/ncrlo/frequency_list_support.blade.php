@@ -140,9 +140,7 @@
                                     <th class="border">Mat.</th>
                                     <th class="border">Nome</th>
                                     <th class="border">Fone</th>
-                                    <th class="border">FMS</th>
-                                    <th class="border">ACE</th>
-                                    <th class="border">ACS</th>
+                                    <th class="border">Tipo</th>
                                     <th class="border">Assinatura</th>
                                 </thead>
                                 @foreach ($profile->workers[$i] as $worker)
@@ -150,9 +148,7 @@
                                         <td class="border line-mat"> {{ $worker->registration }} </td>
                                         <td class="border line-name"> {{ $worker->name }} </td>
                                         <td class="border"> {{ $worker->phone }} </td>
-                                        <td class="border line-origin"></td>
-                                        <td class="border line-origin"></td>
-                                        <td class="border line-origin"></td>
+                                        <td class="border line-origin"> {{ strtoupper($worker->type) }} </td>
                                         <td class="border line-vaccinator"></td>
                                     </tr>
                                 @endforeach
@@ -170,9 +166,7 @@
                         <th class="border">Mat.</th>
                         <th class="border">Nome</th>
                         <th class="border">Fone</th>
-                        <th class="border">FMS</th>
-                        <th class="border">ACE</th>
-                        <th class="border">ACS</th>
+                        <th class="border">Tipo</th>
                         <th class="border">Assinatura</th>
                     </thead>
                     <tr>
@@ -180,7 +174,12 @@
                         <td class="border line-name"></td>
                         <td class="border"></td>
                         <td class="border line-origin"></td>
-                        <td class="border line-origin"></td>
+                        <td class="border line-vaccinator"></td>
+                    </tr>
+                    <tr>
+                        <td class="border line-mat"></td>
+                        <td class="border line-name"></td>
+                        <td class="border"></td>
                         <td class="border line-origin"></td>
                         <td class="border line-vaccinator"></td>
                     </tr>
@@ -189,8 +188,6 @@
                         <td class="border line-name"></td>
                         <td class="border"></td>
                         <td class="border line-origin"></td>
-                        <td class="border line-origin"></td>
-                        <td class="border line-origin"></td>
                         <td class="border line-vaccinator"></td>
                     </tr>
                     <tr>
@@ -198,25 +195,12 @@
                         <td class="border line-name"></td>
                         <td class="border"></td>
                         <td class="border line-origin"></td>
-                        <td class="border line-origin"></td>
-                        <td class="border line-origin"></td>
                         <td class="border line-vaccinator"></td>
                     </tr>
                     <tr>
                         <td class="border line-mat"></td>
                         <td class="border line-name"></td>
                         <td class="border"></td>
-                        <td class="border line-origin"></td>
-                        <td class="border line-origin"></td>
-                        <td class="border line-origin"></td>
-                        <td class="border line-vaccinator"></td>
-                    </tr>
-                    <tr>
-                        <td class="border line-mat"></td>
-                        <td class="border line-name"></td>
-                        <td class="border"></td>
-                        <td class="border line-origin"></td>
-                        <td class="border line-origin"></td>
                         <td class="border line-origin"></td>
                         <td class="border line-vaccinator"></td>
                     </tr>

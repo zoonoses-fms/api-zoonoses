@@ -129,6 +129,12 @@ class CampaignPointController extends Controller
             ]
         )->findOrFail($id);
 
+        $point->loadProfiles();
+
+        foreach ($point->profiles as $profile) {
+            $profile->syncWorkersPoint([], false, $point->support->cycle->campaign->id, $point->support->cycle->id, $point->support->id, $point->id);
+        }
+
         $point->vaccinators()->sync([]);
 
         $point->delete();
