@@ -26,7 +26,7 @@ class VaccinationWorkerController extends Controller
 
         if ($request->has('list_type')) {
             if (in_array($request->list_type, $listTypeAll)) {
-                return VaccinationWorker::when(
+                $workers = VaccinationWorker::when(
                     $request->has('keyword'),
                     function ($query) use ($request) {
                         $keyword = $request->keyword;
@@ -36,9 +36,14 @@ class VaccinationWorkerController extends Controller
                             "unaccent(registration) ilike unaccent('%{$keyword}%')"
                         );
                     }
-                )
-                ->orderBy('name', 'asc')
+                )->orderBy('name', 'asc')
                 ->get();
+
+                foreach ($workers as $worker) {
+                    $worker->label = "{$worker->id} : {$worker->name}";
+                }
+
+                return $workers;
             }
         }
 
@@ -104,7 +109,7 @@ class VaccinationWorkerController extends Controller
     public function update(Request $request, $id)
     {
         $worker = VaccinationWorker::find($id);
-        if($request->has('change_type')) {
+        if ($request->has('change_type')) {
             $worker->type = $request->change_type;
             $worker->save();
             return $worker;
@@ -138,51 +143,63 @@ class VaccinationWorkerController extends Controller
      */
     public function search(Request $request)
     {
-        if ($request->has('per_page')) {
-            $perPage = $request->per_page;
-        } else {
-            $perPage = 5;
-        }
-
-        $cycle_id = $request->cycle_id;
-
-        $cycle = CampaignCycle::find($cycle_id);
-
-        $workers = VaccinationWorker::when(
-            $request->has('keyword'),
-            function ($query) use ($request) {
-                $keyword = $request->keyword;
-                return $query->whereRaw(
-                    "unaccent(name) ilike unaccent('%{$keyword}%')"
-                )->orWhereRaw(
-                    "unaccent(registration) ilike unaccent('%{$keyword}%')"
-                );
+        try {
+            if ($request->has('per_page')) {
+                $perPage = $request->per_page;
+            } else {
+                $perPage = 5;
             }
-        )->orderBy('updated_at', 'desc')->get();
 
-        $allocations = [];
+            $cycle_id = $request->cycle_id;
 
-        /*
-        $supervisorWorker = new stdClass();
-        $supervisorWorker->name = $worker->name;
-        $supervisorWorker->occupation = 'Supervisor - PA';
-        $supervisorWorker->location = $support->support->name;
-        $allocations[] = $supervisorWorker;
-         */
-        foreach ($workers as $worker) {
-            $allocations = DB::table('campaign_worker')
-                ->select(
-                    'vaccination_workers.id as id',
-                    'vaccination_workers.name as name',
-                    'profile_workers.name as occupation'
-                )
-                ->join('vaccination_workers', 'campaign_worker.vaccination_worker_id', '=', 'vaccination_workers.id')
-                ->join('profile_workers', 'campaign_worker.profile_workers_id', '=', 'profile_workers.id')
-                ->where('vaccination_worker_id', $worker->id)
-                ->get();
+            $cycle = CampaignCycle::find($cycle_id);
+
+            $workers = VaccinationWorker::when(
+                $request->has('keyword'),
+                function ($query) use ($request) {
+                    $keyword = $request->keyword;
+                    return $query->whereRaw(
+                        "unaccent(name) ilike unaccent('%{$keyword}%')"
+                    )->orWhereRaw(
+                        "unaccent(registration) ilike unaccent('%{$keyword}%')"
+                    );
+                }
+            )->orderBy('updated_at', 'desc')->get();
+
+            $allocations = [];
+
+            foreach ($workers as $worker) {
+                $allocation = DB::table('campaign_worker')
+                    ->select(
+                        'vaccination_workers.id as id',
+                        'vaccination_workers.name as name',
+                        'profile_workers.name as occupation',
+                        'campaign_worker.campaign_id as campaign_id',
+                        'campaign_cycles.id as cycle_id',
+                        'campaign_cycles.description as cycle_name',
+                        'campaign_supports.id as support_id',
+                        'vaccination_supports.name as support_name',
+                        'campaign_points.id as point_id',
+                        'vaccination_points.name as point_name',
+                    )
+                    ->join('vaccination_workers', 'campaign_worker.vaccination_worker_id', '=', 'vaccination_workers.id')
+                    ->join('profile_workers', 'campaign_worker.profile_workers_id', '=', 'profile_workers.id')
+                    ->leftJoin('campaign_cycles', 'campaign_worker.campaign_cycle_id', '=', 'campaign_cycles.id')
+                    ->leftJoin('campaign_supports', 'campaign_worker.campaign_support_id', '=', 'campaign_supports.id')
+                    ->leftJoin('vaccination_supports', 'campaign_supports.vaccination_support_id', '=', 'vaccination_supports.id')
+                    ->leftJoin('campaign_points', 'campaign_worker.campaign_point_id', '=', 'campaign_points.id')
+                    ->leftJoin('vaccination_points', 'campaign_points.vaccination_point_id', '=', 'vaccination_points.id')
+                    ->where('campaign_worker.campaign_cycle_id', $cycle->id)
+                    ->where('campaign_worker.vaccination_worker_id', $worker->id)
+                    ->get()->toArray();
+
+                $allocations = array_merge($allocation, $allocations);
+            }
+
+            return $allocations;
+        } catch (\Throwable $th) {
+            return [];
         }
-
-        return $allocations;
     }
 
     /**
@@ -331,9 +348,9 @@ class VaccinationWorkerController extends Controller
 
                     foreach ($support->points as $point) {
                         $pointVaccinators = $point
-                        ->vaccinators()
-                        ->wherePivotIn('vaccinator_id', $workerIds)
-                        ->get();
+                            ->vaccinators()
+                            ->wherePivotIn('vaccinator_id', $workerIds)
+                            ->get();
 
                         if (count($pointVaccinators) > 0) {
                             $point->load('point');
@@ -342,9 +359,9 @@ class VaccinationWorkerController extends Controller
                         }
 
                         $pointAnnotators = $point
-                        ->annotators()
-                        ->wherePivotIn('annotator_id', $workerIds)
-                        ->get();
+                            ->annotators()
+                            ->wherePivotIn('annotator_id', $workerIds)
+                            ->get();
 
                         if (count($pointAnnotators) > 0) {
                             $point->load('point');

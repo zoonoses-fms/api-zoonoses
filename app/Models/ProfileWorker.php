@@ -103,6 +103,10 @@ class ProfileWorker extends Model
                 $campaign_support_id,
                 $campaign_point_id
             )->withPivot('id', 'is_pre_campaign', 'is_confirmation', 'is_presence')->get();
+
+            foreach ($workers[$i] as $worker) {
+                $worker->label = "{$worker->id} : {$worker->name}";
+            }
         }
         /*
         if ($this->is_pre_campaign) {
