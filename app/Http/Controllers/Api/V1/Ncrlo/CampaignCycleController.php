@@ -7,13 +7,12 @@ use App\Models\CampaignCycle;
 use App\Models\ProfileWorker;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Barryvdh\DomPDF\Facade\Pdf;
+use PDF;
 use App\Exports\CampaignCyclePayrollExport;
-use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\CampaignCycleReportExport;
+use Excel;
 use DateTime;
 use DateInterval;
-use stdClass;
 
 class CampaignCycleController extends Controller
 {
@@ -264,6 +263,11 @@ class CampaignCycleController extends Controller
         }
 
         //return view('receipt');
+    }
+
+    public function reportXlsx(Request $request, $id)
+    {
+        return Excel::download(new CampaignCycleReportExport($id), 'report.xlsx');
     }
 
     public function frequency(Request $request, $id)

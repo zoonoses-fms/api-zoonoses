@@ -160,7 +160,7 @@
                         @else
                             <td class="border"> 0% </td>
                         @endif
-                        < </tr>
+                    </tr>
                 </tbody>
             </table>
 

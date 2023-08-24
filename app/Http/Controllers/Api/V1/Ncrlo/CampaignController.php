@@ -2,16 +2,15 @@
 
 namespace App\Http\Controllers\Api\V1\Ncrlo;
 
+use App\Exports\CampaignReportExport;
 use App\Http\Controllers\Controller;
 use App\Models\Campaign;
 use App\Models\CampaignWorkers;
 use App\Models\ProfileWorker;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
-use Psy\Sudo;
-use Barryvdh\DomPDF\Facade\Pdf;
-use DateTime;
-use DateInterval;
+use PDF;
+use Excel;
 
 class CampaignController extends Controller
 {
@@ -229,6 +228,10 @@ class CampaignController extends Controller
 
         //return view('receipt');
     }
+    public function reportXlsx(Request $request, $id)
+    {
+        return Excel::download(new CampaignReportExport($id), 'report.xlsx');
+    }
 
     public function payroll(Request $request, $id)
     {
@@ -420,6 +423,34 @@ class CampaignController extends Controller
 
                 foreach ($support->points as $point) {
                     $newPoint = $point->replicate();
+                    $newPoint->bottle_lost = 0;
+                    $newPoint->bottle_received = 0;
+                    $newPoint->bottle_returned_completely = 0;
+                    $newPoint->bottle_returned_partially = 0;
+                    $newPoint->bottle_used_completely = 0;
+                    $newPoint->bottle_used_partially = 0;
+
+                    $newPoint->female_cat = 0;
+                    $newPoint->male_cat = 0;
+                    $newPoint->total_of_cats = 0;
+
+                    $newPoint->female_dog_under_4m = 0;
+                    $newPoint->female_dog_major_4m_under_1y = 0;
+                    $newPoint->female_dog_major_1y_under_2y = 0;
+                    $newPoint->female_dog_major_2y_under_4y = 0;
+                    $newPoint->female_dog_major_4y = 0;
+                    $newPoint->female_dogs = 0;
+
+                    $newPoint->male_dog_under_4m = 0;
+                    $newPoint->male_dog_major_4m_under_1y = 0;
+                    $newPoint->male_dog_major_1y_under_2y = 0;
+                    $newPoint->male_dog_major_2y_under_4y = 0;
+                    $newPoint->male_dog_major_4y = 0;
+                    $newPoint->male_dogs = 0;
+                    $newPoint->total_of_dogs = 0;
+
+                    $newPoint->total = 0;
+
                     $newPoint->campaign_support_id = $newSupport->id;
                     $newPoint->save();
 

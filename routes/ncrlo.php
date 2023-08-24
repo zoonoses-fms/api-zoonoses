@@ -17,6 +17,7 @@ Route::get('campaign/cycle/report/{id}', [CampaignCycleController::class, 'repor
 Route::get('campaign/cycle/allocation/{id}', [CampaignCycleController::class, 'allocation']);
 Route::get('campaign/cycle/frequency/{id}', [CampaignCycleController::class, 'frequency']);
 Route::get('campaign/cycle/report/pdf/{id}', [CampaignCycleController::class, 'reportPdf']);
+Route::get('campaign/cycle/report/xlsx/{id}', [CampaignCycleController::class, 'reportXlsx']);
 Route::get('campaign/cycle/public/map/{id}', [CampaignCycleController::class, 'publicMap']);
 
 Route::apiResource('campaign/cycle', CampaignCycleController::class)
@@ -34,6 +35,7 @@ Route::apiResource('campaign/point', CampaignPointController::class)
 Route::get('campaign/clone/{id}', [CampaignController::class, 'cloneCampaign']);
 Route::get('campaign/report/{id}', [CampaignController::class, 'report']);
 Route::get('campaign/report/pdf/{id}', [CampaignController::class, 'reportPdf']);
+Route::get('campaign/report/xlsx/{id}', [CampaignController::class, 'reportXlsx']);
 Route::get('campaign/payroll/pdf/{id}', [CampaignController::class, 'payroll']);
 Route::get('campaign/worker/', [CampaignWorkerController::class, 'index']);
 Route::put('campaign/worker/{id}', [CampaignWorkerController::class, 'update']);
