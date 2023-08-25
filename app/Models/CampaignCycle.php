@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use \stdClass;
+use stdClass;
 
 class CampaignCycle extends Model
 {
@@ -558,6 +558,9 @@ class CampaignCycle extends Model
         $item->total_of_cats = 0;
         $item->total = 0;
         $item->goal = 0;
+        $item->goal_cats = 0;
+        $item->goal_dogs = 0;
+
     }
 
     public static function incrementItem($item, $increment)
@@ -588,6 +591,8 @@ class CampaignCycle extends Model
         $item->total_of_cats += $increment->total_of_cats;
         $item->total += $increment->total;
         $item->goal += $increment->goal;
+        $item->goal_cats += $increment->goal_cats;
+        $item->goal_dogs += $increment->goal_dogs;
     }
 
     public function loadReport()

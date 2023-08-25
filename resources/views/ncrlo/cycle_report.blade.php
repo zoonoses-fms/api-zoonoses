@@ -132,7 +132,11 @@
                         <th class="border">Gatas</th>
                         <th class="border">Total Gatos</th>
                         <th class="border">Total</th>
+                        <th class="border">Meta Cães</th>
+                        <th class="border">Meta Gatos</th>
                         <th class="border">Meta</th>
+                        <th class="border">Cobertura Cães</th>
+                        <th class="border">Cobertura Gatos</th>
                         <th class="border">Cobertura</th>
                     </tr>
                 </thead>
@@ -152,7 +156,28 @@
 
                         <td class="border"> {{ number_format($cycle->total, 0, ',', '.') }} </td>
 
+                        <td class="border"> {{ number_format($cycle->goal_dogs, 0, ',', '.') }} </td>
+
+                        <td class="border"> {{ number_format($cycle->goal_cats, 0, ',', '.') }} </td>
+
                         <td class="border"> {{ number_format($cycle->goal, 0, ',', '.') }} </td>
+
+                        @if ($cycle->total_of_dogs > 0 && $cycle->goal_dogs > 0)
+                            <td class="border">
+                                {{ number_format($cycle->total_of_dogs / ($cycle->goal_dogs / 100), 2, ',', ' ') }}%
+                            </td>
+                        @else
+                            <td class="border"> 0% </td>
+                        @endif
+
+                        @if ($cycle->total_of_cats > 0 && $cycle->goal_cats > 0)
+                            <td class="border">
+                                {{ number_format($cycle->total_of_cats / ($cycle->goal_cats / 100), 2, ',', ' ') }}%
+                            </td>
+                        @else
+                            <td class="border"> 0% </td>
+                        @endif
+
                         @if ($cycle->total > 0 && $cycle->goal > 0)
                             <td class="border">
                                 {{ number_format($cycle->total / ($cycle->goal / 100), 2, ',', ' ') }}%
@@ -176,7 +201,11 @@
                             <th class="border">Gatas</th>
                             <th class="border">Total Gatos</th>
                             <th class="border">Total</th>
+                            <th class="border">Meta Cães</th>
+                            <th class="border">Meta Gatos</th>
                             <th class="border">Meta</th>
+                            <th class="border">Cobertura Cães</th>
+                            <th class="border">Cobertura Gatos</th>
                             <th class="border">Cobertura</th>
                         </tr>
                     </thead>
@@ -199,10 +228,35 @@
 
                                 <td class="border"> {{ number_format($saad->total, 0, ',', '.') }} </td>
 
+                                <td class="border"> {{ number_format($saad->goal_dogs, 0, ',', '.') }} </td>
+
+                                <td class="border"> {{ number_format($saad->goal_cats, 0, ',', '.') }} </td>
+
                                 <td class="border"> {{ number_format($saad->goal, 0, ',', '.') }} </td>
-                                <td class="border">
-                                    {{ number_format($saad->total / ($saad->goal / 100), 2, ',', ' ') }}%
-                                </td>
+
+                                @if ($saad->total_of_dogs > 0 && $saad->goal_dogs > 0)
+                                    <td class="border">
+                                        {{ number_format($saad->total_of_dogs / ($saad->goal_dogs / 100), 2, ',', ' ') }}%
+                                    </td>
+                                @else
+                                    <td class="border"> 0% </td>
+                                @endif
+
+                                @if ($saad->total_of_cats > 0 && $saad->goal_cats > 0)
+                                    <td class="border">
+                                        {{ number_format($saad->total_of_cats / ($saad->goal_cats / 100), 2, ',', ' ') }}%
+                                    </td>
+                                @else
+                                    <td class="border"> 0% </td>
+                                @endif
+
+                                @if ($saad->total > 0 && $saad->goal > 0)
+                                    <td class="border">
+                                        {{ number_format($saad->total / ($saad->goal / 100), 2, ',', ' ') }}%
+                                    </td>
+                                @else
+                                    <td class="border"> 0% </td>
+                                @endif
                             </tr>
                         @endforeach
                     </tbody>
@@ -224,7 +278,11 @@
                                 <th class="border">Gatas</th>
                                 <th class="border">Total Gatos</th>
                                 <th class="border">Total</th>
+                                <th class="border">Meta Cães</th>
+                                <th class="border">Meta Gatos</th>
                                 <th class="border">Meta</th>
+                                <th class="border">Cobertura Cães</th>
+                                <th class="border">Cobertura Gatos</th>
                                 <th class="border">Cobertura</th>
                             </tr>
                         </thead>
@@ -244,7 +302,28 @@
 
                                 <td class="border"> {{ number_format($support->total, 0, ',', '.') }} </td>
 
+                                <td class="border"> {{ number_format($support->goal_dogs, 0, ',', '.') }} </td>
+
+                                <td class="border"> {{ number_format($support->goal_cats, 0, ',', '.') }} </td>
+
                                 <td class="border"> {{ number_format($support->goal, 0, ',', '.') }} </td>
+
+                                @if ($support->total_of_dogs > 0 && $support->goal_dogs > 0)
+                                    <td class="border">
+                                        {{ number_format($support->total_of_dogs / ($support->goal_dogs / 100), 2, ',', ' ') }}%
+                                    </td>
+                                @else
+                                    <td class="border"> 0% </td>
+                                @endif
+
+                                @if ($support->total_of_cats > 0 && $support->goal_cats > 0)
+                                    <td class="border">
+                                        {{ number_format($support->total_of_cats / ($support->goal_cats / 100), 2, ',', ' ') }}%
+                                    </td>
+                                @else
+                                    <td class="border"> 0% </td>
+                                @endif
+
                                 @if ($support->total > 0 && $support->goal > 0)
                                     <td class="border">
                                         {{ number_format($support->total / ($support->goal / 100), 2, ',', ' ') }}%
@@ -266,7 +345,12 @@
                                 <th class="border">Gatas</th>
                                 <th class="border">Total Gatos</th>
                                 <th class="border">Total</th>
+                                <th class="border">Meta Cães</th>
+                                <th class="border">Meta Gatos</th>
                                 <th class="border">Meta</th>
+                                <th class="border">Cobertura Cães</th>
+                                <th class="border">Cobertura Gatos</th>
+                                <th class="border">Cobertura</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -288,7 +372,35 @@
 
                                     <td class="border"> {{ number_format($point->total, 0, ',', '.') }} </td>
 
+                                    <td class="border"> {{ number_format($point->goal_dogs, 0, ',', '.') }} </td>
+
+                                    <td class="border"> {{ number_format($point->goal_cats, 0, ',', '.') }} </td>
+
                                     <td class="border"> {{ number_format($point->goal, 0, ',', '.') }} </td>
+
+                                    @if ($point->total_of_dogs > 0 && $point->goal_dogs > 0)
+                                        <td class="border">
+                                            {{ number_format($point->total_of_dogs / ($point->goal_dogs / 100), 2, ',', ' ') }}%
+                                        </td>
+                                    @else
+                                        <td class="border"> 0% </td>
+                                    @endif
+
+                                    @if ($point->total_of_cats > 0 && $point->goal_cats > 0)
+                                        <td class="border">
+                                            {{ number_format($point->total_of_cats / ($point->goal_cats / 100), 2, ',', ' ') }}%
+                                        </td>
+                                    @else
+                                        <td class="border"> 0% </td>
+                                    @endif
+
+                                    @if ($point->total > 0 && $point->goal > 0)
+                                        <td class="border">
+                                            {{ number_format($point->total / ($point->goal / 100), 2, ',', ' ') }}%
+                                        </td>
+                                    @else
+                                        <td class="border"> 0% </td>
+                                    @endif
                                 </tr>
                             @endforeach
                         </tbody>
